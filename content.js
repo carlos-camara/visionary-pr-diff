@@ -1,204 +1,172 @@
 /**
- * Visionary PR Diff — Premium Inline Injector v4
- *
- * Renders a professional heat-map diff overlay:
- *  - Unchanged pixels: shows the actual image, slightly dimmed.
- *  - Changed pixels: shows the "after" image with a vivid heat-map overlay
- *    whose intensity reflects the magnitude of the change.
- *    Low diff → green tint | Medium diff → amber | High diff → red
- *
- * The result is a third column that is immediately readable and beautiful.
+ * Visionary PR Diff — Premium Inline Injector v5 (Diagnostic build)
+ * Heat-map diff with comprehensive debug logging.
  */
 
 (function () {
     'use strict';
 
-    console.log('%c[Visionary PR Diff] Premium engine v4', 'color:#58a6ff;font-weight:bold');
+    const VERSION = 'v5-heatmap';
 
-    // ─── Image helpers ────────────────────────────────────────────────────────
+    // ─── Diagnostic banner (visible in page for 4s to confirm extension is loaded) ─
+    const diag = Object.assign(document.createElement('div'), { textContent: `🔍 Visionary PR Diff ${VERSION} active` });
+    Object.assign(diag.style, {
+        position: 'fixed', bottom: '16px', right: '16px', zIndex: '99999',
+        background: 'linear-gradient(135deg,#0d1117,#161b22)',
+        border: '1px solid #58a6ff', borderRadius: '8px',
+        padding: '8px 14px', color: '#58a6ff', fontSize: '12px', fontWeight: '600',
+        fontFamily: '-apple-system,sans-serif', boxShadow: '0 4px 16px rgba(0,0,0,.6)',
+        transition: 'opacity .4s ease', opacity: '1'
+    });
+    document.body.appendChild(diag);
+    setTimeout(() => { diag.style.opacity = '0'; setTimeout(() => diag.remove(), 500); }, 4000);
+
+    console.log(`%c[Visionary PR Diff] ${VERSION} loaded ✓`, 'color:#58a6ff;font-weight:bold;font-size:13px');
+
+    // ─── Image helpers ─────────────────────────────────────────────────────────
 
     function loadImage(src) {
         return new Promise((resolve, reject) => {
             const img = new Image();
             img.crossOrigin = 'Anonymous';
             img.onload = () => resolve(img);
-            img.onerror = () => reject(new Error('Failed to load image: ' + src.slice(0, 80)));
+            img.onerror = () => reject(new Error('CORS/load error: ' + src.slice(0, 80)));
             img.src = src;
         });
     }
 
-    function drawToCanvas(img, w, h) {
+    function getPixels(img, w, h) {
         const cv = Object.assign(document.createElement('canvas'), { width: w, height: h });
         cv.getContext('2d').drawImage(img, 0, 0, w, h);
         return cv.getContext('2d').getImageData(0, 0, w, h).data;
     }
 
-    // ─── Premium Diff Engine ──────────────────────────────────────────────────
+    // ─── Heatmap Diff Engine ──────────────────────────────────────────────────
 
-    async function renderPremiumDiff(srcBefore, srcAfter) {
-        const [a, b] = await Promise.all([loadImage(srcBefore), loadImage(srcAfter)]);
+    async function renderDiff(urlA, urlB) {
+        console.log('[VPD] Loading images…', urlA.slice(0, 60), urlB.slice(0, 60));
+        const [imgA, imgB] = await Promise.all([loadImage(urlA), loadImage(urlB)]);
 
-        const w = Math.max(a.naturalWidth, b.naturalWidth);
-        const h = Math.max(a.naturalHeight, b.naturalHeight);
+        const w = Math.max(imgA.naturalWidth, imgB.naturalWidth);
+        const h = Math.max(imgA.naturalHeight, imgB.naturalHeight);
+        console.log('[VPD] Canvas size:', w, 'x', h);
 
-        const dataA = drawToCanvas(a, w, h);
-        const dataB = drawToCanvas(b, w, h);
+        const dA = getPixels(imgA, w, h);
+        const dB = getPixels(imgB, w, h);
 
-        const outCanvas = Object.assign(document.createElement('canvas'), { width: w, height: h });
-        const ctx = outCanvas.getContext('2d');
+        const cv = Object.assign(document.createElement('canvas'), { width: w, height: h });
+        const ctx = cv.getContext('2d');
         const out = ctx.createImageData(w, h);
-        const d = out.data;
+        const px = out.data;
 
-        let diffPx = 0;
-        let totalDelta = 0;
+        let changed = 0, totalDelta = 0;
 
-        for (let i = 0; i < dataA.length; i += 4) {
-            const rA = dataA[i], gA = dataA[i + 1], bA = dataA[i + 2];
-            const rB = dataB[i], gB = dataB[i + 1], bB = dataB[i + 2];
+        for (let i = 0; i < dA.length; i += 4) {
+            const rA = dA[i], gA = dA[i + 1], bA = dA[i + 2];
+            const rB = dB[i], gB = dB[i + 1], bB = dB[i + 2];
 
-            // Euclidean colour distance (ignoring alpha)
-            const delta = Math.sqrt(
-                (rA - rB) ** 2 + (gA - gB) ** 2 + (bA - bB) ** 2
-            );
-            const norm = Math.min(delta / 441.67, 1); // 441.67 = max possible √(255²*3)
-
+            const delta = Math.sqrt((rA - rB) ** 2 + (gA - gB) ** 2 + (bA - bB) ** 2);
+            const norm = Math.min(delta / 441.67, 1);
             totalDelta += norm;
 
             if (norm < 0.02) {
-                // ── Identical pixel → show original, slightly dimmed ──────────────
-                d[i] = rB * 0.45;
-                d[i + 1] = gB * 0.45;
-                d[i + 2] = bB * 0.45;
-                d[i + 3] = 255;
+                // Identical → dim original
+                px[i] = rB * 0.35;
+                px[i + 1] = gB * 0.35;
+                px[i + 2] = bB * 0.35;
+                px[i + 3] = 255;
             } else {
-                // ── Changed pixel → heat-map overlay blended onto "after" image ───
-                diffPx++;
-                const t = Math.min(norm * 3, 1); // boost low changes for visibility
+                changed++;
+                const t = Math.min(norm * 2.5, 1);
 
-                // Heat gradient: green (0,255,100) → amber (255,180,0) → red (255,30,30)
+                // Green → Amber → Red
                 let hR, hG, hB;
                 if (t < 0.5) {
                     const s = t * 2;
-                    hR = Math.round(0 + s * 255);
-                    hG = Math.round(210 + s * (180 - 210));
-                    hB = Math.round(80 + s * (0 - 80));
+                    hR = Math.round(s * 255);
+                    hG = Math.round(220 - s * 60);
+                    hB = Math.round(100 - s * 100);
                 } else {
                     const s = (t - 0.5) * 2;
                     hR = 255;
-                    hG = Math.round(180 - s * 150);
-                    hB = Math.round(0 + s * 30);
+                    hG = Math.round(160 - s * 140);
+                    hB = Math.round(s * 30);
                 }
 
-                // Blend: 55% original after-image + 45% heat colour
-                const alpha = 0.45 + norm * 0.3; // more intense = more colour
-                d[i] = Math.round(rB * (1 - alpha) + hR * alpha);
-                d[i + 1] = Math.round(gB * (1 - alpha) + hG * alpha);
-                d[i + 2] = Math.round(bB * (1 - alpha) + hB * alpha);
-                d[i + 3] = 255;
+                // Blend: after-image + heat
+                const a = 0.50 + norm * 0.35;
+                px[i] = Math.round(rB * (1 - a) + hR * a);
+                px[i + 1] = Math.round(gB * (1 - a) + hG * a);
+                px[i + 2] = Math.round(bB * (1 - a) + hB * a);
+                px[i + 3] = 255;
             }
         }
 
         ctx.putImageData(out, 0, 0);
 
-        const totalPx = w * h;
-        const pct = (diffPx / totalPx * 100).toFixed(2);
-        const avgIntensity = (totalDelta / totalPx * 100).toFixed(1);
+        const total = w * h;
+        const pct = (changed / total * 100).toFixed(2);
+        const intensity = (totalDelta / total * 100).toFixed(1);
+        console.log(`[VPD] Done — ${pct}% changed, ${changed.toLocaleString()} pixels`);
 
-        return { canvas: outCanvas, pct, diffPx, totalPx, avgIntensity };
+        return { canvas: cv, pct, changed, total, intensity };
     }
 
-    // ─── Build Panel UI ───────────────────────────────────────────────────────
+    // ─── Panel Builder ────────────────────────────────────────────────────────
 
-    function buildPanel(container) {
-        const panel = document.createElement('div');
-        panel.style.cssText = [
-            'display:inline-flex', 'flex-direction:column', 'align-items:center',
-            'gap:0', 'vertical-align:top', 'margin-left:12px',
+    function buildPanel(parent) {
+        const p = document.createElement('div');
+        p.style.cssText = [
+            'display:inline-flex', 'flex-direction:column', 'align-items:stretch',
             'border-radius:10px', 'overflow:hidden',
-            'border:1px solid rgba(88,166,255,.25)',
-            'box-shadow:0 4px 24px rgba(0,0,0,.5)',
-            'min-width:120px', 'background:#010409'
+            'border:1px solid rgba(88,166,255,.3)',
+            'box-shadow:0 6px 30px rgba(0,0,0,.6)',
+            'min-width:140px', 'max-width:260px', 'background:#0d1117',
+            'vertical-align:top', 'flex-shrink:0'
         ].join(';');
 
-        // Header bar
-        const header = document.createElement('div');
-        header.style.cssText = [
-            'width:100%', 'padding:7px 12px',
-            'background:linear-gradient(135deg,rgba(88,166,255,.12),rgba(88,166,255,.04))',
-            'border-bottom:1px solid rgba(88,166,255,.15)',
-            'display:flex', 'align-items:center', 'gap:6px',
-            'box-sizing:border-box'
-        ].join(';');
-        header.innerHTML = `
-      <span style="font-size:13px;">🔍</span>
-      <span style="font-size:12px;font-weight:700;color:#58a6ff;letter-spacing:.4px;">Diff</span>
+        p.innerHTML = `
+      <div style="padding:8px 12px;background:linear-gradient(135deg,rgba(88,166,255,.15),rgba(88,166,255,.04));border-bottom:1px solid rgba(88,166,255,.15);display:flex;align-items:center;gap:6px;">
+        <span>🔍</span>
+        <span style="font-size:12px;font-weight:700;color:#58a6ff;letter-spacing:.5px;font-family:-apple-system,sans-serif;">Diff</span>
+        <span id="vpd-badge" style="margin-left:auto;font-size:10px;color:#484f58;">computing…</span>
+      </div>
+      <div id="vpd-slot" style="display:flex;justify-content:center;align-items:center;padding:10px;min-height:60px;background:#010409;">
+        <span style="font-size:11px;color:#484f58;">Rendering…</span>
+      </div>
+      <div id="vpd-footer" style="padding:8px 10px;border-top:1px solid rgba(255,255,255,.06);font-family:-apple-system,sans-serif;font-size:11px;color:#8b949e;"></div>
     `;
 
-        // Canvas area
-        const canvasWrap = document.createElement('div');
-        canvasWrap.id = 'vpd-canvas-slot';
-        canvasWrap.style.cssText = [
-            'width:100%', 'display:flex', 'justify-content:center',
-            'padding:10px', 'box-sizing:border-box',
-            'background:#010409'
-        ].join(';');
-        canvasWrap.innerHTML = `
-      <span style="font-size:11px;color:#484f58;align-self:center;padding:20px 0;">
-        Rendering…
-      </span>
-    `;
-
-        // Stats footer
-        const footer = document.createElement('div');
-        footer.id = 'vpd-stats';
-        footer.style.cssText = [
-            'width:100%', 'padding:7px 10px',
-            'border-top:1px solid rgba(255,255,255,.06)',
-            'background:rgba(255,255,255,.02)',
-            'box-sizing:border-box'
-        ].join(';');
-
-        panel.appendChild(header);
-        panel.appendChild(canvasWrap);
-        panel.appendChild(footer);
-        container.appendChild(panel);
-
-        return panel;
+        parent.appendChild(p);
+        return p;
     }
 
-    function renderStats(panel, { pct, diffPx, totalPx, avgIntensity }) {
-        const severity =
-            parseFloat(pct) === 0 ? { label: 'Identical', color: '#3fb950', icon: '✓' } :
-                parseFloat(pct) < 0.5 ? { label: 'Trivial', color: '#3fb950', icon: '~' } :
-                    parseFloat(pct) < 3 ? { label: 'Minor', color: '#d29922', icon: '!' } :
-                        parseFloat(pct) < 15 ? { label: 'Moderate', color: '#f0883e', icon: '⚠' } :
-                            { label: 'Major', color: '#f85149', icon: '✕' };
+    function fillPanel(panel, { pct, changed, intensity }) {
+        const sev =
+            parseFloat(pct) === 0 ? ['Identical', '#3fb950'] :
+                parseFloat(pct) < 0.5 ? ['Trivial', '#3fb950'] :
+                    parseFloat(pct) < 3 ? ['Minor', '#d29922'] :
+                        parseFloat(pct) < 15 ? ['Moderate', '#f0883e'] :
+                            ['Major', '#f85149'];
 
-        const footer = panel.querySelector('#vpd-stats');
-        footer.innerHTML = `
-      <div style="display:flex;align-items:center;gap:5px;margin-bottom:5px;">
-        <span style="
-          display:inline-flex;align-items:center;justify-content:center;
-          width:16px;height:16px;border-radius:50%;
-          background:${severity.color}22;border:1px solid ${severity.color}66;
-          font-size:10px;font-weight:700;color:${severity.color};
-        ">${severity.icon}</span>
-        <span style="font-size:12px;font-weight:700;color:${severity.color};">${severity.label}</span>
+        panel.querySelector('#vpd-badge').textContent = sev[0];
+        panel.querySelector('#vpd-badge').style.color = sev[1];
+        panel.querySelector('#vpd-badge').style.fontWeight = '600';
+
+        panel.querySelector('#vpd-footer').innerHTML = `
+      <div style="display:flex;gap:6px;align-items:center;margin-bottom:6px;">
+        <span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${sev[1]};"></span>
+        <b style="color:${sev[1]};">${sev[0]}</b>
       </div>
-      <div style="font-size:11px;color:#8b949e;line-height:1.7;">
+      <div style="line-height:1.8;">
         <div>Changed: <b style="color:#c9d1d9;">${pct}%</b></div>
-        <div>Pixels: <b style="color:#c9d1d9;">${diffPx.toLocaleString()}</b></div>
-        <div>Intensity: <b style="color:#c9d1d9;">${avgIntensity}</b></div>
+        <div>Pixels: <b style="color:#c9d1d9;">${changed.toLocaleString()}</b></div>
+        <div>Intensity: <b style="color:#c9d1d9;">${intensity}</b></div>
       </div>
       <div style="margin-top:8px;border-top:1px solid rgba(255,255,255,.06);padding-top:6px;">
-        <div style="font-size:10px;color:#484f58;margin-bottom:3px;">Heat legend</div>
-        <div style="
-          height:6px;width:100%;border-radius:3px;
-          background:linear-gradient(to right,#00d264,#ffa500,#ff1e1e);
-        "></div>
-        <div style="display:flex;justify-content:space-between;font-size:9px;color:#484f58;margin-top:2px;">
-          <span>Low</span><span>High</span>
-        </div>
+        <div style="font-size:10px;color:#484f58;margin-bottom:3px;">Heat scale</div>
+        <div style="height:5px;border-radius:3px;background:linear-gradient(to right,#00d264,#ffa500,#ff1e1e);"></div>
+        <div style="display:flex;justify-content:space-between;font-size:9px;color:#484f58;margin-top:2px;"><span>Low</span><span>High</span></div>
       </div>
     `;
     }
@@ -206,66 +174,75 @@
     // ─── Image Extraction ─────────────────────────────────────────────────────
 
     function extractImages(fileEl) {
-        const before = fileEl.querySelector(
-            '.image-diff-item.deleted img, .js-diff-item.deleted img, ' +
-            '[data-position="left"] img, .file-deleted img, .render-cell-left img'
-        );
-        const after = fileEl.querySelector(
-            '.image-diff-item.added img, .js-diff-item.added img, ' +
-            '[data-position="right"] img, .file-added img, .render-cell-right img'
-        );
-        if (before && after) return { before, after };
+        // Try every known Github selector combination
+        const strategies = [
+            // Strategy 1: explicit position attributes
+            () => {
+                const b = fileEl.querySelector('[data-position="left"] img, .image-diff-item.deleted img, .render-cell-left img');
+                const a = fileEl.querySelector('[data-position="right"] img, .image-diff-item.added img, .render-cell-right img');
+                return b && a ? { before: b, after: a } : null;
+            },
+            // Strategy 2: render-wrapper with 2+ images
+            () => {
+                const c = fileEl.querySelector('.render-wrapper, .image-diff, [data-render-url]');
+                if (!c) return null;
+                const imgs = [...c.querySelectorAll('img')].filter(x => x.src && !x.src.includes('avatar') && !x.src.includes('emoji'));
+                return imgs.length >= 2 ? { before: imgs[0], after: imgs[1] } : null;
+            },
+            // Strategy 3: any 2 non-avatar images in block
+            () => {
+                const imgs = [...fileEl.querySelectorAll('img')].filter(x => x.src && !x.src.includes('avatar') && !x.src.includes('emoji') && x.naturalWidth > 4);
+                return imgs.length >= 2 ? { before: imgs[0], after: imgs[1] } : null;
+            }
+        ];
 
-        const container = fileEl.querySelector('.image-diff, [data-render-url], .render-wrapper');
-        if (container) {
-            const imgs = [...container.querySelectorAll('img')].filter(i => i.src && !i.src.includes('avatar'));
-            if (imgs.length >= 2) return { before: imgs[0], after: imgs[1] };
+        for (const s of strategies) {
+            const result = s();
+            if (result) { console.log('[VPD] Images found via strategy', strategies.indexOf(s) + 1, result.before.src.slice(0, 60)); return result; }
         }
 
-        const all = [...fileEl.querySelectorAll('img')].filter(i => i.src && !i.src.includes('avatar'));
-        if (all.length >= 2) return { before: all[0], after: all[1] };
-
+        console.log('[VPD] No images found in block');
         return null;
     }
 
-    // ─── Injection ─────────────────────────────────────────────────────────────
+    // ─── Inline Injection ─────────────────────────────────────────────────────
 
-    async function injectInlinePanel(fileEl) {
-        if (fileEl.dataset.vpdInline) return;
-        fileEl.dataset.vpdInline = 'pending';
+    async function inject(fileEl) {
+        if (fileEl.dataset.vpd) return;
+        fileEl.dataset.vpd = '1';
 
         const srcs = extractImages(fileEl);
-        if (!srcs) { fileEl.dataset.vpdInline = 'skip'; return; }
+        if (!srcs) return;
 
-        const imageRow = srcs.before.closest(
-            '.image-diff, .render-wrapper, [data-render-url]'
-        ) || srcs.before.closest('td, .d-flex, .d-table-row') || srcs.before.parentElement;
-        if (!imageRow) { fileEl.dataset.vpdInline = 'skip'; return; }
+        // Find the row that contains both images
+        const imageRow =
+            srcs.before.closest('.render-wrapper, .image-diff, [data-render-url]') ||
+            srcs.before.closest('td, [class*="d-flex"], [class*="table-row"]') ||
+            srcs.before.parentElement;
+        if (!imageRow) { console.log('[VPD] No row found'); return; }
 
-        imageRow.style.cssText += ';display:flex!important;flex-wrap:wrap;align-items:flex-start;gap:12px;';
+        // Make the container flex so the panel sits alongside
+        imageRow.style.setProperty('display', 'flex', 'important');
+        imageRow.style.setProperty('flex-wrap', 'wrap', 'important');
+        imageRow.style.setProperty('align-items', 'flex-start', 'important');
+        imageRow.style.setProperty('gap', '12px', 'important');
 
         const panel = buildPanel(imageRow);
 
         try {
-            const result = await renderPremiumDiff(srcs.before.src, srcs.after.src);
+            const result = await renderDiff(srcs.before.src, srcs.after.src);
 
-            result.canvas.style.cssText = [
-                'max-width:100%', 'height:auto', 'display:block',
-                'border-radius:4px'
-            ].join(';');
+            result.canvas.style.cssText = 'max-width:100%;height:auto;display:block;border-radius:4px;';
 
-            const slot = panel.querySelector('#vpd-canvas-slot');
+            const slot = panel.querySelector('#vpd-slot');
             slot.innerHTML = '';
             slot.appendChild(result.canvas);
-
-            renderStats(panel, result);
+            fillPanel(panel, result);
         } catch (err) {
-            console.warn('[Visionary PR Diff]', err.message);
-            const slot = panel.querySelector('#vpd-canvas-slot');
-            slot.innerHTML = `<span style="font-size:11px;color:#f85149;padding:12px;text-align:center;">${err.message}</span>`;
+            console.error('[VPD] Error:', err.message);
+            panel.querySelector('#vpd-slot').innerHTML =
+                `<span style="font-size:11px;color:#f85149;padding:12px;text-align:center;">${err.message}</span>`;
         }
-
-        fileEl.dataset.vpdInline = 'done';
     }
 
     // ─── Scanner ──────────────────────────────────────────────────────────────
@@ -278,12 +255,14 @@
             '.file'
         ];
         for (const sel of selectors) {
-            const items = document.querySelectorAll(sel);
-            if (items.length) { items.forEach(el => injectInlinePanel(el)); break; }
+            const nodes = document.querySelectorAll(sel);
+            if (nodes.length) { console.log('[VPD] Scanning', nodes.length, 'blocks with:', sel); nodes.forEach(inject); break; }
         }
     }
 
     new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
-    [1500, 3500, 7000].forEach(t => setTimeout(scan, t));
+    [1000, 2500, 5000, 10000].forEach(t => setTimeout(scan, t));
+
+    console.log('[VPD] Observer attached, scanning scheduled.');
 
 })();
