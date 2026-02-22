@@ -66,7 +66,7 @@
                 d[i + 2] = Math.round(B[i + 2] * (1 - al) + b2 * al); d[i + 3] = 255;
             }
         }
-        ctx.putImageData(id, cv);
+        ctx.putImageData(id, 0, 0);
         // watermark
         ctx.save(); ctx.font = 'bold 11px -apple-system,sans-serif'; ctx.fillStyle = 'rgba(88,166,255,.45)'; ctx.textAlign = 'right'; ctx.fillText(`DIFF ${W}×${H}`, W - 6, H - 6); ctx.restore();
         const total = W * H, pct = (diff / total * 100).toFixed(2), intens = (sumD / total * 100).toFixed(1);
@@ -150,8 +150,6 @@
                     processed.add(node);
 
                     const imgA = siblings[0], imgB = siblings[1];
-                    imgA.dataset.vpd = '1';
-                    imgB.dataset.vpd = '1';
                     seen.add(imgA);
                     seen.add(imgB);
 
@@ -159,9 +157,10 @@
                     console.log(`[VPD]   Before: ${imgA.src.slice(0, 60)}`);
                     console.log(`[VPD]   After:  ${imgB.src.slice(0, 60)}`);
 
-                    // Inject after the common ancestor or after imgB's parent
-                    const anchor = node;
-                    injectPanel(anchor, imgA.src, imgB.src);
+                    // Mark as processed only AFTER successful injection attempt
+                    injectPanel(node, imgA.src, imgB.src);
+                    imgA.dataset.vpd = '1';
+                    imgB.dataset.vpd = '1';
                     break;
                 }
                 node = node.parentElement;
