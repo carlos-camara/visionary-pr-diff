@@ -1,0 +1,73 @@
+/* 
+ * Visionary PR Diff - Premium Styling
+ * Glassmorphism and Elegant UI for GitHub Integration
+ */
+
+.visionary-btn {
+  background: linear-gradient(135deg, #24292e 0%, #1a1e22 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3) !important;
+  transition: all 0.2s ease-in-out !important;
+  backdrop-filter: blur(5px);
+  font-weight: 500 !important;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.visionary-btn:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(135deg, #2ea44f 0%, #298e46 100%) !important;
+  box-shadow: 0 6px 20px rgba(46, 164, 79, 0.4) !important;
+  border-color: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Modal Overlay */
+.visionary-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.visionary-modal-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Diff Container */
+.visionary-diff-container {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 90vw;
+  max-height: 90vh;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  position: relative;
+  overflow: auto;
+}
+
+.visionary-diff-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  color: #8b949e;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.visionary-diff-close:hover {
+  color: #fff;
+}
