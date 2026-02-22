@@ -117,18 +117,26 @@
     // ─── Image-first scanner ──────────────────────────────────────────────────
     const processed = new WeakSet();
 
+    // Content-image domains only (never GitHub UI/animation assets)
+    const CONTENT_DOMAINS = [
+        'raw.githubusercontent.com',
+        'user-images.githubusercontent.com',
+        'camo.githubusercontent.com',
+        'objects.githubusercontent.com',
+        'private-user-images.githubusercontent.com'
+    ];
+
+    function isContentImg(img) {
+        if (!img.src || !img.complete || img.naturalWidth < 30 || img.naturalHeight < 30) return false;
+        if (img.dataset.vpd) return false;
+        try {
+            const host = new URL(img.src).hostname;
+            return CONTENT_DOMAINS.some(d => host === d || host.endsWith('.' + d));
+        } catch { return false; }
+    }
+
     function scanImages() {
-        // Collect ALL images on the page
-        const allImgs = [...document.querySelectorAll('img')].filter(img =>
-            img.src &&
-            img.complete &&
-            img.naturalWidth > 50 &&
-            img.naturalHeight > 50 &&
-            !img.src.includes('avatar') &&
-            !img.src.includes('emoji') &&
-            !img.src.includes('github.com/images') &&
-            !img.dataset.vpd
-        );
+        const allImgs = [...document.querySelectorAll('img')].filter(isContentImg);
 
         console.log(`[VPD] Found ${allImgs.length} candidate images on page`);
         if (!allImgs.length) return;
