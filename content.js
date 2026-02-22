@@ -1,14 +1,16 @@
 /**
- * Visionary PR Diff — v7
- * Waits for images to fully load before computing diff.
- * Injects a heatmap "Diff" panel below GitHub's 2-up comparison.
+ * Visionary PR Diff — v8 (Image-first strategy + exhaustive debug)
+ *
+ * Instead of relying on container selectors, we find ALL loaded images
+ * on the page, group them by their parent render block, and inject
+ * a Diff panel for every pair we find.
  */
 
 (function () {
     'use strict';
+    const V = 'v8';
 
-    const V = 'v7';
-    console.log(`%c[VPD] ${V} loaded`, 'color:#58a6ff;font-weight:bold;font-size:13px');
+    console.log(`%c[VPD] ${V} starting`, 'color:#58a6ff;font-weight:bold;font-size:13px');
 
     // ─── Toast ────────────────────────────────────────────────────────────────
     function toast(msg, color = '#58a6ff') {
@@ -17,201 +19,179 @@
             position: 'fixed', bottom: '16px', right: '16px', zIndex: '999999',
             background: '#0d1117', border: `1px solid ${color}`,
             borderRadius: '8px', padding: '8px 14px', color,
-            fontSize: '12px', fontWeight: '600',
-            fontFamily: '-apple-system,sans-serif',
-            boxShadow: '0 4px 20px rgba(0,0,0,.7)',
-            transition: 'opacity .5s', opacity: '1'
+            fontSize: '12px', fontWeight: '600', fontFamily: '-apple-system,sans-serif',
+            boxShadow: '0 4px 20px rgba(0,0,0,.7)', transition: 'opacity .5s', opacity: '1'
         });
         document.body.appendChild(el);
-        setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 600); }, 3500);
+        setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 600); }, 4000);
     }
     toast(`🔍 Visionary PR Diff ${V} active`);
 
-    // ─── Wait for an img to fully load ───────────────────────────────────────
-    function waitForImg(img) {
-        return new Promise(res => {
-            if (img.complete && img.naturalWidth > 0) { res(img); return; }
-            img.addEventListener('load', () => res(img), { once: true });
-            img.addEventListener('error', () => res(null), { once: true });
-        });
-    }
-
-    // ─── Cross-origin canvas load ─────────────────────────────────────────────
-    function loadCors(src) {
+    // ─── Load image with CORS ─────────────────────────────────────────────────
+    function corsLoad(src) {
+        // Strip any existing cache-busters
+        const clean = src.split('?')[0];
         return new Promise((res, rej) => {
             const i = new Image();
             i.crossOrigin = 'Anonymous';
             i.onload = () => res(i);
-            i.onerror = () => rej(new Error('CORS error loading image'));
-            i.src = src + (src.includes('?') ? '&' : '?') + '_vpd=' + Date.now(); // cache-bust
+            i.onerror = () => rej(new Error('CORS blocked: ' + clean.slice(0, 60)));
+            i.src = clean;
         });
     }
 
-    // ─── Heatmap diff ─────────────────────────────────────────────────────────
-    async function heatmap(urlA, urlB) {
-        const [imgA, imgB] = await Promise.all([loadCors(urlA), loadCors(urlB)]);
-        const W = Math.max(imgA.naturalWidth, imgB.naturalWidth);
-        const H = Math.max(imgA.naturalHeight, imgB.naturalHeight);
+    // ─── Heatmap ──────────────────────────────────────────────────────────────
+    async function buildHeatmap(srcA, srcB) {
+        console.log('[VPD] Loading pair:', srcA.slice(0, 50), '|', srcB.slice(0, 50));
+        const [a, b] = await Promise.all([corsLoad(srcA), corsLoad(srcB)]);
+        const W = Math.max(a.naturalWidth, b.naturalWidth), H = Math.max(a.naturalHeight, b.naturalHeight);
+        console.log('[VPD] Canvas:', W, 'x', H);
 
-        function px(img) {
-            const c = Object.assign(document.createElement('canvas'), { width: W, height: H });
-            c.getContext('2d').drawImage(img, 0, 0, W, H);
-            return c.getContext('2d').getImageData(0, 0, W, H).data;
-        }
-
-        const A = px(imgA), B = px(imgB);
-        const out = Object.assign(document.createElement('canvas'), { width: W, height: H });
-        const ctx = out.getContext('2d');
-        const id = ctx.createImageData(W, H);
-        const d = id.data;
-
+        function px(img) { const c = Object.assign(document.createElement('canvas'), { width: W, height: H }); c.getContext('2d').drawImage(img, 0, 0, W, H); return c.getContext('2d').getImageData(0, 0, W, H).data; }
+        const A = px(a), B = px(b);
+        const cv = Object.assign(document.createElement('canvas'), { width: W, height: H });
+        const ctx = cv.getContext('2d'); const id = ctx.createImageData(W, H); const d = id.data;
         let diff = 0, sumD = 0;
         for (let i = 0; i < A.length; i += 4) {
             const dr = A[i] - B[i], dg = A[i + 1] - B[i + 1], db = A[i + 2] - B[i + 2];
-            const n = Math.min(Math.sqrt(dr * dr + dg * dg + db * db) / 441.67, 1);
-            sumD += n;
-            if (n < 0.025) {
-                d[i] = B[i] * .3; d[i + 1] = B[i + 1] * .3; d[i + 2] = B[i + 2] * .3; d[i + 3] = 255;
-            } else {
-                diff++;
-                const t = Math.min(n * 2.5, 1);
-                let r, g, b;
-                if (t < .5) { const s = t * 2; r = Math.round(s * 255); g = Math.round(220 - s * 60); b = Math.round(100 - s * 100); }
-                else { const s = (t - .5) * 2; r = 255; g = Math.round(160 - s * 140); b = Math.round(s * 30); }
-                const a = Math.min(.50 + n * .40, .92);
-                d[i] = Math.round(B[i] * (1 - a) + r * a); d[i + 1] = Math.round(B[i + 1] * (1 - a) + g * a);
-                d[i + 2] = Math.round(B[i + 2] * (1 - a) + b * a); d[i + 3] = 255;
+            const n = Math.min(Math.sqrt(dr * dr + dg * dg + db * db) / 441.67, 1); sumD += n;
+            if (n < 0.025) { d[i] = B[i] * .3; d[i + 1] = B[i + 1] * .3; d[i + 2] = B[i + 2] * .3; d[i + 3] = 255; }
+            else {
+                diff++; const t = Math.min(n * 2.5, 1);
+                let r, g, b2;
+                if (t < .5) { const s = t * 2; r = Math.round(s * 255); g = Math.round(220 - s * 60); b2 = Math.round(100 - s * 100); }
+                else { const s = (t - .5) * 2; r = 255; g = Math.round(160 - s * 140); b2 = Math.round(s * 30); }
+                const al = Math.min(.50 + n * .40, .92);
+                d[i] = Math.round(B[i] * (1 - al) + r * al); d[i + 1] = Math.round(B[i + 1] * (1 - al) + g * al);
+                d[i + 2] = Math.round(B[i + 2] * (1 - al) + b2 * al); d[i + 3] = 255;
             }
         }
-        ctx.putImageData(id, 0, 0);
-
+        ctx.putImageData(id, cv);
         // watermark
-        ctx.save(); ctx.font = 'bold 11px -apple-system,sans-serif';
-        ctx.fillStyle = 'rgba(88,166,255,.5)'; ctx.textAlign = 'right';
-        ctx.fillText(`DIFF ${W}×${H}`, W - 6, H - 6); ctx.restore();
-
+        ctx.save(); ctx.font = 'bold 11px -apple-system,sans-serif'; ctx.fillStyle = 'rgba(88,166,255,.45)'; ctx.textAlign = 'right'; ctx.fillText(`DIFF ${W}×${H}`, W - 6, H - 6); ctx.restore();
         const total = W * H, pct = (diff / total * 100).toFixed(2), intens = (sumD / total * 100).toFixed(1);
-        return { canvas: out, pct, diff, total, intens };
+        return { canvas: cv, pct, diff, intens, W, H };
     }
 
     // ─── Panel ────────────────────────────────────────────────────────────────
-    function severity(pct) {
-        const p = parseFloat(pct);
-        if (p === 0) return ['Identical', '#3fb950'];
-        if (p < 0.5) return ['Trivial', '#3fb950'];
-        if (p < 3) return ['Minor', '#d29922'];
-        if (p < 15) return ['Moderate', '#f0883e'];
-        return ['Major', '#f85149'];
-    }
+    function sev(pct) { const p = parseFloat(pct); if (p === 0) return ['Identical', '#3fb950']; if (p < .5) return ['Trivial', '#3fb950']; if (p < 3) return ['Minor', '#d29922']; if (p < 15) return ['Moderate', '#f0883e']; return ['Major', '#f85149']; }
 
-    function insertPanel(anchor, urlA, urlB) {
+    function injectPanel(anchor, srcA, srcB) {
         const wrap = document.createElement('div');
+        wrap.dataset.vpd = 'panel';
         wrap.style.cssText = 'margin-top:10px;border-top:1px solid #30363d;padding-top:10px;text-align:center;font-family:-apple-system,sans-serif;';
-
         wrap.innerHTML = `
       <div style="font-size:13px;font-weight:600;color:#58a6ff;margin-bottom:8px;letter-spacing:.4px;">Diff</div>
-      <div id="vpd-card" style="display:inline-block;border:1px solid rgba(88,166,255,.3);border-radius:8px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.6);background:#010409;">
-        <div style="padding:24px 40px;color:#484f58;font-size:12px;">Computing diff…</div>
+      <div id="vpd-card-${Date.now()}" style="display:inline-block;border:1px solid rgba(88,166,255,.3);border-radius:8px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.6);">
+        <div style="padding:24px 40px;color:#484f58;font-size:12px;">Computing…</div>
       </div>
-      <div id="vpd-stats" style="margin-top:8px;display:inline-flex;align-items:center;gap:14px;padding:6px 14px;background:rgba(255,255,255,.02);border:1px solid #30363d;border-radius:6px;font-size:12px;color:#8b949e;">Computing…</div>
+      <div class="vpd-stats" style="margin-top:8px;display:inline-flex;align-items:center;gap:12px;padding:6px 14px;background:rgba(255,255,255,.02);border:1px solid #30363d;border-radius:6px;font-size:12px;color:#8b949e;">Computing…</div>
     `;
-
         anchor.after(wrap);
 
-        heatmap(urlA, urlB).then(({ canvas, pct, diff, intens }) => {
-            const [label, color] = severity(pct);
+        const cardId = wrap.querySelector('[id^="vpd-card-"]').id;
+
+        buildHeatmap(srcA, srcB).then(({ canvas, pct, diff, intens }) => {
+            const [label, color] = sev(pct);
             canvas.style.cssText = 'display:block;max-width:min(587px,90vw);height:auto;';
-
-            const legend = document.createElement('div');
-            legend.style.cssText = 'height:4px;width:100%;background:linear-gradient(to right,#00d264,#ffa500,#ff1e1e);';
-
-            const card = wrap.querySelector('#vpd-card');
-            card.innerHTML = '';
-            card.appendChild(canvas);
-            card.appendChild(legend);
-
-            wrap.querySelector('#vpd-stats').innerHTML = `
-        <span style="display:inline-flex;align-items:center;gap:5px;">
-          <span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;"></span>
-          <b style="color:${color};">${label}</b>
-        </span>
+            const leg = document.createElement('div');
+            leg.style.cssText = 'height:4px;width:100%;background:linear-gradient(to right,#00d264,#ffa500,#ff1e1e);';
+            const card = document.getElementById(cardId);
+            card.innerHTML = ''; card.appendChild(canvas); card.appendChild(leg);
+            wrap.querySelector('.vpd-stats').innerHTML = `
+        <span style="display:inline-flex;align-items:center;gap:5px;"><span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block;"></span><b style="color:${color};">${label}</b></span>
         <span>Changed: <b style="color:#c9d1d9;">${pct}%</b></span>
         <span>Pixels: <b style="color:#c9d1d9;">${parseInt(diff).toLocaleString()}</b></span>
         <span>Intensity: <b style="color:#c9d1d9;">${intens}</b></span>
-        <span style="margin-left:8px;display:flex;align-items:center;gap:4px;font-size:10px;color:#484f58;">
-          <span style="display:inline-block;width:28px;height:3px;border-radius:2px;background:linear-gradient(to right,#00d264,#ffa500,#ff1e1e);"></span> Low→High
-        </span>
+        <span style="font-size:10px;color:#484f58;display:flex;align-items:center;gap:4px;"><span style="display:inline-block;width:24px;height:3px;border-radius:2px;background:linear-gradient(to right,#00d264,#ffa500,#ff1e1e);"></span>Low→High</span>
       `;
-            console.log(`[VPD] Done — ${pct}% changed`);
+            console.log(`[VPD] ✓ Diff rendered: ${pct}% changed`);
         }).catch(err => {
-            console.error('[VPD] Error:', err.message);
-            wrap.querySelector('#vpd-card').innerHTML = `<div style="padding:16px;color:#f85149;font-size:12px;">${err.message}</div>`;
-            wrap.querySelector('#vpd-stats').textContent = '';
+            console.error('[VPD] ✗ Error:', err.message);
+            document.getElementById(cardId).innerHTML = `<div style="padding:16px;color:#f85149;font-size:12px;max-width:260px;">${err.message}</div>`;
+            wrap.querySelector('.vpd-stats').innerHTML = `<span style="color:#f85149;">⚠ ${err.message}</span>`;
+            toast('⚠ VPD: ' + err.message, '#f85149');
         });
     }
 
-    // ─── Scanner ──────────────────────────────────────────────────────────────
-    async function processBlock(block) {
-        if (block.dataset.vpd) return;
+    // ─── Image-first scanner ──────────────────────────────────────────────────
+    const processed = new WeakSet();
 
-        // Find all images in this block (no naturalWidth filter — they may not be loaded yet)
-        const allImgs = [...block.querySelectorAll('img')].filter(x =>
-            x.src && !x.src.includes('avatar') && !x.src.includes('emoji') &&
-            !x.src.includes('github.com/images') && x.src.startsWith('http')
+    function scanImages() {
+        // Collect ALL images on the page
+        const allImgs = [...document.querySelectorAll('img')].filter(img =>
+            img.src &&
+            img.complete &&
+            img.naturalWidth > 50 &&
+            img.naturalHeight > 50 &&
+            !img.src.includes('avatar') &&
+            !img.src.includes('emoji') &&
+            !img.src.includes('github.com/images') &&
+            !img.dataset.vpd
         );
 
-        if (allImgs.length < 2) return;
+        console.log(`[VPD] Found ${allImgs.length} candidate images on page`);
+        if (!allImgs.length) return;
 
-        console.log(`[VPD] Found ${allImgs.length} images, waiting for load…`);
-        block.dataset.vpd = 'loading';
+        // Group into pairs by common ancestor
+        const seen = new Set();
+        for (const img of allImgs) {
+            if (seen.has(img)) continue;
 
-        // Wait for ALL images to load
-        await Promise.all(allImgs.map(waitForImg));
+            // Walk up to find a container that has exactly 2+ images
+            let node = img.parentElement;
+            for (let depth = 0; depth < 8; depth++) {
+                if (!node) break;
+                const siblings = [...node.querySelectorAll('img')].filter(x =>
+                    x.complete && x.naturalWidth > 50 && !x.dataset.vpd && !x.src.includes('avatar')
+                );
+                if (siblings.length >= 2) {
+                    if (processed.has(node)) break;
+                    processed.add(node);
 
-        // Re-filter after load
-        const loaded = allImgs.filter(x => x.complete && x.naturalWidth > 10);
-        if (loaded.length < 2) {
-            console.log('[VPD] Images loaded but too small/failed');
-            block.dataset.vpd = 'skip';
-            return;
-        }
+                    const imgA = siblings[0], imgB = siblings[1];
+                    imgA.dataset.vpd = '1';
+                    imgB.dataset.vpd = '1';
+                    seen.add(imgA);
+                    seen.add(imgB);
 
-        // Try to identify before/after
-        const imgBefore = loaded[0];
-        const imgAfter = loaded[1];
+                    console.log(`[VPD] Pair found at depth ${depth}, ancestor: ${node.tagName}.${[...node.classList].join('.')}`);
+                    console.log(`[VPD]   Before: ${imgA.src.slice(0, 60)}`);
+                    console.log(`[VPD]   After:  ${imgB.src.slice(0, 60)}`);
 
-        console.log('[VPD] Injecting diff:', imgBefore.src.slice(0, 60), '|', imgAfter.src.slice(0, 60));
-        block.dataset.vpd = 'done';
-
-        // Find the best anchor to inject after
-        const anchor =
-            block.querySelector('.image-diff, .render-wrapper, [data-render-url], .js-render-blob-wrapper') ||
-            block.querySelector('.file-body, .data') ||
-            block.querySelector('td') ||
-            block.lastElementChild;
-
-        if (!anchor) { console.log('[VPD] No anchor found'); return; }
-        insertPanel(anchor, imgBefore.src, imgAfter.src);
-    }
-
-    function scan() {
-        const sels = [
-            '[data-details-container-group]',
-            '.file.js-details-container',
-            '.js-diff-container',
-            '.file'
-        ];
-        for (const s of sels) {
-            const blocks = document.querySelectorAll(s);
-            if (blocks.length) {
-                console.log(`[VPD] Scanning ${blocks.length} blocks via: ${s}`);
-                blocks.forEach(b => processBlock(b));
-                break;
+                    // Inject after the common ancestor or after imgB's parent
+                    const anchor = node;
+                    injectPanel(anchor, imgA.src, imgB.src);
+                    break;
+                }
+                node = node.parentElement;
             }
         }
     }
 
-    new MutationObserver(scan).observe(document.body, { childList: true, subtree: true });
-    [800, 2000, 4000, 8000, 15000].forEach(t => setTimeout(scan, t));
+    // Also try waiting for images to load if none are ready yet
+    function scanWithRetry(attempt = 0) {
+        const readyImgs = [...document.querySelectorAll('img')].filter(x =>
+            x.complete && x.naturalWidth > 50 && !x.src.includes('avatar')
+        );
+        console.log(`[VPD] Attempt ${attempt}: ${readyImgs.length} loaded imgs on page`);
+
+        if (readyImgs.length >= 2) {
+            scanImages();
+        } else if (attempt < 5) {
+            // No images loaded yet — retry
+            setTimeout(() => scanWithRetry(attempt + 1), 2000);
+        } else {
+            console.log('[VPD] Giving up after 5 attempts — no image pairs found');
+        }
+    }
+
+    new MutationObserver(() => {
+        // Only re-scan if new images appeared
+        const imgs = [...document.querySelectorAll('img')].filter(x => x.complete && x.naturalWidth > 50 && !x.dataset.vpd && !x.src.includes('avatar'));
+        if (imgs.length >= 2) scanImages();
+    }).observe(document.body, { childList: true, subtree: true });
+
+    [600, 1500, 3000, 6000].forEach(t => setTimeout(() => scanWithRetry(), t));
 
 })();
