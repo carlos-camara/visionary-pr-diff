@@ -55,8 +55,6 @@
         });
     };
 
-    let _isInternalSwitch = false;
-
     const setup3Up = () => {
         const fieldset = document.querySelector('fieldset, .view-modes fieldset');
         if (!fieldset) return;
@@ -65,7 +63,6 @@
         if (!fieldset.dataset.vpdObserved) {
             fieldset.dataset.vpdObserved = "true";
             fieldset.addEventListener('change', (e) => {
-                if (_isInternalSwitch) return; // Guard: ignore our own 2-up click
                 const val = e.target.value;
                 if (val === 'three-up') activate3Up();
                 else deactivate3Up();
@@ -114,46 +111,27 @@
         if (!view || view.dataset.vpdState === 'loading') return;
 
         const requestId = ++_currentRequestId;
-        console.log(`[VPD] Request ${requestId}: Starting...`);
+        console.log(`[VPD] Request ${requestId}: Starting (Passive Mode)...`);
         view.dataset.vpdState = 'loading';
 
-        // CRITICAL FIX (v39): Force GitHub to clean up any active native mode
-        // by programmatically clicking the "2-up" radio. GitHub doesn't know
-        // about our "three-up" value, so it won't clean up Swipe/Onion Skin
-        // on its own. We force 2-up first, wait for GitHub to clean up, then
-        // apply our layout on top.
-        const nativeRadio = document.querySelector('input[name="view-mode"][value="2-up"]');
-        if (nativeRadio && !nativeRadio.checked) {
-            _isInternalSwitch = true;
-            nativeRadio.click();
-            await new Promise(r => setTimeout(r, 150));
-            _isInternalSwitch = false;
-        }
-
-        // Re-query the view after GitHub's cleanup (the element may have changed)
-        const cleanView = document.querySelector('.view, .image-diff, .two-up');
-        const targetView = cleanView || view;
-
-        // Re-check our radio so the tab highlight is on 3-up
-        const ourRadio = document.querySelector('input[name="view-mode"][value="three-up"]');
-        if (ourRadio) ourRadio.checked = true;
-        syncTabSelection();
-
-        // Now apply our 3-up layout on top of the clean 2-up base
-        targetView.classList.add('three-up');
+        // PASSIVE ISOLATION: Don't remove native classes.
+        // Let CSS handle the neutralization via .three-up and .vpd-3up-active
+        view.classList.add('three-up');
         document.body.classList.add('vpd-3up-active');
-        targetView.dataset.vpdState = 'loading';
+
+        // Note: We don't manually toggle .selected on labels anymore.
+        // GitHub's native radio listener will handle that for us.
 
         // Anti-hang protection
         const hangTimer = setTimeout(() => {
-            if (targetView.dataset.vpdState === 'loading' && requestId === _currentRequestId) {
+            if (view.dataset.vpdState === 'loading' && requestId === _currentRequestId) {
                 console.warn(`[VPD] Request ${requestId} hung.`);
-                targetView.dataset.vpdState = 'idle';
+                view.dataset.vpdState = 'idle';
                 setStatus(diffShell, 'Sync Timeout. Please Retry.', true);
             }
         }, 20000);
 
-        let diffShell = targetView.querySelector('.vpd-diff-shell');
+        let diffShell = view.querySelector('.vpd-diff-shell');
         if (!diffShell) {
             diffShell = document.createElement('div');
             diffShell.className = 'shell vpd-diff-shell';
@@ -162,9 +140,9 @@
                 <div class="vpd-diff-frame"><div class="vpd-loader" style="padding:40px;text-align:center;font-size:12px;color:#8b949e;">Initialing...</div></div>
                 <div class="vpd-stats-card">...</div>
             `;
-            const firstNativeShell = targetView.querySelector('.shell');
+            const firstNativeShell = view.querySelector('.shell');
             if (firstNativeShell) firstNativeShell.after(diffShell);
-            else targetView.appendChild(diffShell);
+            else view.appendChild(diffShell);
         }
 
         setStatus(diffShell, 'Waiting for source images...');
@@ -175,12 +153,12 @@
             return el?.querySelector('img') || document.querySelector(`.js-image-diff img[alt*="${label}"]`);
         };
 
-        const imgA = findImg('Deleted') || findImg('Before') || targetView.querySelectorAll('img')[0];
-        const imgB = findImg('Added') || findImg('After') || targetView.querySelectorAll('img')[1];
+        const imgA = findImg('Deleted') || findImg('Before') || view.querySelectorAll('img')[0];
+        const imgB = findImg('Added') || findImg('After') || view.querySelectorAll('img')[1];
 
         if (!imgA || !imgB) {
             setStatus(diffShell, 'Error: Source images not found.', true);
-            targetView.dataset.vpdState = 'error';
+            view.dataset.vpdState = 'error';
             clearTimeout(hangTimer);
             return;
         }
@@ -196,7 +174,7 @@
         if (!imgA?.src || !imgB?.src || imgA.src.startsWith('data:')) {
             console.warn('[VPD] Invalid image sources.');
             setStatus(diffShell, 'Error: Invalid image sources.', true);
-            targetView.dataset.vpdState = 'idle';
+            view.dataset.vpdState = 'idle';
             clearTimeout(hangTimer);
             return;
         }
@@ -240,7 +218,7 @@
             diffShell.querySelector('.vpd-stats-card').innerHTML = `
                 Change: <b>${stats.pct}%</b> | Delta: <b>${stats.diff.toLocaleString()}</b> px
             `;
-            targetView.dataset.vpdState = 'active';
+            view.dataset.vpdState = 'active';
             console.log(`[VPD] Request ${requestId} complete.`);
         } catch (e) {
             clearTimeout(hangTimer);
@@ -258,7 +236,7 @@
                         </div>
                     `;
                 }
-                targetView.dataset.vpdState = 'error';
+                view.dataset.vpdState = 'error';
             }
         }
     };

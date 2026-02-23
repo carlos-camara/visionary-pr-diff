@@ -47,35 +47,39 @@
 }
 
 /* 
-   SHIELD MODE v38 — Nuclear Isolation
-   Hide EVERYTHING inside the view container that isn't a .shell.
-   Uses wildcard * instead of div to catch spans, imgs, custom elements.
+   SHIELD MODE (v36 Passive Isolation) 
+   We neutralize native GitHub diff elements WITHOUT removing their classes.
 */
-
-/* The container itself: clip any native overflow */
-body.vpd-3up-active .three-up {
-  overflow: hidden !important;
-}
-
-/* Hide ALL direct children that aren't shells */
-body.vpd-3up-active .three-up>*:not(.shell):not(.vpd-diff-shell) {
+body.vpd-3up-active .image-diff.three-up .handle,
+body.vpd-3up-active .image-diff.three-up .swipe-bar,
+body.vpd-3up-active .image-diff.three-up .onion-skin-slider,
+body.vpd-3up-active .image-diff.three-up .image-diff-swipe,
+body.vpd-3up-active .image-diff.three-up .image-diff-onion-skin {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
-  position: absolute !important;
-  width: 0 !important;
-  height: 0 !important;
 }
 
-/* Force native shells to behave as blocks in our 3-column grid */
-body.vpd-3up-active .three-up .shell {
+/* Force native shells to behave like blocks in our 3-column grid */
+body.vpd-3up-active .image-diff.three-up .shell {
   position: static !important;
   transform: none !important;
   display: block !important;
   width: auto !important;
   margin: 0 !important;
-  opacity: 1 !important;
+}
+
+body.vpd-3up-active .handle,
+body.vpd-3up-active .swipe-bar,
+body.vpd-3up-active .onion-skin-slider,
+body.vpd-3up-active .image-diff-swipe,
+body.vpd-3up-active .image-diff-onion-skin,
+body.vpd-3up-active .image-diff>div:not(.shell):not(.vpd-diff-shell) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
 
 /* Diff Container */
@@ -189,21 +193,20 @@ body.vpd-3up-active .three-up .shell .vpd-diff-frame {
   /* Highlights pop more */
 }
 
-/* Hide native mode drag handles */
-body.vpd-3up-active .js-drag-handle,
-body.vpd-3up-active .divider {
-  display: none !important;
-}
-
-/* Onion Skin: Force each image to be its own block — prevent stacking */
-body.vpd-3up-active .three-up .shell img {
+/* Fix for Onion Skin "ghost" images peaking through */
+body.vpd-3up-active .view.onion-skin .shell:nth-of-type(1)>img {
   position: relative !important;
-  top: auto !important;
-  left: auto !important;
+  top: 0 !important;
+  left: 0 !important;
   transform: none !important;
   opacity: 1 !important;
-  width: 100% !important;
-  height: auto !important;
+}
+
+/* Hide native mode gunk */
+body.vpd-3up-active .js-drag-handle,
+body.vpd-3up-active .handle,
+body.vpd-3up-active .divider {
+  display: none !important;
 }
 
 /* Metadata tweaks for 3-up */

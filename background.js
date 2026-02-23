@@ -14,7 +14,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 async function fetchImageRaw(url) {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), 10000);
+    const timeout = setTimeout(() => controller.abort(), 20000);
 
     try {
         console.log('[VPD-BG] Fetching:', url);
@@ -45,7 +45,7 @@ async function fetchImageRaw(url) {
         console.error('[VPD-BG] Error:', isTimeout ? 'Timeout' : error.message);
         return {
             success: false,
-            error: isTimeout ? 'Background fetch timed out (10s)' : error.message
+            error: isTimeout ? 'Background fetch timed out (20s)' : error.message
         };
     }
 }

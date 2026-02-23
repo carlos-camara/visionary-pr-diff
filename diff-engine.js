@@ -58,8 +58,8 @@ class VisionaryDiffEngine {
     static async fetchBytes(url) {
         return new Promise((resolve, reject) => {
             const timeout = setTimeout(() => {
-                reject(new Error('Fetch timeout (10s) for image bytes.'));
-            }, 10000);
+                reject(new Error('Fetch timeout (20s) for image bytes.'));
+            }, 20000);
 
             try {
                 console.log('[VPD] Requesting bytes for:', url);
