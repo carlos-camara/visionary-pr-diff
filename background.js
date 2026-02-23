@@ -13,14 +13,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 });
 
 async function fetchImageRaw(url) {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
     try {
-        console.log('[VPD-BG] Fetching raw:', url);
-        // Include credentials to handle private repos / session-gated images
-        // Use no-store to avoid getting a cached error page
+        console.log('[VPD-BG] Fetching:', url);
         const response = await fetch(url, {
             credentials: 'include',
-            cache: 'no-store'
+            cache: 'no-store',
+            signal: controller.signal
         });
+
+        clearTimeout(timeout);
 
         if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -28,19 +32,20 @@ async function fetchImageRaw(url) {
 
         const contentType = response.headers.get('Content-Type') || '';
         const buffer = await response.arrayBuffer();
-
-        // Convert ArrayBuffer to Array for sendMessage (Chrome structured clone handles this)
-        // Actually, Uint8Array is often better managed.
         const bytes = new Uint8Array(buffer);
 
-        // Structured clone in Chrome handles Uint8Array efficiently
         return {
             success: true,
-            bytes: Array.from(bytes), // Still using Array for max compatibility in older versions, but Uint8Array preferred
+            bytes: Array.from(bytes),
             contentType
         };
     } catch (error) {
-        console.error('[VPD-BG] Fetch error:', error);
-        return { success: false, error: error.message };
+        clearTimeout(timeout);
+        const isTimeout = error.name === 'AbortError';
+        console.error('[VPD-BG] Error:', isTimeout ? 'Timeout' : error.message);
+        return {
+            success: false,
+            error: isTimeout ? 'Background fetch timed out (10s)' : error.message
+        };
     }
 }

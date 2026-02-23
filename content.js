@@ -11,6 +11,22 @@
 
     console.log(`[VPD] v25 Init: ${window.location.hostname}`);
 
+    let _currentRequestId = 0;
+
+    const setStatus = (diffShell, text, isError = false) => {
+        const loader = diffShell?.querySelector('.vpd-loader');
+        if (loader) {
+            loader.innerHTML = isError
+                ? `<div style="color:#f85149; font-weight:600;">${text}</div><button onclick="window._vpdRetry()" style="margin-top:10px; background:#238636; color:white; border:none; padding:4px 12px; border-radius:4px; cursor:pointer;">Retry</button>`
+                : text;
+        }
+    };
+
+    window._vpdRetry = () => {
+        document.querySelectorAll('[data-vpd-state]').forEach(el => el.dataset.vpdState = 'idle');
+        activate3Up();
+    };
+
     const calculateStats = (ctx, w, h) => {
         if (!ctx || w === 0 || h === 0) return { diff: 0, pct: "0.00" };
         try {
@@ -32,9 +48,7 @@
         if (!fieldset) return;
 
         fieldset.querySelectorAll('label, .js-view-mode-item').forEach(l => {
-            const txt = l.textContent.trim();
-            if (txt === '2-up') l.style.display = 'none';
-            if ((txt === 'Swipe' || txt === 'Onion Skin') && !l.dataset.vpdObserved) {
+            if (!l.dataset.vpdObserved) {
                 l.dataset.vpdObserved = "true";
                 l.addEventListener('mousedown', () => deactivate3Up(), true);
             }
@@ -62,27 +76,28 @@
         if (img.complete && img.naturalWidth !== 0) return true;
         return new Promise((resolve) => {
             const timer = setTimeout(() => resolve(false), timeout);
-            img.addEventListener('load', () => { clearTimeout(timer); resolve(true); }, { once: true });
-            img.addEventListener('error', () => { clearTimeout(timer); resolve(false); }, { once: true });
+            const onFull = () => { clearTimeout(timer); resolve(true); };
+            img.addEventListener('load', onFull, { once: true });
+            img.addEventListener('error', onFull, { once: true });
         });
     };
 
     const activate3Up = async () => {
         const view = document.querySelector('.view, .image-diff, .two-up, .swipe, .onion-skin');
-        if (!view || view.dataset.vpdState === 'active' || view.dataset.vpdState === 'loading') return;
+        if (!view || view.dataset.vpdState === 'loading') return;
 
-        console.log('[VPD] Rendering 3-up view...');
+        const requestId = ++_currentRequestId;
+        console.log(`[VPD] Request ${requestId}: Starting...`);
         view.dataset.vpdState = 'loading';
 
         // Anti-hang protection
         const hangTimer = setTimeout(() => {
-            if (view.dataset.vpdState === 'loading') {
-                console.warn('[VPD] Render hang detected, resetting state.');
+            if (view.dataset.vpdState === 'loading' && requestId === _currentRequestId) {
+                console.warn(`[VPD] Request ${requestId} hung.`);
                 view.dataset.vpdState = 'idle';
-                const loader = view.querySelector('.vpd-loader');
-                if (loader) loader.innerHTML = `<span style="color:#f85149">Sync Timeout. Click 3-up to retry.</span>`;
+                setStatus(diffShell, 'Sync Timeout. Please Retry.', true);
             }
-        }, 15000);
+        }, 20000);
 
         document.querySelectorAll('.js-view-mode-item, .vpd-3up-tab').forEach(t => t.classList.remove('selected'));
         const tab = document.querySelector('.vpd-3up-tab');
@@ -91,53 +106,65 @@
         document.body.classList.add('vpd-3up-active');
         view.classList.add('three-up');
 
-        const shells = [...view.querySelectorAll('.shell')].filter(s => !s.classList.contains('vpd-diff-shell'));
-        if (shells.length < 2) {
-            view.dataset.vpdState = 'error';
-            return;
-        }
-
-        const imgA = shells[0].querySelector('img');
-        const imgB = shells[1].querySelector('img');
-
-        // Ensure images are ready
-        const ready = await Promise.all([waitForImage(imgA), waitForImage(imgB)]);
-        if (!ready[0] || !ready[1]) {
-            console.warn('[VPD] Target images failed to signal readiness.');
-        }
-
-        if (!imgA?.src || !imgB?.src || imgA.src.startsWith('data:')) {
-            console.warn('[VPD] Invalid image sources.');
-            view.dataset.vpdState = 'idle';
-            clearTimeout(hangTimer);
-            return;
-        }
-
         let diffShell = view.querySelector('.vpd-diff-shell');
         if (!diffShell) {
             diffShell = document.createElement('div');
             diffShell.className = 'shell vpd-diff-shell';
             diffShell.innerHTML = `
                 <span class="frame-label">Visionary Diff</span>
-                <div class="vpd-diff-frame">
-                    <div class="vpd-loader" style="padding:40px;text-align:center;font-size:12px;color:#8b949e;">
-                        Syncing pixels...
-                    </div>
-                </div>
-                <div class="vpd-stats-card">Analyzing...</div>
+                <div class="vpd-diff-frame"><div class="vpd-loader" style="padding:40px;text-align:center;font-size:12px;color:#8b949e;">Initialing...</div></div>
+                <div class="vpd-stats-card">...</div>
             `;
-            shells[0].after(diffShell);
+            const firstNativeShell = view.querySelector('.shell');
+            if (firstNativeShell) firstNativeShell.after(diffShell);
+            else view.appendChild(diffShell);
+        }
+
+        setStatus(diffShell, 'Waiting for source images...');
+
+        // Resilient Image Discovery
+        const findImg = (label) => {
+            const el = [...document.querySelectorAll('.shell')].find(s => s.textContent.toLowerCase().includes(label.toLowerCase()));
+            return el?.querySelector('img') || document.querySelector(`.js-image-diff img[alt*="${label}"]`);
+        };
+
+        const imgA = findImg('Deleted') || findImg('Before') || view.querySelectorAll('img')[0];
+        const imgB = findImg('Added') || findImg('After') || view.querySelectorAll('img')[1];
+
+        if (!imgA || !imgB) {
+            setStatus(diffShell, 'Error: Source images not found.', true);
+            view.dataset.vpdState = 'error';
+            clearTimeout(hangTimer);
+            return;
+        }
+
+        // Ensure images are ready
+        const ready = await Promise.all([waitForImage(imgA), waitForImage(imgB)]);
+        if (requestId !== _currentRequestId) return;
+
+        if (!ready[0] || !ready[1]) {
+            console.warn('[VPD] Target images failed to signal readiness.');
+        }
+
+        if (!imgA?.src || !imgB?.src || imgA.src.startsWith('data:')) {
+            console.warn('[VPD] Invalid image sources.');
+            setStatus(diffShell, 'Error: Invalid image sources.', true);
+            view.dataset.vpdState = 'idle';
+            clearTimeout(hangTimer);
+            return;
         }
 
         try {
-            if (!chrome.runtime?.id) throw new Error('Extension updated. Please refresh GitHub.');
+            if (!chrome.runtime?.id) throw new Error('Refresh GitHub to re-connect.');
             if (!window.VisionaryDiffEngine) throw new Error('Engine missing');
 
+            setStatus(diffShell, 'Streaming pixels...');
             const urlA = new URL(imgA.getAttribute('src'), window.location.href).href;
             const urlB = new URL(imgB.getAttribute('src'), window.location.href).href;
 
             const { canvas, imgB: decodedImgB } = await window.VisionaryDiffEngine.compareImages(urlA, urlB);
 
+            if (requestId !== _currentRequestId) return;
             clearTimeout(hangTimer); // Success!
 
             // Track for cleanup
@@ -161,27 +188,30 @@
             canvas.className = 'vpd-canvas-main';
             frame.appendChild(canvas);
 
+            setStatus(diffShell, 'Calculating stats...');
             const stats = calculateStats(canvas.getContext('2d'), canvas.width, canvas.height);
             diffShell.querySelector('.vpd-stats-card').innerHTML = `
                 Change: <b>${stats.pct}%</b> | Delta: <b>${stats.diff.toLocaleString()}</b> px
             `;
-            view.dataset.vpdState = 'active';
+            console.log(`[VPD] Request ${requestId} complete.`);
         } catch (e) {
             clearTimeout(hangTimer);
-            console.error('[VPD]', e);
-            const frame = diffShell.querySelector('.vpd-diff-frame');
-            if (frame) {
+            if (requestId === _currentRequestId) {
+                console.error(`[VPD] Request ${requestId} failed:`, e);
                 const isContextError = e.message.includes('refresh');
-                frame.innerHTML = `
-                    <div style="padding:40px; text-align:center;">
-                        <div style="color:#f85149; font-size:13px; margin-bottom:10px; font-weight:600;">
-                            ${e.message}
+                const frame = diffShell.querySelector('.vpd-diff-frame');
+                if (frame) {
+                    frame.innerHTML = `
+                        <div style="padding:40px; text-align:center;">
+                            <div style="color:#f85149; font-size:13px; margin-bottom:10px; font-weight:600;">
+                                ${e.message}
+                            </div>
+                            ${isContextError ? '<button onclick="window.location.reload()" style="background:#238636; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Refrescar Página</button>' : ''}
                         </div>
-                        ${isContextError ? '<button onclick="window.location.reload()" style="background:#238636; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Refrescar Página</button>' : ''}
-                    </div>
-                `;
+                    `;
+                }
+                view.dataset.vpdState = 'error';
             }
-            view.dataset.vpdState = 'error';
         }
     };
 
