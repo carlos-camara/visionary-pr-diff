@@ -57,9 +57,7 @@
 */
 body.vpd-3up-active .image-diff.three-up .handle,
 body.vpd-3up-active .image-diff.three-up .swipe-bar,
-body.vpd-3up-active .image-diff.three-up .onion-skin-slider,
-body.vpd-3up-active .image-diff.three-up .image-diff-swipe,
-body.vpd-3up-active .image-diff.three-up .image-diff-onion-skin {
+body.vpd-3up-active .image-diff.three-up .image-diff-swipe {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
@@ -77,9 +75,7 @@ body.vpd-3up-active .image-diff.three-up .shell {
 
 body.vpd-3up-active .handle,
 body.vpd-3up-active .swipe-bar,
-body.vpd-3up-active .onion-skin-slider,
 body.vpd-3up-active .image-diff-swipe,
-body.vpd-3up-active .image-diff-onion-skin,
 body.vpd-3up-active .image-diff>div:not(.shell):not(.vpd-diff-shell) {
   display: none !important;
   visibility: hidden !important;
@@ -198,13 +194,10 @@ body.vpd-3up-active .three-up .shell .vpd-diff-frame {
   /* Highlights pop more */
 }
 
-/* Fix for Onion Skin "ghost" images peaking through */
-body.vpd-3up-active .view.onion-skin .shell:nth-of-type(1)>img {
-  position: relative !important;
-  top: 0 !important;
-  left: 0 !important;
-  transform: none !important;
-  opacity: 1 !important;
+/* Hide native Onion Skin tab */
+label:has(input[value="onion-skin"]),
+.js-view-mode-item:has(input[value="onion-skin"]) {
+  display: none !important;
 }
 
 /* Hide native mode gunk */

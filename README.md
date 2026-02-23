@@ -19,6 +19,12 @@
 
 ---
 
+## 🎬 Live Demonstration
+
+![Visionary PR Diff in Action](demo.webp)
+
+---
+
 ## ⚙️ How It Works
 
 1. **DOM Observation**: The engine monitors GitHub's "Files changed" section for image modifications.

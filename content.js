@@ -107,7 +107,7 @@
     };
 
     const activate3Up = async () => {
-        const view = document.querySelector('.view, .image-diff, .two-up, .swipe, .onion-skin');
+        const view = document.querySelector('.view, .image-diff, .two-up, .swipe');
         if (!view || view.dataset.vpdState === 'loading') return;
 
         const requestId = ++_currentRequestId;
