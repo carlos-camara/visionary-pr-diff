@@ -2,33 +2,34 @@
     "manifest_version": 3,
     "name": "Visionary PR Diff",
     "version": "1.0.0",
-    "description": "Advanced pixel-level image regression analysis directly within GitHub Pull Requests.",
+    "description": "Advanced pixel-level regression analysis.",
     "permissions": [
         "storage"
     ],
-    "host_permissions": [
-        "https://github.com/*"
-    ],
-    "action": {
-        "default_popup": "popup.html",
-        "default_icon": {
-            "16": "icons/icon16.png",
-            "48": "icons/icon48.png",
-            "128": "icons/icon128.png"
-        }
+    "background": {
+        "service_worker": "background.js"
     },
+    "host_permissions": [
+        "https://github.com/*",
+        "https://*.githubusercontent.com/*"
+    ],
     "content_scripts": [
         {
             "matches": [
-                "https://github.com/*"
+                "https://github.com/*",
+                "https://*.githubusercontent.com/*",
+                "https://viewscreen.githubusercontent.com/*"
             ],
             "js": [
-                "content.js",
-                "diff-engine.js"
+                "diff-engine.js",
+                "content.js"
             ],
             "css": [
                 "styles.css"
-            ]
+            ],
+            "all_frames": true,
+            "match_about_blank": true,
+            "run_at": "document_end"
         }
     ],
     "icons": {
