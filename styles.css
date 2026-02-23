@@ -47,17 +47,27 @@
 }
 
 /* 
-   SHIELD MODE (v37 — covers Onion Skin + Swipe containers)
-   We neutralize native GitHub diff modes WITHOUT removing their classes.
-   GitHub may keep .onion-skin or .swipe on the view container, so we
-   target both .image-diff.three-up AND any .three-up variant.
+   SHIELD MODE (v38 — Nuclear Isolation)
+   Hides ALL native GitHub diff content when 3-up is active.
+   Targets both children AND siblings of the view container.
 */
-body.vpd-3up-active .three-up .handle,
-body.vpd-3up-active .three-up .swipe-bar,
-body.vpd-3up-active .three-up .onion-skin-slider,
-body.vpd-3up-active .three-up .image-diff-swipe,
-body.vpd-3up-active .three-up .image-diff-onion-skin,
-body.vpd-3up-active .three-up>div:not(.shell):not(.vpd-diff-shell) {
+
+/* Hide EVERYTHING inside .three-up that is NOT our shells */
+body.vpd-3up-active .three-up>*:not(.shell):not(.vpd-diff-shell) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Also target by known class names (belt + suspenders) */
+body.vpd-3up-active .handle,
+body.vpd-3up-active .swipe-bar,
+body.vpd-3up-active .onion-skin-slider,
+body.vpd-3up-active .image-diff-swipe,
+body.vpd-3up-active .image-diff-onion-skin,
+body.vpd-3up-active .js-stacked-area,
+body.vpd-3up-active .two-up-content {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
@@ -65,7 +75,7 @@ body.vpd-3up-active .three-up>div:not(.shell):not(.vpd-diff-shell) {
 }
 
 /* Force native shells to behave like blocks in our 3-column grid.
-   This covers BOTH Swipe (.image-diff) and Onion Skin (.onion-skin) containers. */
+   Covers Swipe, Onion Skin, 2-up containers. */
 body.vpd-3up-active .three-up .shell {
   position: static !important;
   transform: none !important;
@@ -74,6 +84,18 @@ body.vpd-3up-active .three-up .shell {
   margin: 0 !important;
   opacity: 1 !important;
 }
+
+/* Force images within shells to not stack (Onion Skin stacks them by default) */
+body.vpd-3up-active .three-up .shell img {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  opacity: 1 !important;
+  width: 100% !important;
+  height: auto !important;
+}
+
 
 /* Diff Container */
 .visionary-diff-container {

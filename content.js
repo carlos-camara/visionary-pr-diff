@@ -119,8 +119,14 @@
         view.classList.add('three-up');
         document.body.classList.add('vpd-3up-active');
 
-        // Note: We don't manually toggle .selected on labels anymore.
-        // GitHub's native radio listener will handle that for us.
+        // JS-level cleanup: hide ALL non-shell direct children of the view container.
+        // This catches any Onion Skin composites, sliders, handles regardless of their class name.
+        [...view.children].forEach(el => {
+            if (!el.classList.contains('shell') && !el.classList.contains('vpd-diff-shell')) {
+                el.dataset.vpdHidden = 'true';
+                el.style.setProperty('display', 'none', 'important');
+            }
+        });
 
         // Anti-hang protection
         const hangTimer = setTimeout(() => {
@@ -249,6 +255,12 @@
             el.classList.remove('three-up');
         });
         document.querySelectorAll('.vpd-diff-shell').forEach(s => s.remove());
+
+        // Restore any elements we explicitly hid in JS
+        document.querySelectorAll('[data-vpd-hidden="true"]').forEach(el => {
+            delete el.dataset.vpdHidden;
+            el.style.removeProperty('display');
+        });
 
         // Cleanup ObjectURLs
         if (window._vpdUrls) {
