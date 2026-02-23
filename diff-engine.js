@@ -56,8 +56,27 @@ class VisionaryDiffEngine {
     }
 
     static async fetchBytes(url) {
-        return new Promise((resolve) => {
-            chrome.runtime.sendMessage({ type: 'FETCH_IMAGE_RAW', url }, resolve);
+        return new Promise((resolve, reject) => {
+            try {
+                chrome.runtime.sendMessage({ type: 'FETCH_IMAGE_RAW', url }, (response) => {
+                    if (chrome.runtime.lastError) {
+                        const err = chrome.runtime.lastError.message;
+                        if (err.includes('context invalidated')) {
+                            reject(new Error('Extension updated. Please refresh GitHub.'));
+                        } else {
+                            reject(new Error(err));
+                        }
+                    } else {
+                        resolve(response);
+                    }
+                });
+            } catch (e) {
+                if (e.message.includes('context invalidated')) {
+                    reject(new Error('Extension updated. Please refresh GitHub.'));
+                } else {
+                    reject(e);
+                }
+            }
         });
     }
 

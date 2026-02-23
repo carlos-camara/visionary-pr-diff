@@ -102,6 +102,7 @@
         }
 
         try {
+            if (!chrome.runtime?.id) throw new Error('Extension updated. Please refresh GitHub.');
             if (!window.VisionaryDiffEngine) throw new Error('Engine missing');
 
             // Resolve potentially relative URLs to absolute
@@ -139,7 +140,17 @@
         } catch (e) {
             console.error('[VPD]', e);
             const frame = diffShell.querySelector('.vpd-diff-frame');
-            if (frame) frame.innerHTML = `<div style="padding:10px;color:#f85149;font-size:10px;">Render Error: ${e.message}</div>`;
+            if (frame) {
+                const isContextError = e.message.includes('refresh');
+                frame.innerHTML = `
+                    <div style="padding:40px; text-align:center;">
+                        <div style="color:#f85149; font-size:13px; margin-bottom:10px; font-weight:600;">
+                            ${e.message}
+                        </div>
+                        ${isContextError ? '<button onclick="window.location.reload()" style="background:#238636; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Refrescar Página</button>' : ''}
+                    </div>
+                `;
+            }
             view.dataset.vpdState = 'error';
         }
     };
