@@ -3,6 +3,11 @@
  * Glassmorphism and Elegant UI for GitHub Integration
  */
 
+/* Visionary Diff label */
+.vpd-diff-shell .frame-label {
+  color: #58a6ff !important;
+}
+
 .visionary-btn {
   background: linear-gradient(135deg, #24292e 0%, #1a1e22 100%) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
