@@ -138,21 +138,23 @@ body.vpd-3up-active .three-up .shell .vpd-diff-frame {
   top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
-  width: 100% !important;
-  height: 100% !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
   object-fit: contain !important;
 }
 
 .vpd-diff-bg {
-  opacity: 0.6 !important;
-  /* Brighter ghost for context */
+  opacity: 0.7 !important;
+  /* Brighter for context */
   z-index: 1;
 }
 
 .vpd-canvas-main {
   z-index: 2;
   mix-blend-mode: screen;
-  /* Blend magenta onto the ghost better */
+  /* Highlights pop more */
 }
 
 /* Fix for Onion Skin "ghost" images peaking through */

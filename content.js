@@ -104,15 +104,20 @@
 
             const { canvas, imgB: decodedImgB } = await window.VisionaryDiffEngine.compareImages(urlA, urlB);
 
+            // Track for cleanup
+            window._vpdUrls = window._vpdUrls || [];
+            if (decodedImgB.src.startsWith('blob:')) window._vpdUrls.push(decodedImgB.src);
+
             const frame = diffShell.querySelector('.vpd-diff-frame');
             frame.innerHTML = '';
 
-            // Fix frame aspect ratio to match source
+            // Sync aspect ratio
             const aspect = canvas.width / canvas.height;
             frame.style.aspectRatio = aspect.toString();
 
             // Background Ghost
-            const ghost = decodedImgB.cloneNode();
+            const ghost = document.createElement('img');
+            ghost.src = decodedImgB.src;
             ghost.className = 'vpd-diff-bg';
             frame.appendChild(ghost);
 
@@ -142,6 +147,12 @@
         document.querySelectorAll('.vpd-diff-shell').forEach(s => s.remove());
         const tab = document.querySelector('.vpd-3up-tab');
         if (tab) tab.classList.remove('selected');
+
+        // Cleanup ObjectURLs
+        if (window._vpdUrls) {
+            window._vpdUrls.forEach(url => URL.revokeObjectURL(url));
+            window._vpdUrls = [];
+        }
     };
 
     setInterval(setup3Up, 1000);

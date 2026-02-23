@@ -69,19 +69,16 @@ class VisionaryDiffEngine {
 
         const blob = new Blob([uint8], { type: contentType });
         const objectUrl = URL.createObjectURL(blob);
-        try {
-            return await new Promise((resolve, reject) => {
-                const img = new Image();
-                img.onload = () => {
-                    if (img.naturalWidth === 0) reject(new Error('Image decoded but has 0 width'));
-                    else resolve(img);
-                };
-                img.onerror = () => reject(new Error('Browser failed to decode image data'));
-                img.src = objectUrl;
-            });
-        } finally {
-            URL.revokeObjectURL(objectUrl);
-        }
+
+        return await new Promise((resolve, reject) => {
+            const img = new Image();
+            img.onload = () => {
+                if (img.naturalWidth === 0) reject(new Error('Image decoded but has 0 width'));
+                else resolve(img);
+            };
+            img.onerror = () => reject(new Error('Browser failed to decode image data'));
+            img.src = objectUrl;
+        });
     }
 
     static createCanvas(width, height) {
