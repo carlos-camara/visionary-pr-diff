@@ -58,12 +58,31 @@
         }
     };
 
+    const waitForImage = async (img, timeout = 5000) => {
+        if (img.complete && img.naturalWidth !== 0) return true;
+        return new Promise((resolve) => {
+            const timer = setTimeout(() => resolve(false), timeout);
+            img.addEventListener('load', () => { clearTimeout(timer); resolve(true); }, { once: true });
+            img.addEventListener('error', () => { clearTimeout(timer); resolve(false); }, { once: true });
+        });
+    };
+
     const activate3Up = async () => {
         const view = document.querySelector('.view, .image-diff, .two-up, .swipe, .onion-skin');
         if (!view || view.dataset.vpdState === 'active' || view.dataset.vpdState === 'loading') return;
 
-        console.log('[VPD] v25: Rendering diff...');
+        console.log('[VPD] Rendering 3-up view...');
         view.dataset.vpdState = 'loading';
+
+        // Anti-hang protection
+        const hangTimer = setTimeout(() => {
+            if (view.dataset.vpdState === 'loading') {
+                console.warn('[VPD] Render hang detected, resetting state.');
+                view.dataset.vpdState = 'idle';
+                const loader = view.querySelector('.vpd-loader');
+                if (loader) loader.innerHTML = `<span style="color:#f85149">Sync Timeout. Click 3-up to retry.</span>`;
+            }
+        }, 15000);
 
         document.querySelectorAll('.js-view-mode-item, .vpd-3up-tab').forEach(t => t.classList.remove('selected'));
         const tab = document.querySelector('.vpd-3up-tab');
@@ -73,15 +92,24 @@
         view.classList.add('three-up');
 
         const shells = [...view.querySelectorAll('.shell')].filter(s => !s.classList.contains('vpd-diff-shell'));
-        if (shells.length < 2) return;
+        if (shells.length < 2) {
+            view.dataset.vpdState = 'error';
+            return;
+        }
 
         const imgA = shells[0].querySelector('img');
         const imgB = shells[1].querySelector('img');
 
-        // Wait for images to have a src and be somewhat ready
-        if (!imgA?.src || !imgB?.src || imgA.src.startsWith('data:') || imgB.src.startsWith('data:')) {
-            console.warn('[VPD] Images not ready or invalid SRCS', { a: imgA?.src, b: imgB?.src });
+        // Ensure images are ready
+        const ready = await Promise.all([waitForImage(imgA), waitForImage(imgB)]);
+        if (!ready[0] || !ready[1]) {
+            console.warn('[VPD] Target images failed to signal readiness.');
+        }
+
+        if (!imgA?.src || !imgB?.src || imgA.src.startsWith('data:')) {
+            console.warn('[VPD] Invalid image sources.');
             view.dataset.vpdState = 'idle';
+            clearTimeout(hangTimer);
             return;
         }
 
@@ -92,7 +120,7 @@
             diffShell.innerHTML = `
                 <span class="frame-label">Visionary Diff</span>
                 <div class="vpd-diff-frame">
-                    <div class="vpd-loader" style="padding:40px;font-size:12px;color:#8b949e;text-align:center;">
+                    <div class="vpd-loader" style="padding:40px;text-align:center;font-size:12px;color:#8b949e;">
                         Syncing pixels...
                     </div>
                 </div>
@@ -105,11 +133,12 @@
             if (!chrome.runtime?.id) throw new Error('Extension updated. Please refresh GitHub.');
             if (!window.VisionaryDiffEngine) throw new Error('Engine missing');
 
-            // Resolve potentially relative URLs to absolute
             const urlA = new URL(imgA.getAttribute('src'), window.location.href).href;
             const urlB = new URL(imgB.getAttribute('src'), window.location.href).href;
 
             const { canvas, imgB: decodedImgB } = await window.VisionaryDiffEngine.compareImages(urlA, urlB);
+
+            clearTimeout(hangTimer); // Success!
 
             // Track for cleanup
             window._vpdUrls = window._vpdUrls || [];
@@ -138,6 +167,7 @@
             `;
             view.dataset.vpdState = 'active';
         } catch (e) {
+            clearTimeout(hangTimer);
             console.error('[VPD]', e);
             const frame = diffShell.querySelector('.vpd-diff-frame');
             if (frame) {

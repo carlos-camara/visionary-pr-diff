@@ -57,8 +57,14 @@ class VisionaryDiffEngine {
 
     static async fetchBytes(url) {
         return new Promise((resolve, reject) => {
+            const timeout = setTimeout(() => {
+                reject(new Error('Fetch timeout (10s) for image bytes.'));
+            }, 10000);
+
             try {
+                console.log('[VPD] Requesting bytes for:', url);
                 chrome.runtime.sendMessage({ type: 'FETCH_IMAGE_RAW', url }, (response) => {
+                    clearTimeout(timeout);
                     if (chrome.runtime.lastError) {
                         const err = chrome.runtime.lastError.message;
                         if (err.includes('context invalidated')) {
@@ -66,11 +72,14 @@ class VisionaryDiffEngine {
                         } else {
                             reject(new Error(err));
                         }
+                    } else if (response && response.success === false) {
+                        reject(new Error(response.error || 'Unknown proxy error'));
                     } else {
                         resolve(response);
                     }
                 });
             } catch (e) {
+                clearTimeout(timeout);
                 if (e.message.includes('context invalidated')) {
                     reject(new Error('Extension updated. Please refresh GitHub.'));
                 } else {
