@@ -47,32 +47,33 @@
         const fieldset = document.querySelector('fieldset, .view-modes fieldset');
         if (!fieldset) return;
 
-        fieldset.querySelectorAll('label, .js-view-mode-item').forEach(l => {
-            if (!l.dataset.vpdObserved) {
-                l.dataset.vpdObserved = "true";
-                // Only clean our UI when moving back to native modes
-                l.addEventListener('click', (e) => {
-                    const is3UpTab = l.classList.contains('vpd-3up-tab');
-                    if (!is3UpTab) deactivate3Up();
-                });
-            }
-        });
+        // 1. Hook into native radio changes for perfect sync
+        if (!fieldset.dataset.vpdObserved) {
+            fieldset.dataset.vpdObserved = "true";
+            fieldset.addEventListener('change', (e) => {
+                const val = e.target.value;
+                if (val === 'three-up') activate3Up();
+                else deactivate3Up();
+            });
+        }
 
         if (fieldset.querySelector('.vpd-3up-tab')) return;
 
+        // 2. Add our tab as a native radio item
         const tab = document.createElement('label');
         tab.className = 'js-view-mode-item vpd-3up-tab';
         tab.innerHTML = '<input type="radio" value="three-up" name="view-mode"> 3-up';
         fieldset.appendChild(tab);
 
-        tab.addEventListener('click', (e) => {
-            e.preventDefault();
-            activate3Up();
-        });
-
         if (!window._vpdAutoTriggered) {
             window._vpdAutoTriggered = true;
-            setTimeout(activate3Up, 500);
+            setTimeout(() => {
+                const radio = tab.querySelector('input');
+                if (radio) {
+                    radio.checked = true;
+                    activate3Up();
+                }
+            }, 500);
         }
     };
 
@@ -94,15 +95,13 @@
         console.log(`[VPD] Request ${requestId}: Starting...`);
         view.dataset.vpdState = 'loading';
 
-        // 1. NEUTRALIZE NATIVE MODES
+        // 3. FORCE CLEAN SLATE
         view.classList.remove('two-up', 'swipe', 'onion-skin');
-        document.body.classList.add('vpd-3up-active');
         view.classList.add('three-up');
+        document.body.classList.add('vpd-3up-active');
 
-        // 2. TAB SELECTION
-        document.querySelectorAll('.js-view-mode-item, .vpd-3up-tab').forEach(t => t.classList.remove('selected'));
-        const tab = document.querySelector('.vpd-3up-tab');
-        if (tab) tab.classList.add('selected');
+        // Note: We don't manually toggle .selected on labels anymore.
+        // GitHub's native radio listener will handle that for us.
 
         // Anti-hang protection
         const hangTimer = setTimeout(() => {
