@@ -81,16 +81,16 @@
 
         let diffShell = view.querySelector('.vpd-diff-shell');
         if (!diffShell) {
-            diffShell = document.createElement('span');
+            diffShell = document.createElement('div');
             diffShell.className = 'shell vpd-diff-shell';
             diffShell.innerHTML = `
                 <span class="frame-label">Visionary Diff</span>
-                <span class="vpd-diff-frame">
-                    <div class="vpd-loader" style="padding:20px;font-size:11px;color:#8b949e;text-align:center;">
+                <div class="vpd-diff-frame">
+                    <div class="vpd-loader" style="padding:40px;font-size:12px;color:#8b949e;text-align:center;">
                         Syncing pixels...
                     </div>
-                </span>
-                <div class="vpd-stats-card" style="font-size:10px;text-align:center;">Analyzing...</div>
+                </div>
+                <div class="vpd-stats-card">Analyzing...</div>
             `;
             shells[0].after(diffShell);
         }

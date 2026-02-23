@@ -123,10 +123,11 @@ body.vpd-3up-active .three-up .shell .vpd-diff-frame {
 
 /* Diff Frame Container */
 .vpd-diff-frame {
+  display: block !important;
+  /* CRITICAL: honor aspect-ratio */
   background: #0d1117 !important;
   position: relative !important;
   overflow: hidden !important;
-  aspect-ratio: auto;
   min-height: 100px;
 }
 
@@ -134,24 +135,24 @@ body.vpd-3up-active .three-up .shell .vpd-diff-frame {
 .vpd-diff-frame .vpd-canvas-main,
 .vpd-diff-frame .vpd-diff-bg {
   position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
   width: 100% !important;
   height: 100% !important;
   object-fit: contain !important;
-  /* MATCH THE NATIVE IMG BEHAVIOR */
 }
 
 .vpd-diff-bg {
-  opacity: 0.4 !important;
-  /* Increased visibility */
+  opacity: 0.6 !important;
+  /* Brighter ghost for context */
   z-index: 1;
 }
 
 .vpd-canvas-main {
   z-index: 2;
-  filter: drop-shadow(0 0 2px #ff00ff);
-  /* Make diff pop */
+  mix-blend-mode: screen;
+  /* Blend magenta onto the ghost better */
 }
 
 /* Fix for Onion Skin "ghost" images peaking through */
