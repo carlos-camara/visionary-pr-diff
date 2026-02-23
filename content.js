@@ -119,16 +119,8 @@
         view.classList.add('three-up');
         document.body.classList.add('vpd-3up-active');
 
-        // v37: PROACTIVE SANITIZATION
-        // Reset inline styles that GitHub might have injected for Onion Skin
-        view.style.opacity = '';
-        view.style.filter = '';
-        view.querySelectorAll('.shell, img').forEach(el => {
-            el.style.opacity = '';
-            el.style.filter = '';
-            el.style.transform = '';
-            el.style.position = '';
-        });
+        // Note: We don't manually toggle .selected on labels anymore.
+        // GitHub's native radio listener will handle that for us.
 
         // Anti-hang protection
         const hangTimer = setTimeout(() => {

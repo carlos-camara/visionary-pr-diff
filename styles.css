@@ -47,40 +47,32 @@
 }
 
 /* 
-   IRONCLAD ISOLATION (v37)
-   Total neutralization of Onion Skin and Swipe artifacts.
+   SHIELD MODE (v37 — covers Onion Skin + Swipe containers)
+   We neutralize native GitHub diff modes WITHOUT removing their classes.
+   GitHub may keep .onion-skin or .swipe on the view container, so we
+   target both .image-diff.three-up AND any .three-up variant.
 */
-body.vpd-3up-active .image-diff.three-up .handle,
-body.vpd-3up-active .image-diff.three-up .swipe-bar,
-body.vpd-3up-active .image-diff.three-up .onion-skin-slider,
-body.vpd-3up-active .image-diff.three-up .image-diff-swipe,
-body.vpd-3up-active .image-diff.three-up .image-diff-onion-skin {
+body.vpd-3up-active .three-up .handle,
+body.vpd-3up-active .three-up .swipe-bar,
+body.vpd-3up-active .three-up .onion-skin-slider,
+body.vpd-3up-active .three-up .image-diff-swipe,
+body.vpd-3up-active .three-up .image-diff-onion-skin,
+body.vpd-3up-active .three-up>div:not(.shell):not(.vpd-diff-shell) {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
 }
 
-/* Force native shells to behave like 100% opaque blocks in our grid */
-body.vpd-3up-active .image-diff.three-up .shell {
+/* Force native shells to behave like blocks in our 3-column grid.
+   This covers BOTH Swipe (.image-diff) and Onion Skin (.onion-skin) containers. */
+body.vpd-3up-active .three-up .shell {
   position: static !important;
   transform: none !important;
   display: block !important;
   width: auto !important;
   margin: 0 !important;
   opacity: 1 !important;
-  filter: none !important;
-  z-index: auto !important;
-  mix-blend-mode: normal !important;
-}
-
-body.vpd-3up-active .image-diff.three-up .shell img {
-  opacity: 1 !important;
-  filter: none !important;
-  display: block !important;
-  position: relative !important;
-  top: 0 !important;
-  left: 0 !important;
 }
 
 /* Diff Container */
@@ -194,20 +186,21 @@ body.vpd-3up-active .three-up .shell .vpd-diff-frame {
   /* Highlights pop more */
 }
 
-/* Fix for Onion Skin "ghost" images peaking through */
-body.vpd-3up-active .view.onion-skin .shell:nth-of-type(1)>img {
-  position: relative !important;
-  top: 0 !important;
-  left: 0 !important;
-  transform: none !important;
-  opacity: 1 !important;
-}
-
-/* Hide native mode gunk */
+/* Hide native mode drag handles */
 body.vpd-3up-active .js-drag-handle,
-body.vpd-3up-active .handle,
 body.vpd-3up-active .divider {
   display: none !important;
+}
+
+/* Onion Skin: Force each image to be its own block — prevent stacking */
+body.vpd-3up-active .three-up .shell img {
+  position: relative !important;
+  top: auto !important;
+  left: auto !important;
+  transform: none !important;
+  opacity: 1 !important;
+  width: 100% !important;
+  height: auto !important;
 }
 
 /* Metadata tweaks for 3-up */
