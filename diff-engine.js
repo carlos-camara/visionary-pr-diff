@@ -49,7 +49,9 @@ class VisionaryDiffEngine {
             }
         }
 
-        ctxDiff.putImageData(diffImgData, 0, 0);
+        if (width === 0 || height === 0) throw new Error('Invalid image dimensions (0x0)');
+
+        ctxDiff.putImageData(diffImgData, 0, 0, 0, 0, width, height);
         return { canvas: canvasDiff, imgB };
     }
 

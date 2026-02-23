@@ -12,13 +12,19 @@
     console.log(`[VPD] v25 Init: ${window.location.hostname}`);
 
     const calculateStats = (ctx, w, h) => {
-        const data = ctx.getImageData(0, 0, w, h).data;
-        let diff = 0;
-        const total = data.length / 4;
-        for (let i = 0; i < data.length; i += 4) {
-            if (data[i] === 255 && data[i + 2] === 255) diff++;
+        if (!ctx || w === 0 || h === 0) return { diff: 0, pct: "0.00" };
+        try {
+            const data = ctx.getImageData(0, 0, w, h).data;
+            let diff = 0;
+            const total = data.length / 4;
+            for (let i = 0; i < data.length; i += 4) {
+                if (data[i] === 255 && data[i + 2] === 255) diff++;
+            }
+            return { diff, pct: (diff / total * 100).toFixed(2) };
+        } catch (e) {
+            console.warn('[VPD] Stats failed:', e);
+            return { diff: 0, pct: "0.00" };
         }
-        return { diff, pct: (diff / total * 100).toFixed(2) };
     };
 
     const setup3Up = () => {
