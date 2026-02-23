@@ -46,6 +46,30 @@
   pointer-events: auto;
 }
 
+/* 
+   SHIELD MODE (v36 Passive Isolation) 
+   We neutralize native GitHub diff elements WITHOUT removing their classes.
+*/
+body.vpd-3up-active .image-diff.three-up .handle,
+body.vpd-3up-active .image-diff.three-up .swipe-bar,
+body.vpd-3up-active .image-diff.three-up .onion-skin-slider,
+body.vpd-3up-active .image-diff.three-up .image-diff-swipe,
+body.vpd-3up-active .image-diff.three-up .image-diff-onion-skin {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Force native shells to behave like blocks in our 3-column grid */
+body.vpd-3up-active .image-diff.three-up .shell {
+  position: static !important;
+  transform: none !important;
+  display: block !important;
+  width: auto !important;
+  margin: 0 !important;
+}
+
 body.vpd-3up-active .handle,
 body.vpd-3up-active .swipe-bar,
 body.vpd-3up-active .onion-skin-slider,

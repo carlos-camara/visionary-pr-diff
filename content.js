@@ -43,6 +43,18 @@
         }
     };
 
+    const syncTabSelection = () => {
+        const fieldset = document.querySelector('fieldset, .view-modes fieldset');
+        if (!fieldset) return;
+        fieldset.querySelectorAll('label, .js-view-mode-item').forEach(label => {
+            const input = label.querySelector('input');
+            if (input) {
+                if (input.checked) label.classList.add('selected');
+                else label.classList.remove('selected');
+            }
+        });
+    };
+
     const setup3Up = () => {
         const fieldset = document.querySelector('fieldset, .view-modes fieldset');
         if (!fieldset) return;
@@ -54,10 +66,16 @@
                 const val = e.target.value;
                 if (val === 'three-up') activate3Up();
                 else deactivate3Up();
+
+                // Ensure selection highlight follows the radio check
+                syncTabSelection();
             });
         }
 
-        if (fieldset.querySelector('.vpd-3up-tab')) return;
+        if (fieldset.querySelector('.vpd-3up-tab')) {
+            syncTabSelection(); // Keep existing tab sync checked
+            return;
+        }
 
         // 2. Add our tab as a native radio item
         const tab = document.createElement('label');
@@ -72,6 +90,7 @@
                 if (radio) {
                     radio.checked = true;
                     activate3Up();
+                    syncTabSelection();
                 }
             }, 500);
         }
@@ -92,11 +111,11 @@
         if (!view || view.dataset.vpdState === 'loading') return;
 
         const requestId = ++_currentRequestId;
-        console.log(`[VPD] Request ${requestId}: Starting...`);
+        console.log(`[VPD] Request ${requestId}: Starting (Passive Mode)...`);
         view.dataset.vpdState = 'loading';
 
-        // 3. FORCE CLEAN SLATE
-        view.classList.remove('two-up', 'swipe', 'onion-skin');
+        // PASSIVE ISOLATION: Don't remove native classes.
+        // Let CSS handle the neutralization via .three-up and .vpd-3up-active
         view.classList.add('three-up');
         document.body.classList.add('vpd-3up-active');
 
@@ -199,6 +218,7 @@
             diffShell.querySelector('.vpd-stats-card').innerHTML = `
                 Change: <b>${stats.pct}%</b> | Delta: <b>${stats.diff.toLocaleString()}</b> px
             `;
+            view.dataset.vpdState = 'active';
             console.log(`[VPD] Request ${requestId} complete.`);
         } catch (e) {
             clearTimeout(hangTimer);
@@ -222,14 +242,13 @@
     };
 
     const deactivate3Up = () => {
+        _currentRequestId++; // Cancel any active analysis
         document.body.classList.remove('vpd-3up-active');
         document.querySelectorAll('[data-vpd-state]').forEach(el => {
             el.dataset.vpdState = 'inactive';
             el.classList.remove('three-up');
         });
         document.querySelectorAll('.vpd-diff-shell').forEach(s => s.remove());
-        const tab = document.querySelector('.vpd-3up-tab');
-        if (tab) tab.classList.remove('selected');
 
         // Cleanup ObjectURLs
         if (window._vpdUrls) {
