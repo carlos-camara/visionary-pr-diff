@@ -50,7 +50,11 @@
         fieldset.querySelectorAll('label, .js-view-mode-item').forEach(l => {
             if (!l.dataset.vpdObserved) {
                 l.dataset.vpdObserved = "true";
-                l.addEventListener('mousedown', () => deactivate3Up(), true);
+                // Only clean our UI when moving back to native modes
+                l.addEventListener('click', (e) => {
+                    const is3UpTab = l.classList.contains('vpd-3up-tab');
+                    if (!is3UpTab) deactivate3Up();
+                });
             }
         });
 
@@ -90,6 +94,16 @@
         console.log(`[VPD] Request ${requestId}: Starting...`);
         view.dataset.vpdState = 'loading';
 
+        // 1. NEUTRALIZE NATIVE MODES
+        view.classList.remove('two-up', 'swipe', 'onion-skin');
+        document.body.classList.add('vpd-3up-active');
+        view.classList.add('three-up');
+
+        // 2. TAB SELECTION
+        document.querySelectorAll('.js-view-mode-item, .vpd-3up-tab').forEach(t => t.classList.remove('selected'));
+        const tab = document.querySelector('.vpd-3up-tab');
+        if (tab) tab.classList.add('selected');
+
         // Anti-hang protection
         const hangTimer = setTimeout(() => {
             if (view.dataset.vpdState === 'loading' && requestId === _currentRequestId) {
@@ -98,13 +112,6 @@
                 setStatus(diffShell, 'Sync Timeout. Please Retry.', true);
             }
         }, 20000);
-
-        document.querySelectorAll('.js-view-mode-item, .vpd-3up-tab').forEach(t => t.classList.remove('selected'));
-        const tab = document.querySelector('.vpd-3up-tab');
-        if (tab) tab.classList.add('selected');
-
-        document.body.classList.add('vpd-3up-active');
-        view.classList.add('three-up');
 
         let diffShell = view.querySelector('.vpd-diff-shell');
         if (!diffShell) {

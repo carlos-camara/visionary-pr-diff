@@ -46,6 +46,13 @@
   pointer-events: auto;
 }
 
+body.vpd-3up-active .image-diff>div:not(.shell):not(.vpd-diff-shell),
+body.vpd-3up-active .handle,
+body.vpd-3up-active .swipe-bar,
+body.vpd-3up-active .onion-skin-slider {
+  display: none !important;
+}
+
 /* Diff Container */
 .visionary-diff-container {
   background: rgba(255, 255, 255, 0.03);
