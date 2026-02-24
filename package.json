@@ -1,6 +1,7 @@
 {
     "name": "visionary-pr-diff",
     "version": "1.0.0",
+    "type": "module",
     "description": "Advanced pixel-level image regression analysis engine for modern GitHub Pull Requests.",
     "main": "background.js",
     "scripts": {
@@ -19,6 +20,7 @@
     "license": "MIT",
     "devDependencies": {
         "eslint": "^9.0.0",
+        "globals": "^17.3.0",
         "husky": "^9.1.7",
         "jest": "^29.7.0",
         "jest-environment-jsdom": "^30.2.0",

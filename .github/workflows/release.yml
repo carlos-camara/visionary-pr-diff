@@ -20,6 +20,7 @@ jobs:
         run: |
           zip -r visionary-pr-diff.zip . \
             -x "*.git*" ".github*" ".gitignore" "docs*" "*.mp4" "*.gif" \
+            "media/screenshots/*" "media/demos/*" \
             "package-lock.json" "package.json" ".eslintrc.json" \
             ".editorconfig" "CONTRIBUTING.md" "CODE_OF_CONDUCT.md" \
             "LICENSE" "SECURITY.md"

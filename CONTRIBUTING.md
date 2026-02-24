@@ -24,23 +24,25 @@ To contribute to this project, you need to set up a local development environmen
 
 ## 🔄 Contribution Workflow
 
-We follow a standard professional contribution lifecycle:
+We maintain enterprise-grade engineering standards:
 
-1. **Branching Strategy**: Always create a feature branch from latest `main`.
-   ```bash
-   git checkout -b feat/your-feature-name
-   ```
-2. **Linting & Style**: Ensure your code passes all linting checks before committing.
-3. **Commit Convention**: Use [Conventional Commits](https://www.conventionalcommits.org/) (e.g., `feat:`, `fix:`, `chore:`).
+1. **Branching Strategy**: Create feature branches (`feat/`, `fix/`, `chore/`) from `main`.
+2. **Quality Guardrails**:
+   - **Linting**: Code must pass ESLint flat config checks (enforced by Husky).
+   - **Formatting**: Automated Prettier formatting on commit.
+   - **Testing**: New logic must include [Jest](tests/diff-engine.test.js) unit tests.
+3. **Commit Convention**: Follow [Conventional Commits](https://www.conventionalcommits.org/).
 4. **Pull Request**:
    - Use the provided PR template.
-   - Ensure CI checks (Hygiene, Lint) are green.
-   - Our AI Summarizer will automatically provide a high-level overview of your changes.
+   - CI pipelines (`tests.yml`, `lint.yml`) must be green for merge.
+   - Documentation must be updated in `docs/` or `README.md` if applicable.
+
+## 🤖 AI Assistance
+Each Pull Request is automatically analyzed by our **Visionary AI Summarizer**, providing maintainers with a surgical overview of visual and logic modifications.
 
 ## 🐛 Reporting & Suggestions
-
 - **Bugs**: Use the [Bug Report](.github/ISSUE_TEMPLATE/bug_report.yml) template.
 - **Features**: Use the [Feature Request](.github/ISSUE_TEMPLATE/feature_request.yml) template.
 
 ---
-*Part of the Visionary Engineering Suite*
+*Precision by Design. Excellence by Choice.*

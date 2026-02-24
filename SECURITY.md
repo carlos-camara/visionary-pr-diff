@@ -30,4 +30,6 @@ If you believe you have found a security vulnerability, please do **not** open a
 - We do not store or transmit image data to external servers; analysis happens locally in your browser canvas.
 
 ---
-*Precision and Security by Design.*
+<div align="center">
+  <i>Surgical Analysis. Absolute Security.</i>
+</div>

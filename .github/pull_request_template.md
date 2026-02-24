@@ -18,6 +18,16 @@
 
 <!-- Add screenshots or screen recordings showing the changes -->
 
+## ✅ Quality Guardrails
+
+- [ ] My code passes all local linting checks (`npm run lint`)
+- [ ] I have added/updated [Jest tests](tests/) for new logic
+- [ ] I have verified the changes in "3-up" mode
+- [ ] I have updated the documentation in `docs/` or `README.md`
+
+---
+*Automated Hygiene Check enabled. 🚥*
+
 ## ✅ Checklist
 
 - [ ] My code follows the style guidelines of this project
