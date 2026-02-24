@@ -6,7 +6,7 @@
   ### *The advanced pixel-level image regression analysis engine for modern GitHub Pull Requests.*
 
   [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?style=for-the-badge)](https://github.com/carlos-camara/visionary-pr-diff)
-  [![License](https://img.shields.io/badge/license-Polyform--Noncommercial-orange.svg?style=for-the-badge)](LICENSE)
+  [![License](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](LICENSE)
   [![Status](https://img.shields.io/badge/status-active-success.svg?style=for-the-badge)](https://github.com/carlos-camara/visionary-pr-diff)
 </div>
 
@@ -53,10 +53,7 @@ We value professional contributions. Please refer to our community guidelines:
 
 ## ⚖️ Licensing
 
-Licensed under the **Polyform Noncommercial License 1.0.0**. 
-
-> [!CAUTION]
-> This software is free for personal use, research, and non-profit experimentation. **Corporate or commercial usage requires a specific license.**
+Licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
 
 ---
 

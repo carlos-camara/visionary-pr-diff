@@ -1,41 +1,21 @@
-PolyForm Noncommercial License 1.0.0
+MIT License
 
-<https://polyformproject.org/licenses/noncommercial/1.0.0>
+Copyright (c) 2026 Carlos Camara
 
-## Acceptance
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-In order to get any license under these terms, you must agree to them as both strict obligations and conditions to all your licenses.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
-## Copyright License
-
-The licensor grants you a copyright license for the software to do everything that would be infringed by one of your actions that is a copyright infringement, or a use of a copyright work for which you would be liable for copyright infringement, for any permitted purpose.
-
-## Patent License
-
-The licensor grants you a patent license for the software that would be infringed by one of your actions for any permitted purpose.
-
-## Permitted Purposes
-
-A permitted purpose is any noncommercial purpose.
-
-## Noncommercial Purposes
-
-A noncommercial purpose is any purpose that is not a commercial purpose.
-
-## Commercial Purposes
-
-A commercial purpose is any purpose that is intended for or directed toward commercial advantage or monetary compensation.
-
-## Personal Purposes
-
-Personal use of the software for your own noncommercial research, experimentation, and testing for the purpose of contributing to public knowledge, personal study, private entertainment, hobby projects, amateur pursuits, or religious observance are all noncommercial purposes, assuming they are not intended for or directed toward commercial advantage or monetary compensation.
-
-## Limited Distribution and Changes
-
-## Licenses Terminate Immediately
-
-All your licenses under these terms terminate immediately if you or your company bring a lawsuit or other legal proceeding against the licensor or any other licensee of the software, claiming that the software or any of its uses infringes any patent.
-
-## No Liability
-
-*** As far as the law allows, the software is provided as is, without any warranty or condition, and the licensor will not be liable to you for any damages arising out of these terms or the use or nature of the software, under any legal theory. ***
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
