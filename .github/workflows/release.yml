@@ -16,22 +16,9 @@ jobs:
       - name: 🔍 Checkout Code
         uses: actions/checkout@v4
 
-      - name: 📦 Bundle Extension
-        run: |
-          zip -r visionary-pr-diff.zip . \
-            -x "*.git*" ".github*" ".gitignore" "docs*" "*.mp4" "*.gif" \
-            "media/screenshots/*" "media/demos/*" \
-            "package-lock.json" "package.json" ".eslintrc.json" \
-            ".editorconfig" "CONTRIBUTING.md" "CODE_OF_CONDUCT.md" \
-            "LICENSE" "SECURITY.md"
-
-      - name: 🚀 Create GitHub Release
-        uses: softprops/action-gh-release@v2
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: 🚀 Create Asset Release
+        uses: carlos-camara/qa-hub-actions/create-asset-release@main
         with:
-          files: visionary-pr-diff.zip
-          generate_release_notes: true
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          asset-name: 'visionary-pr-diff'
+          exclusions: '".git*" ".github*" ".gitignore" "docs*" "*.mp4" "*.gif" "media/screenshots/*" "media/demos/*" "package-lock.json" "package.json" ".eslintrc.json" ".editorconfig" "CONTRIBUTING.md" "CODE_OF_CONDUCT.md" "LICENSE" "SECURITY.md"'
+          github-token: ${{ secrets.GITHUB_TOKEN }}
