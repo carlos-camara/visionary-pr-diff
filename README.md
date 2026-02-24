@@ -12,21 +12,6 @@
 
 ---
 
-> [!IMPORTANT]
-> **Visionary PR Diff** is a professional Chrome extension architected to eliminate visual uncertainty. It injects a pixel-perfect "Difference" view directly into GitHub's file diff UI, allowing engineers to surgically identify subtle visual regressions that the human eye might miss.
-
-## 🎬 Live Demonstration
-
-Injecting surgical precision into your GitHub workflow:
-
-| Deleted | Visionary Diff | Added |
-| :---: | :---: | :---: |
-| ![Deleted](https://raw.githubusercontent.com/carlos-camara/dashboard/main/features/resources/screenshots/dashboard_chart_success.png) | <img src="https://i.imgur.com/your-visionary-diff-image-here.png" alt="Visionary Diff" width="300" /> | ![Added](https://raw.githubusercontent.com/carlos-camara/dashboard/main/features/resources/screenshots/dashboard_chart_success.png) |
-
-> [!TIP]
-> Use the **Visual Diff** button injected into the header of any detected image file to toggle the comparison engine.
-
----
 
 ## ✨ Key Impact
 
