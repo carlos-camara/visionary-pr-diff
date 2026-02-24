@@ -120,3 +120,7 @@ class VisionaryDiffEngine {
 }
 
 window.VisionaryDiffEngine = VisionaryDiffEngine;
+
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = VisionaryDiffEngine;
+}
