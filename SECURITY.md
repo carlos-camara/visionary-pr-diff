@@ -15,13 +15,13 @@ Currently, the following versions of the extension receive security updates:
 
 If you believe you have found a security vulnerability, please do **not** open a public issue. Instead, follow our coordinated disclosure process:
 
-1.  **Contact**: Send a detailed report to the maintainer via email.
-2.  **Information Required**:
-    - Detailed description of the vulnerability.
-    - Full reproduction steps (POC).
-    - Assessment of potential impact.
-3.  **Acknowledgement**: You will receive a response within 48 hours.
-4.  **Fixing**: We aim to resolve critical issues within 7 days.
+1. **Contact**: Send a detailed report to the maintainer via email.
+2. **Information Required**:
+   - Detailed description of the vulnerability.
+   - Full reproduction steps (POC).
+   - Assessment of potential impact.
+3. **Acknowledgement**: You will receive a response within 48 hours.
+4. **Fixing**: We aim to resolve critical issues within 7 days.
 
 ## Security Best Practices
 

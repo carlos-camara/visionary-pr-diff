@@ -10,7 +10,7 @@
 
 ## 🎯 The Core Value Proposition
 
-In modern frontend development, even a **1-pixel misalignment** can degrade the user experience and break brand trust. Standard GitHub image diffs (onion skin, swipe) are human-dependent and error-prone. 
+In modern frontend development, even a **1-pixel misalignment** can degrade the user experience and break brand trust. Standard GitHub image diffs (onion skin, swipe) are human-dependent and error-prone.
 
 **Visionary PR Diff** eliminates guesswork by providing an automated, mathematical verification of visual changes directly within your browser.
 
