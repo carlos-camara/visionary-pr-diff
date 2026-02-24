@@ -1,5 +1,6 @@
+<h1 align="center">Visionary PR Diff</h1>
+
 <div align="center">
-  <h1>Visionary PR Diff</h1>
   <img src="media/icons/icon128.png" alt="Visionary PR Diff Logo" width="128" />
   
   <h3><i>The advanced pixel-level image regression analysis engine for modern GitHub Pull Requests.</i></h3>
