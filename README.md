@@ -8,12 +8,17 @@
   [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?style=for-the-badge)](https://github.com/carlos-camara/visionary-pr-diff)
   [![License](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](LICENSE)
   [![Status](https://img.shields.io/badge/status-active-success.svg?style=for-the-badge)](https://github.com/carlos-camara/visionary-pr-diff)
+
+  <br />
+
+  ![Visionary PR Diff Demo](visionary-pr-diff.gif)
+
+  *Surgical precision in every pixel. Clarity in every Pull Request.*
 </div>
 
 ---
 
-
-## ✨ Key Impact
+## ✨ Key Features
 
 - **🧠 Pixel-Level Intelligence**: Automatically identifies and highlights exact pixel modifications between original and updated images.
 - **🛡️ Quality Guardrails**: Prevents accidental UI regressions by providing absolute clarity in Pull Request reviews.
@@ -31,32 +36,41 @@
 
 ---
 
-## 🛠️ Installation (Developer Mode)
+## 🛠️ Installation & Setup
 
-1. Clone this repository.
+<details>
+<summary><b>Click to expand installation steps</b></summary>
+
+1. **Clone** the repository to your local machine.
 2. Open Chrome and navigate to `chrome://extensions/`.
-3. Enable **Developer mode** (top right).
+3. Enable **Developer mode** (toggle in the top right corner).
 4. Click **Load unpacked** and select the repository directory.
+5. Watch the magic happen on your next GitHub PR with images!
+
+</details>
 
 ---
 
 ## 🤝 Community & Development
 
-We value professional contributions. Please refer to our community guidelines:
+We value professional contributions. Maintain the highest standards of engineering excellence by following our guidelines:
 
-- [**Contributing**](CONTRIBUTING.md) - How to help improve the engine.
-- [**Changelog**](CHANGELOG.md) - Tracking our progress and releases.
-- [**Security**](SECURITY.md) - Our commitment to vulnerability management.
-- [**Code of Conduct**](CODE_OF_CONDUCT.md) - Maintaining a professional environment.
+| Resource | Description |
+| :--- | :--- |
+| [**Contributing**](CONTRIBUTING.md) | How to help improve the engine. |
+| [**Changelog**](CHANGELOG.md) | Tracking our progress and releases. |
+| [**Security**](SECURITY.md) | Our commitment to vulnerability management. |
+| [**Code of Conduct**](CODE_OF_CONDUCT.md) | Maintaining a professional environment. |
 
 ---
 
-## ⚖️ Licensing
+## ⚖️ License
 
-Licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.
+Distributed under the **MIT License**. See the [LICENSE](LICENSE) file for more information.
 
 ---
 
 <div align="center">
   <i>Part of the <b>Visionary Engineering Suite</b> by Carlos Camara</i>
 </div>
+
