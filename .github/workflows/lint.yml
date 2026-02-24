@@ -31,4 +31,3 @@ jobs:
         uses: carlos-camara/qa-hub-actions/lint-codebase@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          validate-ts: "false"
