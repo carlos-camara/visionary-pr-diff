@@ -3,7 +3,7 @@
 <div align="center">
   <img src="icons/icon128.png" alt="Visionary PR Diff Logo" width="128" />
   
-  ### *The advanced pixel-level image regression analysis engine for modern GitHub Pull Requests.*
+## *The advanced pixel-level image regression analysis engine for modern GitHub Pull Requests.*
 
   [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?style=for-the-badge)](https://github.com/carlos-camara/visionary-pr-diff)
   [![License](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](LICENSE)
