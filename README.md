@@ -11,7 +11,12 @@
 
   <br />
 
+  [**🚀 Explore Professional Capabilities**](docs/capabilities.md)
+
+  <br />
+
   ![Visionary PR Diff Demo](visionary-pr-diff.gif)
+
 
   *Surgical precision in every pixel. Clarity in every Pull Request.*
 </div>
