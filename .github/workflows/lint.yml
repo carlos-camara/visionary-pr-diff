@@ -15,7 +15,20 @@ jobs:
       - name: 🔍 Checkout Code
         uses: actions/checkout@v4
 
-      - name: 🧶 Lint Codebase Standard
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 📦 Install Dependencies
+        run: npm ci
+
+      - name: 🧹 Lint JavaScript (ESLint v9)
+        run: npm run lint
+
+      - name: 🧶 Lint Codebase Standard (Markdown, YAML, Actions)
         uses: carlos-camara/qa-hub-actions/lint-codebase@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
+          validate-ts: "false"
