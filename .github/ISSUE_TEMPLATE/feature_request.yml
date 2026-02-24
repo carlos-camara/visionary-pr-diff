@@ -19,6 +19,6 @@ body:
     id: alternatives
     attributes:
       label: "Describe alternatives you've considered"
-      description: "A clear and concise description of any alternative solutions..."
+      description: "A clear description of any alternative solutions."
     validations:
       required: true
