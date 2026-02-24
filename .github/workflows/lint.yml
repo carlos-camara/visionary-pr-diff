@@ -1,0 +1,32 @@
+name: 🛡️ Code Quality Lint
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint:
+    name: Lint JavaScript & CSS
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔍 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 📦 Install Dependencies
+        run: |
+          npm init -y
+          npm install eslint eslint-plugin-import stylelint stylelint-config-standard --save-dev
+
+      - name: ✨ Lint JavaScript
+        run: npx eslint . --ext .js
+
+      - name: 🎨 Lint CSS
+        run: npx stylelint "**/*.css"
