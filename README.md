@@ -1,9 +1,9 @@
-# 🔍 Visionary PR Diff
+<h1 align="center">Visionary PR Diff</h1>
 
 <div align="center">
-  <img src="icons/icon128.png" alt="Visionary PR Diff Logo" width="128" />
+  <img src="media/icons/icon128.png" alt="Visionary PR Diff Logo" width="128" />
   
-  ### *The advanced pixel-level image regression analysis engine for modern GitHub Pull Requests.*
+  <h3><i>The advanced pixel-level image regression analysis engine for modern GitHub Pull Requests.</i></h3>
 
   [![Version](https://img.shields.io/badge/version-1.0.0-blue.svg?style=for-the-badge)](https://github.com/carlos-camara/visionary-pr-diff)
   [![License](https://img.shields.io/badge/license-MIT-green.svg?style=for-the-badge)](LICENSE)
@@ -11,7 +11,12 @@
 
   <br />
 
-  ![Visionary PR Diff Demo](visionary-pr-diff.gif)
+  [**🚀 Explore Professional Capabilities**](docs/capabilities.md)
+
+  <br />
+
+  ![Visionary PR Diff Demo](media/demos/visionary-pr-diff.gif)
+
 
   *Surgical precision in every pixel. Clarity in every Pull Request.*
 </div>
@@ -33,6 +38,32 @@
 2. **Action Injection**: A surgical **Visual Diff** button is injected into the header of every detected image file.
 3. **Canvas Processing**: Upon activation, the engine extracts the "Before" and "After" images and processes them through an HTML5 Canvas-based bitwise comparison.
 4. **Visual Result**: A high-fidelity modal overlay renders the difference map, highlighting changes in surgical magenta.
+
+---
+
+## 🍱 Advanced View Modes
+
+Visionary PR Diff provides three distinct modes of analysis to ensure no visual regression goes undetected:
+
+<br />
+
+### 📐 1. The "Default 2-up" (Side-by-Side)
+![2-up Comparison](media/screenshots/2-up.JPG)
+*The classic architectural comparison. Ideal for verifying general layouts and structural integrity where side-by-side context is paramount.*
+
+<br />
+
+### 💎 2. The "Visionary 3-up" (Symmetrical Differential)
+![3-up Comparison](media/screenshots/3-up.JPG)
+*Our flagship mode. Provides perfect architectural symmetry by rendering the **Source**, **Difference Map (Surgical Magenta)**, and **Target** in a single, high-fidelity view. This is the gold standard for pixel-perfect verification.*
+
+<br />
+
+### ↔️ 3. The "Dynamic Swipe" (Interactive Overlay)
+![Swipe Comparison](media/screenshots/swipe.JPG)
+*An interactive slider that allows you to "wipe" the new version over the old one. Perfect for detecting subtle 1-pixel shifts or font-rendering changes that side-by-side views might miss.*
+
+<br />
 
 ---
 

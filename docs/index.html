@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Visionary PR Diff - Documentation</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Surgical Visual Regression Engine for GitHub Pull Requests.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/dark.css">
+  <style>
+    :root {
+      --theme-color: #ff00ff;
+    }
+
+    .markdown-section {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px 45px 40px;
+    }
+
+    /* Table Professionalism */
+    .markdown-section table {
+      display: table !important;
+      width: 100%;
+      border-collapse: collapse;
+      background: #2a2a2a;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: 2rem 0;
+    }
+
+    .markdown-section table tr {
+      border-bottom: 1px solid #444;
+    }
+
+    .markdown-section table tr:nth-child(2n) {
+      background-color: #333 !important;
+    }
+
+    .markdown-section table td,
+    .markdown-section table th {
+      padding: 15px;
+      border: none !important;
+    }
+
+    .markdown-section table th {
+      background: #3d3d3d;
+      color: var(--theme-color);
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+
+    /* Link Styling */
+    .markdown-section a {
+      color: #e0e0e0 !important;
+      text-decoration: none;
+      border-bottom: 1px solid #555;
+      transition: all 0.2s ease;
+    }
+
+    .markdown-section a:hover {
+      color: var(--theme-color) !important;
+      border-bottom-color: var(--theme-color);
+    }
+
+    .sidebar-nav li.active>a {
+      border-right: 2px solid var(--theme-color);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">Loading...</div>
+  <script>
+    window.$docsify = {
+      name: 'Visionary PR Diff',
+      repo: 'carlos-camara/visionary-pr-diff',
+      loadSidebar: true,
+      subMaxLevel: 2,
+      themeColor: '#FF00FF', // Surgical Magenta
+      auto2top: true,
+      homepage: 'README.md'
+    }
+  </script>
+  <!-- Docsify v4 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+</body>
+
+</html>

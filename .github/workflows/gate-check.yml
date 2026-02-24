@@ -1,12 +1,13 @@
-name: 🚦 PR Hygiene Gate
+---
+name: 🚦 PR Hygiene & Intelligence Gate
 
 on:
   pull_request:
     types: [opened, edited, synchronize]
 
 jobs:
-  hygiene:
-    name: PR Hygiene Check
+  gate:
+    name: PR Gate Check
     runs-on: ubuntu-latest
     steps:
       - name: 🔍 Checkout Code
@@ -14,5 +15,10 @@ jobs:
 
       - name: 📝 PR Hygiene Validator
         uses: carlos-camara/qa-hub-actions/pr-hygiene-validator@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 🤖 AI PR Summarizer
+        uses: carlos-camara/qa-hub-actions/pr-summarizer@main
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
