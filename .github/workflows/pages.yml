@@ -1,5 +1,5 @@
 ---
-name: 📂 Deploy Docs to Pages
+name: 🌐 Deploy Docs to Pages
 
 on:
   push:
@@ -26,12 +26,11 @@ jobs:
       - name: 🏗️ Setup Pages
         uses: actions/configure-pages@v4
 
-      - name: 📦 Static Analysis & Prep
+      - name: 📦 Prep Wiki (Docsify)
         run: |
           mkdir public
           cp -r docs/* public/
-          cp README.md public/index.md
-          # Simple index for Pages if needed, or just let it serve the md files
+          cp README.md public/README.md
 
       - name: 🚀 Upload Artifact
         uses: actions/upload-pages-artifact@v3
