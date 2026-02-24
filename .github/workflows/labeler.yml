@@ -11,7 +11,7 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-    - uses: actions/labeler@v5
-      with:
-        repo-token: "${{ secrets.GITHUB_TOKEN }}"
-        sync-labels: true
+      - name: 🏷️ PR Labeler
+        uses: carlos-camara/qa-hub-actions/pr-labeler@main
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}

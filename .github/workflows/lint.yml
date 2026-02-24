@@ -8,25 +8,13 @@ on:
 
 jobs:
   lint:
-    name: Lint JavaScript & CSS
+    name: Lint Codebase
     runs-on: ubuntu-latest
     steps:
       - name: 🔍 Checkout Code
         uses: actions/checkout@v4
 
-      - name: 🟢 Setup Node.js
-        uses: actions/setup-node@v4
+      - name: 🧶 Lint Codebase Standard
+        uses: carlos-camara/qa-hub-actions/lint-codebase@main
         with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: 📦 Install Dependencies
-        run: |
-          npm init -y
-          npm install eslint eslint-plugin-import stylelint stylelint-config-standard --save-dev
-
-      - name: ✨ Lint JavaScript
-        run: npx eslint . --ext .js
-
-      - name: 🎨 Lint CSS
-        run: npx stylelint "**/*.css"
+          github-token: ${{ secrets.GITHUB_TOKEN }}

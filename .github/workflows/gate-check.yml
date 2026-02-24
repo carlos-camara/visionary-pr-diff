@@ -1,0 +1,18 @@
+name: 🚦 PR Hygiene Gate
+
+on:
+  pull_request:
+    types: [opened, edited, synchronize]
+
+jobs:
+  hygiene:
+    name: PR Hygiene Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🔍 Checkout Code
+        uses: actions/checkout@v4
+
+      - name: 📝 PR Hygiene Validator
+        uses: carlos-camara/qa-hub-actions/pr-hygiene-validator@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
