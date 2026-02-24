@@ -33,3 +33,4 @@ jobs:
           docs-folder: 'docs'
           media-folder: 'media'
           readme-path: 'README.md'
+          additional-files: 'CONTRIBUTING.md CHANGELOG.md SECURITY.md'

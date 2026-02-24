@@ -1,7 +1,7 @@
 # 💎 Visionary PR Diff: Capabilities Showcase
 
 <div align="center">
-  <img src="../media/icons/icon128.png" alt="Visionary logo" width="64" />
+  <img src="media/icons/icon128.png" alt="Visionary logo" width="64" />
   <h2>Visual Integrity for Modern Engineering</h2>
   <p><i>Surgical pixel-level regression analysis for high-stakes Pull Requests.</i></p>
 </div>
@@ -41,14 +41,14 @@ The extension uses a "Shield Mode" strategy. It injects itself into the GitHub U
 ## 🎨 Visual Experience
 
 ### The "3-up" Symmetry
-![3-up Mode](../media/screenshots/3-up.JPG)
+![3-up Mode](media/screenshots/3-up.JPG)
 Our custom layout provides a perfectly symmetrical view of your changes:
 1. **Source (Before)**: The original baseline.
 2. **Target (After)**: The proposed modification.
 3. **Differential Map**: The pixel-level delta highlighting what actually changed.
 
 ### The "Dynamic Swipe"
-![Swipe Mode](../media/screenshots/swipe.JPG)
+![Swipe Mode](media/screenshots/swipe.JPG)
 For those ultra-subtle 1-pixel shifts, the **Swipe** mode provides an interactive overlay that makes deviations move-for-move obvious.
 
 ### Glassmorphism UI
