@@ -274,9 +274,12 @@
             const frame = diffShell.querySelector('.vpd-diff-frame');
             frame.innerHTML = '';
 
-            // We no longer set strict width/height on the frame itself.
-            // We rely on CSS to size the frame and let the inner image dictate the height naturally.
-            frame.removeAttribute('style');
+            const aspect = canvas.width / canvas.height;
+            frame.style.aspectRatio = aspect.toString();
+
+            // Force container to match natural image dimensions to prevent clipping
+            frame.style.width = '100%';
+            // Limit to actual image dimensions so we don't blow up small icons, but let big diffs take the width
 
             const ghost = document.createElement('img');
             ghost.src = decodedImgB.src;
