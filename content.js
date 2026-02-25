@@ -246,14 +246,22 @@
                 const shell = shadowImg?.closest('.shell');
                 if (shell) {
                     const lbl = shell.querySelector('.frame-label');
-                    if (lbl) lbl.classList.add('vpd-premium-label');
+                    if (lbl) {
+                        lbl.classList.add('vpd-premium-label');
+                        if (label.toLowerCase().includes('delete') || label.toLowerCase().includes('before')) lbl.classList.add('vpd-label-deleted');
+                        if (label.toLowerCase().includes('add') || label.toLowerCase().includes('after')) lbl.classList.add('vpd-label-added');
+                    }
                 }
                 if (shadowImg) return shadowImg;
             }
             const el = [...view.querySelectorAll('.shell')].find(s => s.textContent.toLowerCase().includes(label.toLowerCase()));
             if (el) {
                 const lbl = el.querySelector('.frame-label');
-                if (lbl) lbl.classList.add('vpd-premium-label');
+                if (lbl) {
+                    lbl.classList.add('vpd-premium-label');
+                    if (label.toLowerCase().includes('delete') || label.toLowerCase().includes('before')) lbl.classList.add('vpd-label-deleted');
+                    if (label.toLowerCase().includes('add') || label.toLowerCase().includes('after')) lbl.classList.add('vpd-label-added');
+                }
             }
             return el?.querySelector('img');
         };

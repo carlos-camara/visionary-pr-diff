@@ -183,15 +183,30 @@ fieldset:has(.vpd-3up-tab) label input {
   /* Force identical height for vertical alignment */
   border-radius: 20px !important;
   border: 1px solid var(--vpd-border-glass) !important;
-  color: var(--vpd-accent) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
   font-size: 9px !important;
   font-weight: 700 !important;
   letter-spacing: 0.8px !important;
   text-transform: uppercase !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
-  margin: 0 auto 10px auto !important;
-  /* Centers label and sets consistent bottom gap */
+  margin: 0 auto 5px auto !important;
+  /* Reduced vertical gap to image */
   width: fit-content !important;
+  color: var(--vpd-accent) !important;
+  border-color: rgba(var(--vpd-accent-rgb), 0.3) !important;
+}
+
+.frame-label.vpd-label-deleted {
+  color: #ff7b72 !important;
+  /* GitHub Red */
+  border-color: rgba(248, 81, 73, 0.3) !important;
+  background: rgba(248, 81, 73, 0.1) !important;
+}
+
+.frame-label.vpd-label-added {
+  color: #3fb950 !important;
+  /* GitHub Green */
+  border-color: rgba(63, 185, 80, 0.3) !important;
+  background: rgba(63, 185, 80, 0.1) !important;
 }
 
 /* Diff Frame Container */
