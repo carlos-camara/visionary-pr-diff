@@ -162,13 +162,13 @@
   width: 100% !important;
   height: auto !important;
   max-height: none !important;
-  /* Liberate vertical space */
   object-fit: contain !important;
-  border-radius: 12px !important;
+  border-radius: 8px !important;
   border: 1px solid var(--vpd-border-glass) !important;
   box-shadow: var(--vpd-glow) !important;
   transition: var(--vpd-transition) !important;
-  background: #0d1117 !important;
+  background: #000 !important;
+  /* Pure black background for data-heavy diffs */
 }
 
 .image-diff.vpd-active .shell img:hover {
