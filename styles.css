@@ -82,7 +82,16 @@
 .image-diff.vpd-active,
 .three-up.view.vpd-active {
   height: auto !important;
+  min-height: 400px !important;
   /* Prevent parent from clipping */
+  overflow: visible !important;
+}
+
+/* Vertical Liberation: Target GitHub's restrictive containers */
+.js-file-content:has(.vpd-active),
+.js-image-diff:has(.vpd-active) {
+  height: auto !important;
+  max-height: none !important;
   overflow: visible !important;
 }
 
@@ -115,6 +124,9 @@
   flex-direction: column !important;
   align-items: center !important;
   animation: vpd-fade-up 0.5s ease-out forwards;
+  position: relative !important;
+  /* CRITICAL: Prevent overlapping/absolute floating */
+  height: auto !important;
 }
 
 /* Column order and Area assignment */
