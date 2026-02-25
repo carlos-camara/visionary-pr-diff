@@ -70,8 +70,8 @@
             :host(.three-up), :host(.vpd-active), :host {
                 display: grid !important;
                 grid-template-areas: "deleted diff added" !important;
-                grid-template-columns: 1fr 2.2fr 1fr !important;
-                gap: 0 24px !important;
+                grid-template-columns: 1.5fr 3fr 1.5fr !important;
+                gap: 0 16px !important;
                 padding: 0 !important;
                 width: 100% !important;
                 max-width: none !important;
@@ -99,7 +99,8 @@
             }
             .vpd-diff-shell { 
                 grid-area: diff !important; 
-                justify-self: stretch !important;
+                justify-self: center !important;
+                width: 100% !important;
             }
 
             .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle, .swipe-handle, .js-drag-handle {

@@ -87,20 +87,22 @@
   overflow: visible !important;
 }
 
-/* Nuclear Space Liberation: Breakthrough the PR container limits */
-/* Nuclear Space Liberation: Breakthrough the PR container limits */
-.container-lg:has(.vpd-active),
-.discussion-item:has(.vpd-active),
-.js-discussion-item:has(.vpd-active),
-.timeline-comment:has(.vpd-active),
-.js-comment-container:has(.vpd-active),
-.file:has(.vpd-active),
-.js-file-content:has(.vpd-active),
-.blob-wrapper:has(.vpd-active),
-.view.vpd-active,
-image-diff:has(.vpd-active),
-.image-diff:has(.vpd-active),
-image-diff.vpd-active {
+/* Super-Liberation: Break the entire page width for VPD-Active views */
+body:has(.vpd-active) .container-lg,
+body:has(.vpd-active) .application-main,
+body:has(.vpd-active) .page-content,
+body:has(.vpd-active) .repository-content,
+body:has(.vpd-active) .clearfix,
+body:has(.vpd-active) .discussion-item,
+body:has(.vpd-active) .js-discussion-item,
+body:has(.vpd-active) .timeline-comment,
+body:has(.vpd-active) .js-comment-container,
+body:has(.vpd-active) .file,
+body:has(.vpd-active) .js-file-content,
+body:has(.vpd-active) .blob-wrapper,
+body:has(.vpd-active) .view.vpd-active,
+body:has(.vpd-active) image-diff,
+body:has(.vpd-active) .image-diff {
   width: 100% !important;
   max-width: none !important;
   padding-left: 0 !important;
@@ -129,13 +131,14 @@ image-diff.vpd-active {
 .image-diff[data-vpd-state="active"].vpd-active {
   display: grid !important;
   grid-template-areas: "deleted diff added" !important;
-  grid-template-columns: 1fr 2fr 1fr !important;
-  gap: 0 24px !important;
-  /* Horizontal gap only */
+  grid-template-columns: 1.5fr 3fr 1.5fr !important;
+  /* Balanced immersion ratio */
+  gap: 0 16px !important;
+  /* Reduced horizontal gap */
   align-items: start !important;
-  justify-items: stretch !important;
+  justify-items: center !important;
+  /* Center images to prevent blur */
   padding: 0 !important;
-  /* Zero padding for full-bleed immersion */
   width: 100% !important;
   max-width: none !important;
   box-sizing: border-box !important;
