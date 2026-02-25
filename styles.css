@@ -148,39 +148,19 @@ body:has(.vpd-active) .image-diff {
   margin-top: 0 !important;
 }
 
-/* Shared column properties */
-.three-up.view.vpd-active .shell,
-.image-diff[data-vpd-state="active"].vpd-active .shell,
-.vpd-diff-shell {
-  min-width: 0 !important;
-  width: 100% !important;
-  /* Fill grid cell */
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-  animation: vpd-fade-up 0.5s ease-out forwards;
-  position: relative !important;
-  /* CRITICAL: Prevent overlapping/absolute floating */
-  height: auto !important;
-}
-
-/* Column order and Area assignment */
-.shell:first-of-type {
+/* Assign Grid Areas with Maximum Specificity */
+.shell:first-of-type,
+.shell[data-type="before"] {
   grid-area: deleted !important;
-  justify-self: start !important;
-  /* Pin to far left */
 }
 
-.shell:last-of-type {
+.shell:last-of-type,
+.shell[data-type="after"] {
   grid-area: added !important;
-  justify-self: end !important;
-  /* Pin to far right */
 }
 
 .vpd-diff-shell {
   grid-area: diff !important;
-  justify-self: stretch !important;
-  /* Center diff takes majority space */
 }
 
 .three-up.view.vpd-active .shell img,
