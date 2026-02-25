@@ -87,12 +87,15 @@
   overflow: visible !important;
 }
 
-/* Absolute Ultra-Liberation: Force PR page to 100vw for Panorama View */
+/* VISIONARY TRIPTYCH: Root-to-Branch Liberation */
+/* Force the entire GitHub PR hierarchy to expand to 98% width */
+body:has(.vpd-active) .container-xl,
 body:has(.vpd-active) .container-lg,
-body:has(.vpd-active) .application-main,
-body:has(.vpd-active) .page-content,
 body:has(.vpd-active) .repository-content,
-body:has(.vpd-active) .clearfix,
+body:has(.vpd-active) .new-discussion-timeline,
+body:has(.vpd-active) .discussion-timeline,
+body:has(.vpd-active) .pull-discussion-timeline,
+body:has(.vpd-active) .timeline-comment-wrapper,
 body:has(.vpd-active) .discussion-item,
 body:has(.vpd-active) .js-discussion-item,
 body:has(.vpd-active) .timeline-comment,
@@ -102,57 +105,64 @@ body:has(.vpd-active) .js-file-content,
 body:has(.vpd-active) .blob-wrapper,
 body:has(.vpd-active) .view.vpd-active,
 body:has(.vpd-active) image-diff {
-  width: 100vw !important;
-  max-width: 100vw !important;
+  width: 98% !important;
+  max-width: none !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
-  margin-left: calc(-50vw + 50%) !important;
-  margin-right: calc(-50vw + 50%) !important;
-  left: 50% !important;
-  position: relative !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
   height: auto !important;
   min-height: none !important;
   max-height: none !important;
   overflow: visible !important;
+  display: block !important;
 }
 
-body:has(.vpd-active) .image-diff {
+/* Ensure the image-diff host is a grid */
+body:has(.vpd-active) .image-diff,
+body:has(.vpd-active) .three-up.view.vpd-active {
   display: grid !important;
-  /* Force grid back from block override */
   width: 100% !important;
   max-width: none !important;
-}
-
-/* Ensure the grid itself takes full width and expands naturally */
-.image-diff[data-vpd-state="active"].vpd-active,
-.three-up.view.vpd-active {
-  min-height: 500px !important;
   height: auto !important;
-  width: 100% !important;
-  max-width: none !important;
-  display: grid !important;
+  overflow: visible !important;
 }
 
-/* Trinity Panoramic Layout (Strict 1x3 Row) */
+/* Visionary Triptych Layout (Strict 1x3 Row) */
 .three-up.view.vpd-active,
 .image-diff[data-vpd-state="active"].vpd-active {
   display: grid !important;
   grid-template-areas: "deleted diff added" !important;
-  grid-template-columns: 1fr 2fr 1fr !important;
-  gap: 0 !important;
-  /* Tightest possible for maximal scale */
-  align-items: start !important;
+  grid-template-columns: 1fr 1.8fr 1fr !important;
+  /* Elegant Triptych Proportions */
+  gap: 16px !important;
+  align-items: center !important;
+  /* Vertical balance */
   justify-items: stretch !important;
-  /* Force fill for maximum size */
-  padding: 0 !important;
+  padding: 12px 0 !important;
   width: 100% !important;
   max-width: none !important;
   box-sizing: border-box !important;
   background: transparent !important;
   border: none !important;
-  border-radius: 0 !important;
   height: auto !important;
   overflow: visible !important;
+}
+
+/* Visionary Triptych Grid Configuration */
+.three-up.view.vpd-active,
+.image-diff[data-vpd-state="active"].vpd-active {
+  grid-template-areas: "deleted diff added" !important;
+  grid-template-columns: 1fr 1.8fr 1fr !important;
+  /* Elegant Triptych Proportions */
+  gap: 16px !important;
+  align-items: center !important;
+  /* Vertical balance */
+  justify-items: stretch !important;
+  padding: 12px 0 !important;
+  box-sizing: border-box !important;
+  background: transparent !important;
+  border: none !important;
 }
 
 /* Shared column properties */
