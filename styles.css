@@ -74,7 +74,16 @@
   transform: none !important;
   display: flex !important;
   width: auto !important;
+  height: auto !important;
+  /* Liberate vertical space */
   margin: 0 !important;
+}
+
+.image-diff.vpd-active,
+.three-up.view.vpd-active {
+  height: auto !important;
+  /* Prevent parent from clipping */
+  overflow: visible !important;
 }
 
 /* Perfect Symmetrical Layout */
@@ -85,8 +94,7 @@
   gap: 16px !important;
   align-items: flex-start !important;
   justify-content: center !important;
-  padding: 12px 0 32px 0 !important;
-  /* Added bottom padding for breathing room */
+  padding: 12px 0 !important;
   width: 100% !important;
   max-width: none !important;
   box-sizing: border-box !important;
@@ -110,7 +118,8 @@
 .image-diff.vpd-active .shell .vpd-diff-frame {
   width: 100% !important;
   height: auto !important;
-  max-height: 75vh !important;
+  max-height: none !important;
+  /* Liberate vertical space */
   object-fit: contain !important;
   border-radius: 12px !important;
   border: 1px solid var(--vpd-border-glass) !important;
@@ -215,7 +224,8 @@ fieldset:has(.vpd-3up-tab) label input {
   display: block !important;
   background: #0d1117 !important;
   position: relative !important;
-  overflow: hidden !important;
+  overflow: visible !important;
+  /* Ensure no clipping */
   min-height: 120px;
   border-radius: 12px !important;
   border: 1px solid rgba(var(--vpd-accent-rgb), 0.3) !important;
@@ -276,8 +286,7 @@ fieldset:has(.vpd-3up-tab) label input {
   border-left: 3px solid var(--vpd-accent) !important;
   border-radius: 8px !important;
   padding: 10px 18px !important;
-  margin: 16px 0 24px 0 !important;
-  /* Added more space below the stats card */
+  margin-top: 16px !important;
   display: inline-flex !important;
   gap: 16px !important;
   font-size: 12px !important;
