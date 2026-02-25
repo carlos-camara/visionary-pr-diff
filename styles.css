@@ -87,7 +87,7 @@
   overflow: visible !important;
 }
 
-/* Vertical Liberation: Target GitHub's entire container stack */
+/* Nuclear Space Liberation: Target GitHub's entire container stack */
 .js-file-content:has(.vpd-active),
 .js-image-diff:has(.vpd-active),
 .blob-wrapper:has(.vpd-active),
@@ -97,6 +97,12 @@
   max-height: none !important;
   overflow: visible !important;
   display: block !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 /* Ensure the grid itself takes full width and expands naturally */
