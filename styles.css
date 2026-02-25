@@ -128,24 +128,22 @@ body:has(.vpd-active) .image-diff {
 .image-diff[data-vpd-state="active"].vpd-active {
   display: grid !important;
   grid-template-areas: "deleted diff added" !important;
-  grid-template-columns: 1fr 1.2fr 1fr !important;
-  /* Refined Triptych Proportions */
-  /* Premium Triptych Proportions */
-  gap: 16px !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  /* Perfect 1:1:1 Fit */
+  gap: 12px !important;
   align-items: start !important;
-  /* Strictly top-aligned - KILL vertical gap */
   justify-items: stretch !important;
-  padding: 0 !important;
+  padding: 10px !important;
+  /* Breathing room */
   width: 100% !important;
   max-width: none !important;
   box-sizing: border-box !important;
   background: transparent !important;
   border: none !important;
   height: auto !important;
-  max-height: 85vh !important;
-  /* Ensure viewport fit */
-  min-height: 400px !important;
-  /* Ensure Diff is visible during load */
+  max-height: 70vh !important;
+  /* Direct viewport fit */
+  min-height: 200px !important;
   overflow: visible !important;
   margin-top: 0 !important;
 }
