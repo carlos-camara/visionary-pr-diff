@@ -155,10 +155,10 @@ image-diff.vpd-active,
 .two-up.view.vpd-active,
 .image-diff.vpd-active:not(.three-up) {
   grid-template-areas: "originals diff" !important;
-  grid-template-columns: 35% 65% !important;
-  /* Balanced 2-up ratio */
-  align-items: stretch !important;
-  /* Stretch to fill height */
+  grid-template-columns: 40% 60% !important;
+  /* Refined 2-up balance */
+  align-items: start !important;
+  /* Top-aligned for clean fit */
 }
 
 /* Stack originals in the left 'originals' area */
