@@ -79,6 +79,32 @@
         `;
     };
 
+    /**
+     * THE HEIGHT LIBERATOR — strips GitHub's inline height/max-height
+     * from the view and every ancestor up to .js-file-content.
+     * This is the ONLY reliable way to prevent bottom clipping.
+     */
+    const liberateHeight = (view) => {
+        // 1. Strip inline styles from the view itself
+        view.style.removeProperty('height');
+        view.style.removeProperty('max-height');
+        view.style.setProperty('height', 'auto', 'important');
+        view.style.setProperty('overflow', 'visible', 'important');
+
+        // 2. Walk up the DOM and free every ancestor
+        let el = view.parentElement;
+        while (el && !el.matches('body')) {
+            const computed = window.getComputedStyle(el);
+            if (computed.overflow === 'hidden' || el.style.height || el.style.maxHeight) {
+                el.style.setProperty('overflow', 'visible', 'important');
+                el.style.removeProperty('height');
+                el.style.removeProperty('max-height');
+            }
+            if (el.matches('.js-file-content, .js-file, .file')) break;
+            el = el.parentElement;
+        }
+    };
+
     const reconcileViewMode = (view, val) => {
         if (!view) return;
 
@@ -86,6 +112,9 @@
             // Remove native active classes visually, though Ghost 2-up should handle functionality
             view.classList.remove('swipe', 'onion-skin');
             view.classList.add('three-up', 'vpd-active');
+
+            // THE FIX: Strip GitHub's inline height constraints
+            liberateHeight(view);
 
             // Fallback Light DOM cleanup just in case GitHub misses something
             view.querySelectorAll('.swipe-container, .onion-skin-container, .swipe-bar, .handle, .swipe-handle, .js-drag-handle').forEach(el => {
@@ -111,6 +140,12 @@
 
         const cleanup = () => {
             pierceShadowShield(view);
+
+            // Re-strip height every time GitHub mutates the DOM
+            if (view.classList.contains('vpd-active')) {
+                liberateHeight(view);
+            }
+
             view.querySelectorAll('.swipe-container, .onion-skin-container, .swipe-bar, .handle, .swipe-handle, .js-drag-handle').forEach(el => {
                 el.style.setProperty('display', 'none', 'important');
                 el.style.setProperty('visibility', 'hidden', 'important');
