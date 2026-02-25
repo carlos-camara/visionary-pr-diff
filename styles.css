@@ -88,7 +88,7 @@
 }
 
 /* VISIONARY TRIPTYCH: Root-to-Branch Liberation */
-/* Force the entire GitHub PR hierarchy to expand to 98% width */
+/* Force the entire GitHub PR hierarchy to expand to 98% width and stick to the TOP */
 body:has(.vpd-active) .container-xl,
 body:has(.vpd-active) .container-lg,
 body:has(.vpd-active) .repository-content,
@@ -104,11 +104,14 @@ body:has(.vpd-active) .file,
 body:has(.vpd-active) .js-file-content,
 body:has(.vpd-active) .blob-wrapper,
 body:has(.vpd-active) .view.vpd-active,
-body:has(.vpd-active) image-diff {
+body:has(.vpd-active) image-diff,
+body:has(.vpd-active) .image-diff {
   width: 98% !important;
   max-width: none !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
+  padding-top: 0 !important;
+  margin-top: 0 !important;
   margin-left: auto !important;
   margin-right: auto !important;
   height: auto !important;
@@ -116,6 +119,8 @@ body:has(.vpd-active) image-diff {
   max-height: none !important;
   overflow: visible !important;
   display: block !important;
+  position: static !important;
+  /* Kill any relative/absolute shifts */
 }
 
 /* Ensure the image-diff host is a grid */

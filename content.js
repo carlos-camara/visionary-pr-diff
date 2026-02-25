@@ -72,12 +72,13 @@
                 grid-template-areas: "deleted diff added" !important;
                 grid-template-columns: 1fr 1.8fr 1fr !important;
                 gap: 16px !important;
-                padding: 12px 0 !important;
+                padding: 0 !important;
                 width: 100% !important;
                 max-width: none !important;
                 height: auto !important;
-                align-items: center !important;
+                align-items: start !important; /* Top-aligned - remove gap */
                 overflow: visible !important;
+                margin-top: 0 !important;
             }
             .shell {
                 display: flex !important;
@@ -86,12 +87,13 @@
                 width: 100% !important;
                 height: auto !important;
                 min-width: 0 !important;
+                margin-top: 0 !important;
                 overflow: visible !important;
                 animation: vpd-fade-up 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
             }
             .shell:first-of-type { grid-area: deleted !important; }
             .shell:last-of-type { grid-area: added !important; }
-            .vpd-diff-shell { grid-area: diff !important; }
+            .vpd-diff-shell { grid-area: diff !important; min-height: 400px !important; }
 
             .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle, .swipe-handle, .js-drag-handle {
                 display: none !important;
@@ -100,11 +102,12 @@
             /* Kill internal encapsulation scrollbars */
             ::-webkit-scrollbar { display: none !important; }
             
-            /* Ensure images stretch to column width */
+            /* Ensure images stretch to column width and stick to top */
             img, .vpd-diff-frame {
                 width: 100% !important;
                 height: auto !important;
                 display: block !important;
+                margin-top: 0 !important;
             }
         `;
     };
