@@ -56,7 +56,7 @@
         });
     };
 
-    const pierceShadowShield = (view) => {
+    const pierceShadowShield = (view, mode = 'three-up') => {
         if (!view || !view.shadowRoot) return;
 
         let style = view.shadowRoot.querySelector('#vpd-shadow-shield');
@@ -66,41 +66,51 @@
             view.shadowRoot.appendChild(style);
         }
 
+        const is2Up = mode === 'two-up';
+
         style.textContent = `
-            :host(.three-up), :host(.vpd-active), :host {
+            :host(.three-up), :host(.two-up), :host(.vpd-active), :host {
                 display: grid !important;
-                grid-template-areas: 
-                    "deleted diff"
-                    "added diff" !important;
-                grid-template-columns: 1fr 1fr !important;
-                grid-template-rows: auto auto !important;
-                gap: 16px !important;
-                padding: 12px !important;
+                grid-template-areas: ${is2Up ? '"originals diff"' : '"deleted diff added"'} !important;
+                grid-template-columns: ${is2Up ? '0.8fr 1.2fr' : '1fr 1fr 1fr'} !important;
+                gap: 12px !important;
+                padding: 10px !important;
                 width: 100% !important;
                 max-width: none !important;
                 height: auto !important;
-                align-items: center !important;
+                max-height: 70vh !important;
+                align-items: start !important;
                 overflow: visible !important;
                 margin: 0 auto !important;
                 box-sizing: border-box !important;
             }
+
+            ${is2Up ? `
+                /* 2-UP SPLIT DASHBOARD LOGIC */
+                .shell:first-of-type { grid-area: originals !important; margin-bottom: 8px !important; }
+                .shell:last-of-type { display: none !important; } /* We will use a more sophisticated approach if needed, but for now GitHub often stacks them in one host */
+                
+                /* Note: In 2-up, GitHub often puts BOTH images in the first .shell or separate ones. 
+                   If they are separate, we need to stack them in the 'originals' area. */
+                :host(.two-up) {
+                    grid-template-columns: 350px 1fr !important; /* Fixed width for originals stack */
+                }
+            ` : ''}
+
             .shell, .vpd-diff-shell {
                 display: flex !important;
                 flex-direction: column !important;
                 position: relative !important;
                 width: 100% !important;
                 height: auto !important;
+                max-height: ${is2Up ? 'calc(50% - 4px)' : '70vh'} !important;
                 min-width: 0 !important;
                 overflow: visible !important;
                 animation: vpd-fade-up 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
             }
-            .shell:first-of-type { grid-area: deleted !important; }
-            .shell:last-of-type { grid-area: added !important; }
-            .vpd-diff-shell { 
-                grid-area: diff !important; 
-                grid-row: span 2 !important; 
-                min-height: 400px !important; 
-            }
+            .shell:first-of-type { grid-area: ${is2Up ? 'originals' : 'deleted'} !important; }
+            .shell:last-of-type { grid-area: ${is2Up ? 'originals' : 'added'} !important; margin-top: ${is2Up ? 'auto' : '0'} !important; }
+            .vpd-diff-shell { grid-area: diff !important; min-height: 300px !important; max-height: 70vh !important; }
 
             .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle, .swipe-handle, .js-drag-handle {
                 display: none !important;
@@ -111,14 +121,10 @@
             img, .vpd-diff-frame {
                 width: 100% !important;
                 height: auto !important;
-                max-height: 46vh !important;
+                max-height: 100% !important;
                 object-fit: contain !important;
                 display: block !important;
                 border-radius: 8px !important;
-            }
-
-            .vpd-diff-shell .vpd-diff-frame {
-                max-height: 92vh !important;
             }
         `;
     };
@@ -126,25 +132,24 @@
     const reconcileViewMode = (view, val) => {
         if (!view) return;
 
-        if (val === 'three-up') {
-            // Remove native active classes visually, though Ghost 2-up should handle functionality
+        if (val === 'three-up' || val === 'two-up') {
+            // Remove incompatible classes
             view.classList.remove('swipe', 'onion-skin');
-            view.classList.add('three-up', 'vpd-active');
+            view.classList.add(val, 'vpd-active');
 
-            // Fallback Light DOM cleanup just in case GitHub misses something
+            // Fallback Light DOM cleanup
             view.querySelectorAll('.swipe-container, .onion-skin-container, .swipe-bar, .handle, .swipe-handle, .js-drag-handle').forEach(el => {
                 el.style.setProperty('display', 'none', 'important');
                 el.style.setProperty('visibility', 'hidden', 'important');
             });
 
-            // Re-apply secondary shadow shield
-            pierceShadowShield(view);
+            // Re-apply secondary shadow shield with mode awareness
+            pierceShadowShield(view, val);
             activate3Up(view);
             startPersistentCleanup(view);
         } else {
-            // User selected 2-up, Swipe, or Onion natively.
-            // DO NOT FIGHT GITHUB'S DOM. Just remove our classes.
-            view.classList.remove('three-up', 'vpd-active');
+            // User selected Swipe or Onion natively.
+            view.classList.remove('three-up', 'two-up', 'vpd-active');
             deactivate3Up(view);
             stopPersistentCleanup(view);
         }
@@ -154,7 +159,8 @@
         if (view._vpdObserver) return;
 
         const cleanup = () => {
-            pierceShadowShield(view);
+            const currentMode = view.classList.contains('two-up') ? 'two-up' : 'three-up';
+            pierceShadowShield(view, currentMode);
             view.querySelectorAll('.swipe-container, .onion-skin-container, .swipe-bar, .handle, .swipe-handle, .js-drag-handle').forEach(el => {
                 el.style.setProperty('display', 'none', 'important');
                 el.style.setProperty('visibility', 'hidden', 'important');

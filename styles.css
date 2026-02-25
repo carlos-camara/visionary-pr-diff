@@ -123,25 +123,23 @@ body:has(.vpd-active) .image-diff {
   /* Kill any relative/absolute shifts */
 }
 
-/* VISIONARY COLLAGE: 2-up Stack (Left) + Diff (Right) */
+/* VISIONARY TRIPTYCH: NUCLEAR GRID ENFORCEMENT */
 .view.vpd-active,
 .image-diff.vpd-active,
 image-diff.vpd-active,
 [data-vpd-state="active"],
 .three-up.view.vpd-active {
   display: grid !important;
-  grid-template-areas:
-    "deleted diff"
-    "added diff" !important;
-  grid-template-columns: 1fr 1fr !important;
-  grid-template-rows: auto auto !important;
-  gap: 16px !important;
-  align-items: center !important;
+  grid-template-areas: "deleted diff added" !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  gap: 12px !important;
+  align-items: start !important;
   justify-items: stretch !important;
-  padding: 12px !important;
+  padding: 10px !important;
   width: 98% !important;
   max-width: none !important;
   height: auto !important;
+  max-height: 70vh !important;
   margin: 0 auto !important;
   overflow: visible !important;
   box-sizing: border-box !important;
@@ -155,23 +153,6 @@ image-diff.vpd-active,
   height: auto !important;
   min-width: 0 !important;
   position: relative !important;
-}
-
-.shell img,
-.shell .vpd-diff-frame {
-  max-height: 46vh !important;
-  /* Total 92vh stack */
-  object-fit: contain !important;
-}
-
-.vpd-diff-shell {
-  grid-area: diff !important;
-  grid-row: span 2 !important;
-  height: 100% !important;
-}
-
-.vpd-diff-shell .vpd-diff-frame {
-  max-height: 92vh !important;
 }
 
 /* Assign Grid Areas with Maximum Specificity */
