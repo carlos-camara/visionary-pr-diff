@@ -85,7 +85,8 @@
   gap: 16px !important;
   align-items: flex-start !important;
   justify-content: center !important;
-  padding: 12px 0 !important;
+  padding: 12px 0 32px 0 !important;
+  /* Added bottom padding for breathing room */
   width: 100% !important;
   max-width: none !important;
   box-sizing: border-box !important;
@@ -275,7 +276,8 @@ fieldset:has(.vpd-3up-tab) label input {
   border-left: 3px solid var(--vpd-accent) !important;
   border-radius: 8px !important;
   padding: 10px 18px !important;
-  margin-top: 16px !important;
+  margin: 16px 0 24px 0 !important;
+  /* Added more space below the stats card */
   display: inline-flex !important;
   gap: 16px !important;
   font-size: 12px !important;
