@@ -53,6 +53,27 @@
         });
     };
 
+    const pierceShadowShield = (view) => {
+        if (!view || !view.shadowRoot) return;
+
+        let style = view.shadowRoot.querySelector('#vpd-shadow-shield');
+        if (!style) {
+            style = document.createElement('style');
+            style.id = 'vpd-shadow-shield';
+            view.shadowRoot.appendChild(style);
+        }
+
+        style.textContent = `
+            .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle {
+                display: none !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+                height: 0 !important;
+            }
+        `;
+    };
+
     const reconcileViewMode = (view, val) => {
         if (!view) return;
 
@@ -60,10 +81,13 @@
         const nativeClasses = ['swipe', 'onion-skin', 'two-up', '2-up', 'cross-fade', 'blink', 'three-up'];
         view.classList.remove(...nativeClasses);
 
-        // 2. State Cleanup
+        // 2. Quantum Shield: Pierce Shadow DOM
+        pierceShadowShield(view);
+
+        // 3. State Cleanup
         document.body.classList.remove('vpd-3up-active');
 
-        // 3. Mode Activation
+        // 4. Mode Activation
         if (val === 'three-up') {
             view.classList.add('three-up');
             document.body.classList.add('vpd-3up-active');
@@ -137,7 +161,7 @@
         if (!view || view.dataset.vpdState === 'loading') return;
 
         const requestId = ++_currentRequestId;
-        console.log(`[VPD] Request ${requestId}: Starting (Passive Mode)...`);
+        console.log(`[VPD] Request ${requestId}: Starting (Quantum Mode)...`);
         view.dataset.vpdState = 'loading';
 
         // Anti-hang protection
@@ -165,14 +189,24 @@
 
         setStatus(diffShell, 'Waiting for source images...');
 
-        // Resilient Image Discovery
+        // Resilient Image Discovery (Shadow Root Aware)
         const findImg = (label) => {
+            // Priority 1: Shadow Root
+            if (view.shadowRoot) {
+                const shadowImg = [...view.shadowRoot.querySelectorAll('img')].find(img =>
+                    img.alt?.toLowerCase().includes(label.toLowerCase()) ||
+                    img.closest('.shell')?.textContent.toLowerCase().includes(label.toLowerCase())
+                );
+                if (shadowImg) return shadowImg;
+            }
+
+            // Priority 2: Standard Shells
             const el = [...document.querySelectorAll('.shell')].find(s => s.textContent.toLowerCase().includes(label.toLowerCase()));
             return el?.querySelector('img') || document.querySelector(`.js-image-diff img[alt*="${label}"]`);
         };
 
-        const imgA = findImg('Deleted') || findImg('Before') || view.querySelectorAll('img')[0];
-        const imgB = findImg('Added') || findImg('After') || view.querySelectorAll('img')[1];
+        const imgA = findImg('Deleted') || findImg('Before') || view.shadowRoot?.querySelectorAll('img')[0] || view.querySelectorAll('img')[0];
+        const imgB = findImg('Added') || findImg('After') || view.shadowRoot?.querySelectorAll('img')[1] || view.querySelectorAll('img')[1];
 
         if (!imgA || !imgB) {
             setStatus(diffShell, 'Error: Source images not found.', true);
@@ -263,6 +297,11 @@
         _currentRequestId++; // Cancel any active analysis
         document.querySelectorAll('[data-vpd-state]').forEach(el => {
             el.dataset.vpdState = 'inactive';
+            // Clear Shadow Shield
+            if (el.shadowRoot) {
+                const shield = el.shadowRoot.querySelector('#vpd-shadow-shield');
+                if (shield) shield.remove();
+            }
         });
         document.querySelectorAll('.vpd-diff-shell').forEach(s => s.remove());
 
