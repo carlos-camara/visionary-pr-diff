@@ -169,10 +169,12 @@ fieldset:has(.vpd-3up-tab) label input {
   display: none !important;
 }
 
-/* Glassmorphism Labels */
+/* Unified Premium Labels for all columns */
+.image-diff.vpd-active .shell .frame-label,
 .vpd-diff-shell .frame-label {
   display: flex !important;
   align-items: center !important;
+  justify-content: center !important;
   gap: 6px !important;
   background: var(--vpd-bg-glass) !important;
   backdrop-filter: blur(8px) !important;
@@ -186,7 +188,15 @@ fieldset:has(.vpd-3up-tab) label input {
   letter-spacing: 0.8px !important;
   text-transform: uppercase !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
-  margin-bottom: 6px !important;
+  margin: 0 auto 8px auto !important;
+  min-height: 22px !important;
+  width: fit-content !important;
+  box-sizing: border-box !important;
+}
+
+/* Ensure native metadata paragraphs don't add extra margin */
+.view.vpd-active .shell p:not(.frame-label) {
+  display: none !important;
 }
 
 /* Diff Frame Container */
