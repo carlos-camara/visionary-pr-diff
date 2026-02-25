@@ -69,9 +69,9 @@
         style.textContent = `
             :host(.three-up), :host(.vpd-active) {
                 display: grid !important;
-                grid-template-areas: "deleted added" "diff diff" !important;
-                grid-template-columns: 1fr 1fr !important;
-                gap: 16px 8px !important;
+                grid-template-areas: "deleted" "added" "diff" !important;
+                grid-template-columns: 100% !important;
+                gap: 32px 0 !important;
                 padding: 0 !important;
                 width: 100% !important;
                 max-width: none !important;
@@ -87,6 +87,7 @@
             }
             .shell:first-of-type { grid-area: deleted !important; }
             .shell:last-of-type { grid-area: added !important; }
+            .vpd-diff-shell { grid-area: diff !important; }
 
             .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle, .swipe-handle, .js-drag-handle {
                 display: none !important;
@@ -249,9 +250,10 @@
                 </div>
                 <div class="vpd-stats-card">...</div>
             `;
-            const firstNativeShell = view.querySelector('.shell');
+            const targetRoot = view.shadowRoot || view;
+            const firstNativeShell = targetRoot.querySelector('.shell');
             if (firstNativeShell) firstNativeShell.after(diffShell);
-            else view.appendChild(diffShell);
+            else targetRoot.appendChild(diffShell);
         }
 
         setStatus(diffShell, 'Waiting for source images...');

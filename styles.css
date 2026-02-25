@@ -159,15 +159,15 @@
 
 /* Column order and Area assignment */
 .shell:first-of-type {
-  grid-area: deleted;
-}
-
-.vpd-diff-shell {
-  grid-area: diff;
+  grid-area: deleted !important;
 }
 
 .shell:last-of-type {
-  grid-area: added;
+  grid-area: added !important;
+}
+
+.vpd-diff-shell {
+  grid-area: diff !important;
 }
 
 .three-up.view.vpd-active .shell img,
