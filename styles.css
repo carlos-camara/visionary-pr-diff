@@ -82,11 +82,12 @@
 .image-diff[data-vpd-state="active"].vpd-active {
   display: flex !important;
   flex-direction: row !important;
-  gap: 20px !important;
+  gap: 16px !important;
   align-items: flex-start !important;
   justify-content: center !important;
-  padding: 24px !important;
+  padding: 12px 0 !important;
   width: 100% !important;
+  max-width: none !important;
   box-sizing: border-box !important;
   background: radial-gradient(circle at top, rgba(var(--vpd-accent-rgb), 0.05), transparent) !important;
 }
@@ -108,7 +109,7 @@
 .image-diff.vpd-active .shell .vpd-diff-frame {
   width: 100% !important;
   height: auto !important;
-  max-height: 500px !important;
+  max-height: 75vh !important;
   object-fit: contain !important;
   border-radius: 12px !important;
   border: 1px solid var(--vpd-border-glass) !important;
