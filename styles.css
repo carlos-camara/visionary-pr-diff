@@ -37,7 +37,14 @@
   margin: 0 !important;
 }
 
-/* Perfect Symmetrical Layout - Full Bleed Breakout */
+/* Perfect Symmetrical Layout - Full Page Expansion */
+body:has(.vpd-active) .container-xl,
+body:has(.vpd-active) .container-lg,
+body:has(.vpd-active) .repository-content {
+  max-width: 98% !important;
+  width: 98% !important;
+}
+
 .js-file-content:has(.vpd-active),
 .js-file:has(.vpd-active),
 .file:has(.vpd-active) {
@@ -47,12 +54,9 @@
 
 .image-diff.vpd-active,
 .three-up.view.vpd-active {
-  /* Break out of standard GitHub container limits for a massive, legible layout */
-  width: 94vw !important;
+  /* Expand to 100% of our newly-widened GitHub containers */
+  width: 100% !important;
   max-width: none !important;
-  position: relative !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
 
   display: flex !important;
   flex-direction: row !important;
@@ -63,8 +67,7 @@
   padding: 24px !important;
   box-sizing: border-box !important;
 
-  overflow-x: auto !important;
-  overflow-y: visible !important;
+  overflow: visible !important;
 }
 
 .three-up.view.vpd-active .shell,
