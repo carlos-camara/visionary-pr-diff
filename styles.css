@@ -83,17 +83,62 @@
   align-items: center !important;
 }
 
+/* Diff Frame Container */
+.vpd-diff-frame {
+  display: block !important;
+  /* CRITICAL: honor aspect-ratio */
+  background: #0d1117 !important;
+  position: relative !important;
+  overflow: hidden !important;
+  min-height: 100px;
+}
+
+/* Scaling children of the diff frame */
+.vpd-diff-frame .vpd-canvas-main,
+.vpd-diff-frame .vpd-diff-bg {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: auto !important;
+  height: auto !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  object-fit: contain !important;
+}
+
+.vpd-diff-bg {
+  opacity: 0.7 !important;
+  /* Brighter for context */
+  z-index: 1;
+}
+
+.vpd-canvas-main {
+  z-index: 2;
+  mix-blend-mode: screen;
+  /* Highlights pop more */
+}
+
 /* Hide native modes gunk when active */
 .image-diff.three-up .js-drag-handle,
 .image-diff.three-up .handle,
 .image-diff.three-up .divider,
-.image-diff.three-up .image-diff-swipe-handle {
+.image-diff.three-up .image-diff-swipe-handle,
+.image-diff.three-up .image-diff-swipe,
+.image-diff.three-up .swipe-bar,
+.image-diff.three-up .onion-skin-bar {
+  display: none !important;
+}
+
+/* Hide native Onion Skin tab */
+label:has(input[value="onion-skin"]),
+.js-view-mode-item:has(input[value="onion-skin"]) {
   display: none !important;
 }
 
 /* Metadata tweaks for 3-up */
-body.vpd-3up-active .three-up.view .shell p,
-body.vpd-3up-active .three-up.view .shell .frame-label {
+.image-diff.three-up .shell p,
+.image-diff.three-up .shell .frame-label {
   font-size: 12px !important;
   margin: 6px 0 !important;
   text-align: center !important;
