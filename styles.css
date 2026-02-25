@@ -89,24 +89,23 @@ fieldset:has(.vpd-3up-tab) .js-view-mode-item.selected,
 
 /* Diff Frame Container */
 .vpd-diff-frame {
-  display: block !important;
+  display: grid !important;
   background: #0d1117 !important;
   position: relative !important;
-  overflow: hidden !important;
+  overflow: visible !important;
   min-height: 100px;
+  place-items: center;
+  /* Center contents */
 }
 
 .vpd-diff-frame .vpd-canvas-main,
 .vpd-diff-frame .vpd-diff-bg {
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  width: auto !important;
+  grid-area: 1 / 1;
+  /* Stack them in the same grid cell */
+  width: 100% !important;
   height: auto !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
   object-fit: contain !important;
+  display: block !important;
 }
 
 .vpd-diff-bg {
