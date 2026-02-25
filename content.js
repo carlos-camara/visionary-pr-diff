@@ -70,50 +70,42 @@
             :host(.three-up), :host(.vpd-active), :host {
                 display: grid !important;
                 grid-template-areas: "deleted diff added" !important;
-                grid-template-columns: 1fr 2fr 1fr !important;
-                gap: 0 !important;
-                padding: 0 !important;
+                grid-template-columns: 1fr 1.8fr 1fr !important;
+                gap: 16px !important;
+                padding: 12px 0 !important;
                 width: 100% !important;
                 max-width: none !important;
                 height: auto !important;
-                min-height: none !important;
-                max-height: none !important;
+                align-items: center !important;
                 overflow: visible !important;
             }
             .shell {
                 display: flex !important;
                 flex-direction: column !important;
-                position: static !important;
+                position: relative !important; /* Required for floating labels */
                 width: 100% !important;
                 height: auto !important;
                 min-width: 0 !important;
                 overflow: visible !important;
+                animation: vpd-fade-up 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
             }
-            .shell:first-of-type { 
-                grid-area: deleted !important; 
-                justify-self: stretch !important;
-            }
-            .shell:last-of-type { 
-                grid-area: added !important; 
-                justify-self: stretch !important;
-            }
-            .vpd-diff-shell { 
-                grid-area: diff !important; 
-                justify-self: stretch !important;
-                width: 100% !important;
-            }
+            .shell:first-of-type { grid-area: deleted !important; }
+            .shell:last-of-type { grid-area: added !important; }
+            .vpd-diff-shell { grid-area: diff !important; }
 
             .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle, .swipe-handle, .js-drag-handle {
                 display: none !important;
-                visibility: hidden !important;
-                opacity: 0 !important;
-                height: 0 !important;
-                width: 0 !important;
-                overflow: hidden !important;
             }
             
             /* Kill internal encapsulation scrollbars */
             ::-webkit-scrollbar { display: none !important; }
+            
+            /* Ensure images stretch to column width */
+            img, .vpd-diff-frame {
+                width: 100% !important;
+                height: auto !important;
+                display: block !important;
+            }
         `;
     };
 
