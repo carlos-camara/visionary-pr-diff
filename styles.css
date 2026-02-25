@@ -113,17 +113,18 @@
     "deleted added"
     "diff diff" !important;
   grid-template-columns: 1fr 1fr !important;
-  gap: 32px 24px !important;
-  /* Larger vertical gap between rows */
+  gap: 16px 8px !important;
+  /* Tight spacing for maximal image data */
   align-items: start !important;
   justify-items: center !important;
-  padding: 24px !important;
+  padding: 0 !important;
+  /* Zero padding for full-bleed immersion */
   width: 100% !important;
   max-width: none !important;
   box-sizing: border-box !important;
-  background: radial-gradient(circle at top, rgba(var(--vpd-accent-rgb), 0.08), transparent), #0d1117 !important;
-  border-radius: 16px !important;
-  border: 1px solid var(--vpd-border-glass) !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
 }
 
 /* Shared column properties */
