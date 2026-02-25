@@ -165,7 +165,8 @@ image-diff.vpd-active,
 .two-up.view.vpd-active .shell {
   grid-area: originals !important;
   width: 100% !important;
-  height: calc(50% - 6px) !important;
+  max-height: calc(35vh - 12px) !important;
+  /* Force half-viewport stack */
   position: relative !important;
   /* Anchor for floating labels */
 }
@@ -178,11 +179,13 @@ image-diff.vpd-active,
   margin-top: 0 !important;
 }
 
-/* Force Diff Visibility & Scale */
+/* Constrained Diff Scale */
 .two-up.view.vpd-active .vpd-diff-shell {
   grid-area: diff !important;
   width: 100% !important;
   max-width: 100% !important;
+  justify-self: start !important;
+  /* ONLY occupy available space */
 }
 
 .shell,
