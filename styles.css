@@ -151,14 +151,13 @@ image-diff.vpd-active,
   grid-template-columns: 1fr 1fr 1fr !important;
 }
 
-/* 2-UP IMMERSIVE Mode: Split-Dual Dashboard */
+/* 2-UP IMMERSIVE Mode: Split-Dual Dashboard (Strict 50/50) */
 .two-up.view.vpd-active,
 .image-diff.vpd-active:not(.three-up) {
   grid-template-areas: "originals diff" !important;
-  grid-template-columns: 40% 60% !important;
-  /* Refined 2-up balance */
+  grid-template-columns: 1fr 1fr !important;
+  /* Perfect Center Split */
   align-items: start !important;
-  /* Top-aligned for clean fit */
 }
 
 /* Stack originals in the left 'originals' area */

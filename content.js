@@ -86,15 +86,15 @@
             }
 
             ${is2Up ? `
-                /* 2-UP SPLIT DASHBOARD LOGIC */
+                /* 2-UP SPLIT DASHBOARD LOGIC (Strict 50/50) */
                 :host(.two-up) {
                     grid-template-areas: "originals diff" !important;
-                    grid-template-columns: 35% 65% !important;
-                    align-items: stretch !important;
+                    grid-template-columns: 1fr 1fr !important;
+                    align-items: start !important;
                 }
                 .shell { 
                     grid-area: originals !important; 
-                    height: calc(50% - 6px) !important;
+                    max-height: calc(35vh - 12px) !important;
                     width: 100% !important;
                     position: relative !important;
                 }
