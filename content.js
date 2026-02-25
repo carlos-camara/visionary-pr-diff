@@ -69,15 +69,17 @@
         style.textContent = `
             :host(.three-up), :host(.vpd-active), :host {
                 display: grid !important;
-                grid-template-areas: "deleted diff added" !important;
-                grid-template-columns: 1fr 1fr 1fr !important;
-                gap: 12px !important;
-                padding: 10px !important;
+                grid-template-areas: 
+                    "deleted diff"
+                    "added diff" !important;
+                grid-template-columns: 1fr 1fr !important;
+                grid-template-rows: auto auto !important;
+                gap: 16px !important;
+                padding: 12px !important;
                 width: 100% !important;
                 max-width: none !important;
                 height: auto !important;
-                max-height: 70vh !important;
-                align-items: start !important;
+                align-items: center !important;
                 overflow: visible !important;
                 margin: 0 auto !important;
                 box-sizing: border-box !important;
@@ -88,14 +90,17 @@
                 position: relative !important;
                 width: 100% !important;
                 height: auto !important;
-                max-height: 70vh !important;
                 min-width: 0 !important;
                 overflow: visible !important;
                 animation: vpd-fade-up 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
             }
             .shell:first-of-type { grid-area: deleted !important; }
             .shell:last-of-type { grid-area: added !important; }
-            .vpd-diff-shell { grid-area: diff !important; min-height: 300px !important; }
+            .vpd-diff-shell { 
+                grid-area: diff !important; 
+                grid-row: span 2 !important; 
+                min-height: 400px !important; 
+            }
 
             .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle, .swipe-handle, .js-drag-handle {
                 display: none !important;
@@ -106,10 +111,14 @@
             img, .vpd-diff-frame {
                 width: 100% !important;
                 height: auto !important;
-                max-height: 100% !important;
+                max-height: 46vh !important;
                 object-fit: contain !important;
                 display: block !important;
                 border-radius: 8px !important;
+            }
+
+            .vpd-diff-shell .vpd-diff-frame {
+                max-height: 92vh !important;
             }
         `;
     };
