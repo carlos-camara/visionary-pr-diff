@@ -151,40 +151,38 @@ image-diff.vpd-active,
   grid-template-columns: 1fr 1fr 1fr !important;
 }
 
-/* 2-UP IMMERSIVE Mode: Split-Dual Dashboard (Strict 50/50) */
+/* 2-UP IMMERSIVE Mode: Split-Dual Dashboard (Explicit 2x2 Rescue) */
 .two-up.view.vpd-active,
 .image-diff.vpd-active:not(.three-up) {
-  grid-template-areas: "originals diff" !important;
-  grid-template-columns: 1fr 1fr !important;
-  /* Perfect Center Split */
+  grid-template-areas: none !important;
+  grid-template-columns: 50% 50% !important;
+  /* Strict Center Split */
+  grid-template-rows: auto auto !important;
   align-items: start !important;
 }
 
-/* Stack originals in the left 'originals' area */
-.two-up.view.vpd-active .shell {
-  grid-area: originals !important;
-  width: 100% !important;
-  max-height: calc(35vh - 12px) !important;
-  /* Force half-viewport stack */
-  position: relative !important;
-  /* Anchor for floating labels */
-}
-
+/* Pin originals to Left Column exclusively */
 .two-up.view.vpd-active .shell:first-of-type {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
   margin-bottom: 12px !important;
 }
 
 .two-up.view.vpd-active .shell:last-of-type {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
   margin-top: 0 !important;
 }
 
 /* Strict Right-Half Docking (No Bleeding) */
+/* Dock Diff to Right Column exclusively (Starts at center, spans both rows) */
 .two-up.view.vpd-active .vpd-diff-shell {
-  grid-area: diff !important;
+  grid-area: none !important;
+  grid-column: 2 !important;
+  grid-row: 1 / span 2 !important;
   width: 100% !important;
   max-width: 100% !important;
   height: 100% !important;
-  /* Perfect mirror of left span */
   justify-self: stretch !important;
   margin-left: 0 !important;
   overflow: hidden !important;

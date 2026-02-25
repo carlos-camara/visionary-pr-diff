@@ -86,23 +86,32 @@
             }
 
             ${is2Up ? `
-                /* 2-UP SPLIT DASHBOARD LOGIC (Strict 50/50 Mirror) */
+                /* 2-UP SPLIT DASHBOARD RESCUE (Explicit Grid Pinning) */
                 :host(.two-up) {
-                    grid-template-areas: "originals diff" !important;
-                    grid-template-columns: 1fr 1fr !important;
-                    align-items: stretch !important; /* Match height of cells */
+                    grid-template-areas: none !important;
+                    grid-template-columns: 50% 50% !important;
+                    grid-template-rows: auto auto !important;
+                    align-items: stretch !important;
                 }
-                .shell { 
-                    grid-area: originals !important; 
+                .shell:first-of-type { 
+                    grid-column: 1 !important; 
+                    grid-row: 1 !important;
                     max-height: calc(35vh - 12px) !important;
                     width: 100% !important;
                     position: relative !important;
+                    margin-bottom: 12px !important;
                 }
-                .shell:first-of-type { margin-bottom: 12px !important; }
-                .shell:last-of-type { margin-top: 0 !important; display: flex !important; }
+                .shell:last-of-type { 
+                    grid-column: 1 !important;
+                    grid-row: 2 !important;
+                    margin-top: 0 !important; 
+                    display: flex !important;
+                    position: relative !important;
+                }
                 
                 .vpd-diff-shell {
-                    grid-area: diff !important;
+                    grid-column: 2 !important;
+                    grid-row: 1 / span 2 !important;
                     height: 100% !important;
                     max-height: none !important;
                     overflow: hidden !important;
