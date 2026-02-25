@@ -84,6 +84,8 @@ body.vpd-3up-active .three-up .shell .vpd-diff-frame {
   font-weight: 600 !important;
 }
 
+.view-modes label.selected,
+.view-modes .js-view-mode-item.selected,
 .vpd-3up-tab.selected {
   background: #1f6feb !important;
   color: #fff !important;

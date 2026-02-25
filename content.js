@@ -114,8 +114,9 @@
         console.log(`[VPD] Request ${requestId}: Starting (Passive Mode)...`);
         view.dataset.vpdState = 'loading';
 
-        // PASSIVE ISOLATION: Don't remove native classes.
-        // Let CSS handle the neutralization via .three-up and .vpd-3up-active
+        // PASSIVE ISOLATION: Remove native mode classes to prevent overlap
+        // but add them back if we deactivate. 
+        view.classList.remove('swipe', 'onion-skin', 'two-up');
         view.classList.add('three-up');
         document.body.classList.add('vpd-3up-active');
 
@@ -127,7 +128,7 @@
             if (view.dataset.vpdState === 'loading' && requestId === _currentRequestId) {
                 console.warn(`[VPD] Request ${requestId} hung.`);
                 view.dataset.vpdState = 'idle';
-                setStatus(diffShell, 'Sync Timeout. Please Retry.', true);
+                if (diffShell) setStatus(diffShell, 'Sync Timeout. Please Retry.', true);
             }
         }, 20000);
 
