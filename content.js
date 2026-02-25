@@ -262,6 +262,14 @@
                     if (label.toLowerCase().includes('delete') || label.toLowerCase().includes('before')) lbl.classList.add('vpd-label-deleted');
                     if (label.toLowerCase().includes('add') || label.toLowerCase().includes('after')) lbl.classList.add('vpd-label-added');
                 }
+                // Inject dimensions below native images
+                const img = el.querySelector('img');
+                if (img && !el.querySelector('.vpd-dimensions')) {
+                    const dim = document.createElement('div');
+                    dim.className = 'vpd-dimensions';
+                    dim.textContent = `W: ${img.naturalWidth}px | H: ${img.naturalHeight}px`;
+                    el.appendChild(dim);
+                }
             }
             return el?.querySelector('img');
         };
@@ -316,8 +324,20 @@
             setStatus(diffShell, 'Calculating stats...');
             const stats = calculateStats(canvas.getContext('2d'), canvas.width, canvas.height);
             diffShell.querySelector('.vpd-stats-card').innerHTML = `
-                <span>CHANGE</span> <b>${stats.pct}%</b> <span style="margin-left:8px; opacity:0.5;">|</span> <span>DELTA</span> <b>${stats.diff.toLocaleString()}</b> <span style="font-size:10px; opacity:0.6;">px</span>
+                <div class="vpd-stats-grid">
+                    <span class="vpd-stat-item"><b>Change:</b> ${stats.pct}%</span>
+                    <span class="vpd-stat-item"><b>Delta:</b> ${stats.diff.toLocaleString()} px</span>
+                </div>
             `;
+
+            // Add dimensions to central diff card too for balance
+            if (!diffShell.querySelector('.vpd-dimensions')) {
+                const dim = document.createElement('div');
+                dim.className = 'vpd-dimensions';
+                dim.textContent = `W: ${canvas.width}px | H: ${canvas.height}px`;
+                diffShell.appendChild(dim);
+            }
+
             view.dataset.vpdState = 'active';
         } catch (e) {
             clearTimeout(hangTimer);
