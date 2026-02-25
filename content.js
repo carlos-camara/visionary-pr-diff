@@ -77,42 +77,38 @@
                 max-width: none !important;
                 height: auto !important;
                 max-height: 70vh !important;
-                align-items: start !important; /* Top-aligned */
+                align-items: start !important;
                 overflow: visible !important;
-                margin-top: 0 !important;
+                margin: 0 auto !important;
                 box-sizing: border-box !important;
             }
-            .shell {
+            .shell, .vpd-diff-shell {
                 display: flex !important;
                 flex-direction: column !important;
-                position: relative !important; /* Required for floating labels */
+                position: relative !important;
                 width: 100% !important;
                 height: auto !important;
-                max-height: 100% !important;
+                max-height: 70vh !important;
                 min-width: 0 !important;
-                margin-top: 0 !important;
                 overflow: visible !important;
                 animation: vpd-fade-up 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
             }
             .shell:first-of-type { grid-area: deleted !important; }
             .shell:last-of-type { grid-area: added !important; }
-            .vpd-diff-shell { grid-area: diff !important; min-height: 200px !important; }
+            .vpd-diff-shell { grid-area: diff !important; min-height: 300px !important; }
 
             .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle, .swipe-handle, .js-drag-handle {
                 display: none !important;
             }
             
-            /* Kill internal encapsulation scrollbars */
             ::-webkit-scrollbar { display: none !important; }
             
-            /* Ensure images stretch to column width and fit viewport height */
             img, .vpd-diff-frame {
                 width: 100% !important;
                 height: auto !important;
-                max-height: 70vh !important;
+                max-height: 100% !important;
                 object-fit: contain !important;
                 display: block !important;
-                margin-top: 0 !important;
                 border-radius: 8px !important;
             }
         `;
