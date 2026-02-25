@@ -1,7 +1,14 @@
 <!-- Provide a brief description of the changes in this PR and the motivation behind them -->
 
 ## 🛠️ Type of Change
-...
+
+- [ ] 🚀 Feature
+- [ ] 🐛 Bug Fix
+- [ ] 🧹 Refactor
+- [ ] 📝 Documentation
+- [ ] ⚡ Performance Optimization
+- [ ] 🤖 CI/CD or Tooling
+
 ## 🚀 Key Changes
 
 - [ ] Detailed change 1
