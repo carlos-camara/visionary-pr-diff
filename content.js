@@ -67,11 +67,31 @@
         }
 
         style.textContent = `
+            :host(.three-up), :host(.vpd-active) {
+                display: grid !important;
+                grid-template-areas: "deleted added" "diff diff" !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 16px 8px !important;
+                padding: 0 !important;
+                width: 100% !important;
+                max-width: none !important;
+                height: auto !important;
+            }
+            .shell {
+                display: flex !important;
+                flex-direction: column !important;
+                position: static !important;
+                width: 100% !important;
+                height: auto !important;
+                min-width: 0 !important;
+            }
+            .shell:first-of-type { grid-area: deleted !important; }
+            .shell:last-of-type { grid-area: added !important; }
+
             .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle, .swipe-handle, .js-drag-handle {
                 display: none !important;
                 visibility: hidden !important;
                 opacity: 0 !important;
-                pointer-events: none !important;
                 height: 0 !important;
                 width: 0 !important;
                 overflow: hidden !important;
@@ -262,14 +282,6 @@
                     if (label.toLowerCase().includes('delete') || label.toLowerCase().includes('before')) lbl.classList.add('vpd-label-deleted');
                     if (label.toLowerCase().includes('add') || label.toLowerCase().includes('after')) lbl.classList.add('vpd-label-added');
                 }
-                // Inject dimensions below native images
-                const img = el.querySelector('img');
-                if (img && !el.querySelector('.vpd-dimensions')) {
-                    const dim = document.createElement('div');
-                    dim.className = 'vpd-dimensions';
-                    dim.textContent = `W: ${img.naturalWidth}px | H: ${img.naturalHeight}px`;
-                    el.appendChild(dim);
-                }
             }
             return el?.querySelector('img');
         };
@@ -324,20 +336,8 @@
             setStatus(diffShell, 'Calculating stats...');
             const stats = calculateStats(canvas.getContext('2d'), canvas.width, canvas.height);
             diffShell.querySelector('.vpd-stats-card').innerHTML = `
-                <div class="vpd-stats-grid">
-                    <span class="vpd-stat-item"><b>Change:</b> ${stats.pct}%</span>
-                    <span class="vpd-stat-item"><b>Delta:</b> ${stats.diff.toLocaleString()} px</span>
-                </div>
+                <span>CHANGE</span> <b>${stats.pct}%</b> <span style="margin-left:8px; opacity:0.5;">|</span> <span>DELTA</span> <b>${stats.diff.toLocaleString()}</b> <span style="font-size:10px; opacity:0.6;">px</span>
             `;
-
-            // Add dimensions to central diff card too for balance
-            if (!diffShell.querySelector('.vpd-dimensions')) {
-                const dim = document.createElement('div');
-                dim.className = 'vpd-dimensions';
-                dim.textContent = `W: ${canvas.width}px | H: ${canvas.height}px`;
-                diffShell.appendChild(dim);
-            }
-
             view.dataset.vpdState = 'active';
         } catch (e) {
             clearTimeout(hangTimer);

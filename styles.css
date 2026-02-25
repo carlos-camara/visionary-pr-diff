@@ -87,28 +87,36 @@
   overflow: visible !important;
 }
 
-/* Nuclear Space Liberation: Target GitHub's entire container stack */
-.js-file-content:has(.vpd-active),
-.js-image-diff:has(.vpd-active),
-.blob-wrapper:has(.vpd-active),
+/* Nuclear Space Liberation: Breakthrough the PR container limits */
+.container-lg:has(.vpd-active),
+.discussion-item:has(.vpd-active),
+.js-discussion-item:has(.vpd-active),
+.timeline-comment:has(.vpd-active),
+.js-comment-container:has(.vpd-active),
 .file:has(.vpd-active),
+.js-file-content:has(.vpd-active),
+.blob-wrapper:has(.vpd-active),
 .view.vpd-active {
+  width: 100% !important;
+  max-width: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
   height: auto !important;
   max-height: none !important;
   overflow: visible !important;
   display: block !important;
-  width: 100% !important;
-  max-width: none !important;
-  margin-left: 0 !important;
-  margin-right: 0 !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
 }
 
 /* Ensure the grid itself takes full width and expands naturally */
-.image-diff[data-vpd-state="active"].vpd-active {
+.image-diff[data-vpd-state="active"].vpd-active,
+.three-up.view.vpd-active {
   min-height: 500px !important;
   height: auto !important;
+  width: 100% !important;
+  max-width: none !important;
+  display: grid !important;
 }
 
 /* Perfect Zenith Layout (Stacked: Top 2-up, Bottom Diff) */
