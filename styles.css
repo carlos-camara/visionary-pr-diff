@@ -1,35 +1,35 @@
 /* 
- * Visionary PR Diff - Premium Styling
- * Glassmorphism and Elegant UI for GitHub Integration
+ * Visionary PR Diff - Multi-Diff Premium Styling
  */
 
-/* Visionary Diff label */
 .vpd-diff-shell .frame-label {
   color: #58a6ff !important;
 }
 
 /*
-   LIQUID SHIELD (Extreme Passive Isolation)
+   LIQUID SHIELD (Scoped Version)
    Target any descendant that might be leaking from native scripts.
 */
-body.vpd-3up-active .image-diff .swipe-container,
-body.vpd-3up-active .image-diff .onion-skin-container,
-body.vpd-3up-active .image-diff .swipe-handle,
-body.vpd-3up-active .image-diff .swipe-bar,
-body.vpd-3up-active .image-diff .handle,
-body.vpd-3up-active .image-diff .drag-handle,
-body.vpd-3up-active .image-diff .divider,
-body.vpd-3up-active .image-diff>div:not(.shell):not(.vpd-diff-shell):not(.js-image-diff) {
+.image-diff.vpd-active .swipe-container,
+.image-diff.vpd-active .onion-skin-container,
+.image-diff.vpd-active .swipe-handle,
+.image-diff.vpd-active .swipe-bar,
+.image-diff.vpd-active .handle,
+.image-diff.vpd-active .drag-handle,
+.image-diff.vpd-active .js-drag-handle,
+.image-diff.vpd-active .divider,
+.image-diff.vpd-active>div:not(.shell):not(.vpd-diff-shell):not(.js-image-diff) {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
   height: 0 !important;
+  width: 0 !important;
   overflow: hidden !important;
 }
 
 /* Force native shells to behave like blocks in our 3-column grid */
-body.vpd-3up-active .image-diff .shell {
+.image-diff.vpd-active .shell {
   position: static !important;
   transform: none !important;
   display: flex !important;
@@ -38,8 +38,8 @@ body.vpd-3up-active .image-diff .shell {
 }
 
 /* Perfect Symmetrical Layout */
-body.vpd-3up-active .three-up,
-body.vpd-3up-active [data-vpd-state="active"] {
+.three-up.view.vpd-active,
+.image-diff[data-vpd-state="active"].vpd-active {
   display: flex !important;
   flex-direction: row !important;
   gap: 24px !important;
@@ -50,18 +50,19 @@ body.vpd-3up-active [data-vpd-state="active"] {
   box-sizing: border-box !important;
 }
 
-body.vpd-3up-active .three-up .shell,
-body.vpd-3up-active [data-vpd-state="active"] .shell {
+.three-up.view.vpd-active .shell,
+.image-diff[data-vpd-state="active"].vpd-active .shell {
   flex: 0 0 calc(33.33% - 16px) !important;
-  /* Strict 1/3 width */
   min-width: 0 !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
 }
 
-body.vpd-3up-active .three-up .shell img,
-body.vpd-3up-active .three-up .shell .vpd-diff-frame {
+.three-up.view.vpd-active .shell img,
+.three-up.view.vpd-active .shell .vpd-diff-frame,
+.image-diff.vpd-active [data-vpd-state="active"] .shell img,
+.image-diff.vpd-active [data-vpd-state="active"] .shell .vpd-diff-frame {
   width: 100% !important;
   height: auto !important;
   max-height: 450px !important;
@@ -91,14 +92,12 @@ body.vpd-3up-active .three-up .shell .vpd-diff-frame {
 /* Diff Frame Container */
 .vpd-diff-frame {
   display: block !important;
-  /* CRITICAL: honor aspect-ratio */
   background: #0d1117 !important;
   position: relative !important;
   overflow: hidden !important;
   min-height: 100px;
 }
 
-/* Scaling children of the diff frame */
 .vpd-diff-frame .vpd-canvas-main,
 .vpd-diff-frame .vpd-diff-bg {
   position: absolute !important;
@@ -114,14 +113,12 @@ body.vpd-3up-active .three-up .shell .vpd-diff-frame {
 
 .vpd-diff-bg {
   opacity: 0.7 !important;
-  /* Brighter for context */
   z-index: 1;
 }
 
 .vpd-canvas-main {
   z-index: 2;
   mix-blend-mode: screen;
-  /* Highlights pop more */
 }
 
 /* Hide native Onion Skin tab */
@@ -131,27 +128,20 @@ label:has(input[value="onion-skin"]),
 }
 
 /* Hide native mode gunk */
-body.vpd-3up-active .js-drag-handle,
-body.vpd-3up-active .handle,
-body.vpd-3up-active .divider {
+.image-diff.vpd-active .js-drag-handle,
+.image-diff.vpd-active .handle,
+.image-diff.vpd-active .divider {
   display: none !important;
 }
 
-/* Metadata tweaks for 3-up */
-body.vpd-3up-active .three-up.view .shell p,
-body.vpd-3up-active .three-up.view .shell .frame-label {
-  font-size: 12px !important;
+/* Metadata tweaks */
+.view.vpd-active .shell p,
+.view.vpd-active .shell .frame-label {
+  font-size: 11px !important;
   margin: 6px 0 !important;
   text-align: center !important;
   white-space: nowrap !important;
   font-weight: 500 !important;
-}
-
-/* Hide 2-up Tab Safely */
-.vpd-hidden {
-  display: none !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
 }
 
 /* Tab Selector Injection */
@@ -163,7 +153,6 @@ body.vpd-3up-active .three-up.view .shell .frame-label {
   margin-right: 8px !important;
 }
 
-/* Universal Tab Highlight - follows native radio state */
 .view-modes label:has(input:checked),
 .view-modes .js-view-mode-item:has(input:checked),
 .view-modes .selected,
@@ -175,15 +164,8 @@ body.vpd-3up-active .three-up.view .shell .frame-label {
 
 .view-modes label:has(input:checked) input,
 .view-modes .selected input {
-  /* Ensure radio is hidden but state is kept */
   opacity: 0;
   position: absolute;
-}
-
-.label-vpd {
-  background-color: #58a6ff33 !important;
-  color: #58a6ff !important;
-  border: 1px solid #58a6ff4d !important;
 }
 
 /* High-Contrast Stats Card */
@@ -192,13 +174,12 @@ body.vpd-3up-active .three-up.view .shell .frame-label {
   color: #c9d1d9 !important;
   border: 1px solid #30363d !important;
   border-top: 2px solid #238636 !important;
-  /* Green accent */
   border-radius: 6px;
-  padding: 8px 16px !important;
-  margin-top: 12px;
+  padding: 8px 14px !important;
+  margin-top: 10px;
   display: inline-flex;
-  gap: 15px;
-  font-size: 13px !important;
+  gap: 12px;
+  font-size: 11px !important;
   font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Courier, monospace !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
 }

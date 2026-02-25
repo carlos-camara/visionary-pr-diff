@@ -1,5 +1,5 @@
 /**
- * Visionary PR Diff — v25 (Binary-Stream Fix)
+ * Visionary PR Diff — v26 (Multi-Diff Support)
  */
 
 (function () {
@@ -9,7 +9,7 @@
 
     if (!isIframe && window.location.hostname === 'github.com') return;
 
-    console.log(`[VPD] v25 Init: ${window.location.hostname}`);
+    console.log(`[VPD] v26 Init: ${window.location.hostname}`);
 
     let _currentRequestId = 0;
 
@@ -24,7 +24,6 @@
 
     window._vpdRetry = () => {
         document.querySelectorAll('[data-vpd-state]').forEach(el => el.dataset.vpdState = 'idle');
-        activate3Up();
     };
 
     const calculateStats = (ctx, w, h) => {
@@ -43,13 +42,17 @@
         }
     };
 
-    const syncTabSelection = () => {
-        const fieldset = document.querySelector('fieldset, .view-modes fieldset');
+    const syncTabSelection = (fieldset) => {
         if (!fieldset) return;
         fieldset.querySelectorAll('label, .js-view-mode-item').forEach(label => {
             const radio = label.querySelector('input[type="radio"]');
-            if (radio?.checked) label.classList.add('selected');
-            else label.classList.remove('selected');
+            if (radio?.checked) {
+                label.classList.add('selected');
+                label.setAttribute('aria-selected', 'true');
+            } else {
+                label.classList.remove('selected');
+                label.setAttribute('aria-selected', 'false');
+            }
         });
     };
 
@@ -64,12 +67,14 @@
         }
 
         style.textContent = `
-            .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle {
+            .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle, .swipe-handle, .js-drag-handle {
                 display: none !important;
                 visibility: hidden !important;
                 opacity: 0 !important;
                 pointer-events: none !important;
                 height: 0 !important;
+                width: 0 !important;
+                overflow: hidden !important;
             }
         `;
     };
@@ -77,81 +82,109 @@
     const reconcileViewMode = (view, val) => {
         if (!view) return;
 
-        // 1. LIQUID SHIELD: Aggressively strip native classes
-        const nativeClasses = ['swipe', 'onion-skin', 'two-up', '2-up', 'cross-fade', 'blink', 'three-up'];
-        view.classList.remove(...nativeClasses);
-
-        // 2. THE ERASER: Force internal component state to passive
-        // This triggers GitHub's native cleanup of swipe/onion UI in the Shadow DOM
         if (val === 'three-up') {
-            if (view.tagName === 'IMAGE-DIFF' || view.hasAttribute('mode')) {
-                view.setAttribute('mode', '2-up');
-            }
-        }
+            // Remove native active classes visually, though Ghost 2-up should handle functionality
+            view.classList.remove('swipe', 'onion-skin');
+            view.classList.add('three-up', 'vpd-active');
 
-        // 3. Quantum Shield: Pierce Shadow DOM (Secondary Defense)
-        pierceShadowShield(view);
-
-        // 4. State Cleanup
-        document.body.classList.remove('vpd-3up-active');
-
-        // 5. Mode Activation
-        if (val === 'three-up') {
-            view.classList.add('three-up');
-            document.body.classList.add('vpd-3up-active');
-
-            // Explicitly neutralize native containers in Light DOM
-            view.querySelectorAll('.swipe-container, .onion-skin-container, .swipe-bar, .handle').forEach(el => {
+            // Fallback Light DOM cleanup just in case GitHub misses something
+            view.querySelectorAll('.swipe-container, .onion-skin-container, .swipe-bar, .handle, .swipe-handle, .js-drag-handle').forEach(el => {
                 el.style.setProperty('display', 'none', 'important');
+                el.style.setProperty('visibility', 'hidden', 'important');
             });
 
-            activate3Up();
+            // Re-apply secondary shadow shield
+            pierceShadowShield(view);
+            activate3Up(view);
+            startPersistentCleanup(view);
         } else {
-            if (val) view.classList.add(val);
-            deactivate3Up();
+            // User selected 2-up, Swipe, or Onion natively.
+            // DO NOT FIGHT GITHUB'S DOM. Just remove our classes.
+            view.classList.remove('three-up', 'vpd-active');
+            deactivate3Up(view);
+            stopPersistentCleanup(view);
+        }
+    };
+
+    const startPersistentCleanup = (view) => {
+        if (view._vpdObserver) return;
+
+        const cleanup = () => {
+            pierceShadowShield(view);
+            view.querySelectorAll('.swipe-container, .onion-skin-container, .swipe-bar, .handle, .swipe-handle, .js-drag-handle').forEach(el => {
+                el.style.setProperty('display', 'none', 'important');
+                el.style.setProperty('visibility', 'hidden', 'important');
+            });
+        };
+
+        view._vpdObserver = new MutationObserver(cleanup);
+        view._vpdObserver.observe(view, { childList: true, subtree: true, attributes: true });
+
+        // Also run immediately
+        cleanup();
+    };
+
+    const stopPersistentCleanup = (view) => {
+        if (view._vpdObserver) {
+            view._vpdObserver.disconnect();
+            delete view._vpdObserver;
         }
     };
 
     const setup3Up = () => {
-        const fieldset = document.querySelector('fieldset, .view-modes fieldset');
-        if (!fieldset) return;
+        // More resilient discovery: Start from fieldsets
+        const fieldsets = document.querySelectorAll('fieldset, .view-modes fieldset');
 
-        const view = document.querySelector('.view, .image-diff, .two-up, .swipe, .three-up');
+        fieldsets.forEach(fieldset => {
+            if (fieldset.querySelector('.vpd-3up-tab')) {
+                syncTabSelection(fieldset);
+                return;
+            }
 
-        // 1. Hook into native radio changes for perfect sync
-        if (!fieldset.dataset.vpdObserved) {
-            fieldset.dataset.vpdObserved = 'true';
-            fieldset.addEventListener('change', (e) => {
-                if (e.target.name === 'view-mode') {
-                    reconcileViewMode(view, e.target.value);
-                }
-                syncTabSelection();
-            });
-        }
+            // Find view relative to fieldset (supports both PR diffs and single file views)
+            let view = fieldset.closest('.js-file, .file')?.querySelector('.view, .image-diff, image-diff')
+                || fieldset.parentElement?.querySelector('.view, .image-diff, image-diff')
+                || document.querySelector('.view, .image-diff, image-diff'); // Fallback for isolated views
 
-        if (fieldset.querySelector('.vpd-3up-tab')) {
-            syncTabSelection();
-            return;
-        }
+            if (!view) return;
 
-        // 2. Add our tab as a native radio item
-        const tab = document.createElement('label');
-        tab.className = 'js-view-mode-item vpd-3up-tab';
-        tab.innerHTML = '<input type="radio" value="three-up" name="view-mode"> 3-up';
-        fieldset.appendChild(tab);
+            // 1. Hook into native radio changes
+            if (!fieldset.dataset.vpdObserved) {
+                fieldset.dataset.vpdObserved = 'true';
+                fieldset.addEventListener('change', (e) => {
+                    if (e.target.name !== 'view-mode') return;
+                    if (fieldset.dataset.vpdIgnore) return;
 
-        // Auto-trigger on first load if desired
-        if (!window._vpdAutoTriggered) {
-            window._vpdAutoTriggered = true;
-            setTimeout(() => {
-                const radio = tab.querySelector('input');
-                if (radio) {
-                    radio.checked = true;
-                    reconcileViewMode(view, 'three-up');
-                    syncTabSelection();
-                }
-            }, 500);
-        }
+                    const val = e.target.value;
+
+                    if (val === 'three-up') {
+                        // THE GHOST 2-UP TRICK: Proxy through native 2-up to trigger pristine cleanup
+                        const twoUpRadio = fieldset.querySelector('input[value="2-up"], input[value="two-up"]');
+                        if (twoUpRadio) {
+                            fieldset.dataset.vpdIgnore = 'true';
+                            twoUpRadio.checked = true;
+                            twoUpRadio.dispatchEvent(new Event('change', { bubbles: true })); // Trigger native cleanup
+
+                            // Restore our physical radio state visually
+                            e.target.checked = true;
+                            delete fieldset.dataset.vpdIgnore;
+                        }
+
+                        reconcileViewMode(view, 'three-up');
+                    } else {
+                        // Native mode selected. Hand control back entirely.
+                        reconcileViewMode(view, val);
+                    }
+                    syncTabSelection(fieldset);
+                });
+            }
+
+            // 2. Add our tab as a native radio item
+            const tab = document.createElement('label');
+            tab.className = 'js-view-mode-item vpd-3up-tab';
+            tab.innerHTML = '<input type="radio" value="three-up" name="view-mode"> 3-up';
+            fieldset.appendChild(tab);
+        });
     };
 
     const waitForImage = async (img, timeout = 5000) => {
@@ -164,18 +197,14 @@
         });
     };
 
-    const activate3Up = async () => {
-        const view = document.querySelector('.view, .image-diff, .two-up, .swipe, .three-up');
+    const activate3Up = async (view) => {
         if (!view || view.dataset.vpdState === 'loading') return;
 
         const requestId = ++_currentRequestId;
-        console.log(`[VPD] Request ${requestId}: Starting (Quantum Mode)...`);
         view.dataset.vpdState = 'loading';
 
-        // Anti-hang protection
         const hangTimer = setTimeout(() => {
             if (view.dataset.vpdState === 'loading' && requestId === _currentRequestId) {
-                console.warn(`[VPD] Request ${requestId} hung.`);
                 view.dataset.vpdState = 'idle';
                 if (diffShell) setStatus(diffShell, 'Sync Timeout. Please Retry.', true);
             }
@@ -197,9 +226,7 @@
 
         setStatus(diffShell, 'Waiting for source images...');
 
-        // Resilient Image Discovery (Shadow Root Aware)
         const findImg = (label) => {
-            // Priority 1: Shadow Root
             if (view.shadowRoot) {
                 const shadowImg = [...view.shadowRoot.querySelectorAll('img')].find(img =>
                     img.alt?.toLowerCase().includes(label.toLowerCase()) ||
@@ -207,10 +234,8 @@
                 );
                 if (shadowImg) return shadowImg;
             }
-
-            // Priority 2: Standard Shells
-            const el = [...document.querySelectorAll('.shell')].find(s => s.textContent.toLowerCase().includes(label.toLowerCase()));
-            return el?.querySelector('img') || document.querySelector(`.js-image-diff img[alt*="${label}"]`);
+            const el = [...view.querySelectorAll('.shell')].find(s => s.textContent.toLowerCase().includes(label.toLowerCase()));
+            return el?.querySelector('img');
         };
 
         const imgA = findImg('Deleted') || findImg('Before') || view.shadowRoot?.querySelectorAll('img')[0] || view.querySelectorAll('img')[0];
@@ -223,20 +248,11 @@
             return;
         }
 
-        // Ensure images are ready
         const ready = await Promise.all([waitForImage(imgA), waitForImage(imgB)]);
         if (requestId !== _currentRequestId) return;
 
         if (!ready[0] || !ready[1]) {
             console.warn('[VPD] Target images failed to signal readiness.');
-        }
-
-        if (!imgA?.src || !imgB?.src || imgA.src.startsWith('data:')) {
-            console.warn('[VPD] Invalid image sources.');
-            setStatus(diffShell, 'Error: Invalid image sources.', true);
-            view.dataset.vpdState = 'idle';
-            clearTimeout(hangTimer);
-            return;
         }
 
         try {
@@ -250,26 +266,22 @@
             const { canvas, imgB: decodedImgB } = await window.VisionaryDiffEngine.compareImages(urlA, urlB);
 
             if (requestId !== _currentRequestId) return;
-            clearTimeout(hangTimer); // Success!
+            clearTimeout(hangTimer);
 
-            // Track for cleanup
-            window._vpdUrls = window._vpdUrls || [];
-            if (decodedImgB.src.startsWith('blob:')) window._vpdUrls.push(decodedImgB.src);
+            view._vpdUrls = view._vpdUrls || [];
+            if (decodedImgB.src.startsWith('blob:')) view._vpdUrls.push(decodedImgB.src);
 
             const frame = diffShell.querySelector('.vpd-diff-frame');
             frame.innerHTML = '';
 
-            // Sync aspect ratio
             const aspect = canvas.width / canvas.height;
             frame.style.aspectRatio = aspect.toString();
 
-            // Background Ghost
             const ghost = document.createElement('img');
             ghost.src = decodedImgB.src;
             ghost.className = 'vpd-diff-bg';
             frame.appendChild(ghost);
 
-            // Diff Pixels
             canvas.className = 'vpd-canvas-main';
             frame.appendChild(canvas);
 
@@ -279,44 +291,31 @@
                 Change: <b>${stats.pct}%</b> | Delta: <b>${stats.diff.toLocaleString()}</b> px
             `;
             view.dataset.vpdState = 'active';
-            console.log(`[VPD] Request ${requestId} complete.`);
         } catch (e) {
             clearTimeout(hangTimer);
             if (requestId === _currentRequestId) {
-                console.error(`[VPD] Request ${requestId} failed:`, e);
+                console.error(`[VPD] Failed:`, e);
                 const isContextError = e.message.includes('refresh');
                 const frame = diffShell.querySelector('.vpd-diff-frame');
                 if (frame) {
-                    frame.innerHTML = `
-                        <div style="padding:40px; text-align:center;">
-                            <div style="color:#f85149; font-size:13px; margin-bottom:10px; font-weight:600;">
-                                ${e.message}
-                            </div>
-                            ${isContextError ? '<button onclick="window.location.reload()" style="background:#238636; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Refrescar Página</button>' : ''}
-                        </div>
-                    `;
+                    frame.innerHTML = `<div style="padding:40px; text-align:center;"><div style="color:#f85149; font-size:13px; margin-bottom:10px; font-weight:600;">${e.message}</div></div>`;
                 }
                 view.dataset.vpdState = 'error';
             }
         }
     };
 
-    const deactivate3Up = () => {
-        _currentRequestId++; // Cancel any active analysis
-        document.querySelectorAll('[data-vpd-state]').forEach(el => {
-            el.dataset.vpdState = 'inactive';
-            // Clear Shadow Shield
-            if (el.shadowRoot) {
-                const shield = el.shadowRoot.querySelector('#vpd-shadow-shield');
-                if (shield) shield.remove();
-            }
-        });
-        document.querySelectorAll('.vpd-diff-shell').forEach(s => s.remove());
-
-        // Cleanup ObjectURLs
-        if (window._vpdUrls) {
-            window._vpdUrls.forEach(url => URL.revokeObjectURL(url));
-            window._vpdUrls = [];
+    const deactivate3Up = (view) => {
+        if (!view) return;
+        view.dataset.vpdState = 'inactive';
+        if (view.shadowRoot) {
+            const shield = view.shadowRoot.querySelector('#vpd-shadow-shield');
+            if (shield) shield.remove();
+        }
+        view.querySelectorAll('.vpd-diff-shell').forEach(s => s.remove());
+        if (view._vpdUrls) {
+            view._vpdUrls.forEach(url => URL.revokeObjectURL(url));
+            view._vpdUrls = [];
         }
     };
 
