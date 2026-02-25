@@ -47,9 +47,12 @@ body:has(.vpd-active) .repository-content {
 
 .js-file-content:has(.vpd-active),
 .js-file:has(.vpd-active),
-.file:has(.vpd-active) {
-  /* Prevent parent clipping without destroying internal components */
+.file:has(.vpd-active),
+.js-image-diff:has(.vpd-active) {
+  /* Prevent parent clipping and allow height to grow naturally */
   overflow: visible !important;
+  height: auto !important;
+  max-height: none !important;
 }
 
 .image-diff.vpd-active,
@@ -61,6 +64,7 @@ body:has(.vpd-active) .repository-content {
   height: auto !important;
   /* CRITICAL: Override GitHub's inline height clip */
   min-height: min-content !important;
+  max-height: none !important;
 
   display: flex !important;
   flex-direction: row !important;
@@ -74,7 +78,7 @@ body:has(.vpd-active) .repository-content {
   overflow-x: auto !important;
   /* Allow scroll if screen is narrow */
   overflow-y: visible !important;
-  /* MUST be visible - hidden was clipping images and stats card! */
+  /* CRITICAL: Ensure no bottom clipping */
 }
 
 .three-up.view.vpd-active .shell,
@@ -110,6 +114,8 @@ body:has(.vpd-active) .repository-content {
   height: auto !important;
   display: block !important;
   border-radius: 8px !important;
+  max-height: none !important;
+  /* Allow image to be as tall as natural */
 }
 
 /* Tab Management */
