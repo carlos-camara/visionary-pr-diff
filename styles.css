@@ -65,28 +65,31 @@ body:has(.vpd-active) .repository-content {
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
-  gap: 24px !important;
+  gap: 32px !important;
+  /* Slightly more gap for clarity */
   align-items: flex-start !important;
   justify-content: center !important;
-  padding: 24px !important;
+  padding: 32px !important;
   box-sizing: border-box !important;
 
   overflow-x: auto !important;
   /* Allow scroll if screen is narrow */
-  overflow-y: hidden !important;
-  /* Clear floats */
+  overflow-y: visible !important;
+  /* CRITICAL: Never hide vertical overflow */
 }
 
 .three-up.view.vpd-active .shell,
 .image-diff[data-vpd-state="active"].vpd-active .shell {
   flex: 1 1 0 !important;
   width: 100% !important;
-  min-width: 450px !important;
-  /* CRITICAL: Force large size matching 2-up! */
+  min-width: 550px !important;
+  /* CRITICAL: Force massive size matching 2-up! */
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  padding-bottom: 30px !important;
+  padding-bottom: 40px !important;
+  /* More space for the stats card */
+  overflow: visible !important;
 }
 
 .three-up.view.vpd-active .shell .frame,
@@ -135,7 +138,9 @@ fieldset:has(.vpd-3up-tab) .js-view-mode-item.selected,
   background: #0d1117 !important;
   position: relative !important;
   overflow: visible !important;
-  min-height: 100px;
+  min-height: 200px;
+  width: 100% !important;
+  height: auto !important;
   place-items: center;
   /* Center contents */
 }
@@ -146,6 +151,7 @@ fieldset:has(.vpd-3up-tab) .js-view-mode-item.selected,
   /* Stack them in the same grid cell */
   width: 100% !important;
   height: auto !important;
+  max-width: 100% !important;
   object-fit: contain !important;
   display: block !important;
 }
