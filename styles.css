@@ -57,6 +57,8 @@
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
+  padding-bottom: 24px !important;
+  /* Ensure space for bottom content */
 }
 
 .three-up.view.vpd-active .shell img,
@@ -173,12 +175,15 @@ fieldset:has(.vpd-3up-tab) .selected input {
   border-top: 2px solid #238636 !important;
   border-radius: 6px;
   padding: 8px 14px !important;
-  margin-top: 10px;
+  margin-top: 14px !important;
+  margin-bottom: 10px !important;
   display: inline-flex;
   gap: 12px;
   font-size: 11px !important;
   font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Courier, monospace !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  flex-shrink: 0 !important;
+  /* Prevent squishing */
 }
 
 .vpd-stats-card b {
