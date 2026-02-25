@@ -102,6 +102,33 @@
                 .shell:last-of-type { margin-top: 0 !important; display: flex !important; }
             ` : ''}
 
+            /* PREMIUM FLOATING GLASS LABELS */
+            .frame-label.vpd-premium-label {
+                position: absolute !important;
+                top: 12px !important;
+                left: 12px !important;
+                z-index: 20 !important;
+                display: flex !important;
+                align-items: center !important;
+                gap: 8px !important;
+                background: rgba(13, 17, 23, 0.7) !important;
+                backdrop-filter: blur(12px) saturate(180%) !important;
+                -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
+                padding: 6px 14px !important;
+                border-radius: 30px !important;
+                border: 1px solid rgba(255, 255, 255, 0.15) !important;
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+                font-size: 10px !important;
+                font-weight: 800 !important;
+                letter-spacing: 1px !important;
+                text-transform: uppercase !important;
+                color: #fff !important;
+                pointer-events: none !important;
+                margin: 0 !important;
+            }
+            .vpd-label-deleted { color: #ff7b72 !important; border-color: rgba(248, 81, 73, 0.4) !important; }
+            .vpd-label-added { color: #3fb950 !important; border-color: rgba(63, 185, 80, 0.4) !important; }
+
             .shell, .vpd-diff-shell {
                 display: flex !important;
                 flex-direction: column !important;
