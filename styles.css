@@ -8,14 +8,18 @@
   color: #58a6ff !important;
 }
 
-/* 
-   PER-CONTAINER ISOLATION 
-   We neutralize native GitHub diff elements only when our mode is active on that container.
+/*
+   PER-CONTAINER ISOLATION
+   Aggressively hide native GitHub diff artifacts when 3-up is active.
 */
 .image-diff.three-up .handle,
 .image-diff.three-up .swipe-bar,
 .image-diff.three-up .image-diff-swipe,
-.image-diff.three-up .onion-skin-bar {
+.image-diff.three-up .onion-skin-bar,
+.image-diff.three-up .js-drag-handle,
+.image-diff.three-up .divider,
+.image-diff.three-up .image-diff-swipe-handle,
+.image-diff.three-up>div:not(.shell):not(.vpd-diff-shell):not(.view-modes):not(.js-image-diff-tabs) {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
@@ -26,40 +30,46 @@
 .image-diff.three-up .shell {
   position: static !important;
   transform: none !important;
-  display: block !important;
-  width: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 30% !important;
+  min-width: 0 !important;
+  align-items: center !important;
   margin: 0 !important;
+  width: auto !important;
 }
 
 /* Perfect Symmetrical Layout for Active Containers */
 .image-diff.three-up {
   display: flex !important;
   flex-direction: row !important;
-  gap: 24px !important;
+  flex-wrap: nowrap !important;
+  gap: 20px !important;
   align-items: flex-start !important;
-  justify-content: center !important;
-  padding: 20px !important;
+  justify-content: space-between !important;
+  padding: 24px !important;
   width: 100% !important;
   box-sizing: border-box !important;
-}
-
-.image-diff.three-up .shell {
-  flex: 0 0 calc(33.33% - 16px) !important;
-  min-width: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
+  background: #0d1117 !important;
+  border-radius: 12px !important;
+  border: 1px solid #30363d !important;
 }
 
 .image-diff.three-up .shell img,
 .image-diff.three-up .shell .vpd-diff-frame {
   width: 100% !important;
   height: auto !important;
-  max-height: 450px !important;
+  max-height: 500px !important;
   object-fit: contain !important;
   border-radius: 8px !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important;
+  border: 2px solid #30363d !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6) !important;
+  transition: border-color 0.2s ease;
+}
+
+.image-diff.three-up .shell:hover img,
+.image-diff.three-up .shell:hover .vpd-diff-frame {
+  border-color: #58a6ff !important;
 }
 
 /* Tab Management - Global Selection Styling */
@@ -69,6 +79,7 @@
   background: #1f6feb !important;
   color: #fff !important;
   border-color: #1f6feb !important;
+  box-shadow: 0 0 15px rgba(31, 111, 235, 0.4) !important;
 }
 
 .image-diff label,
@@ -76,21 +87,32 @@
 .vpd-3up-tab {
   cursor: pointer !important;
   font-weight: 600 !important;
-  padding: 4px 12px !important;
+  padding: 6px 16px !important;
   border-radius: 6px !important;
-  margin: 0 2px !important;
+  margin: 0 4px !important;
   display: inline-flex !important;
   align-items: center !important;
+  border: 1px solid transparent !important;
+  transition: all 0.2s ease !important;
+  font-size: 13px !important;
+  color: #8b949e !important;
+}
+
+.image-diff label:hover,
+.image-diff .js-view-mode-item:hover,
+.vpd-3up-tab:hover {
+  background: #21262d !important;
+  color: #c9d1d9 !important;
 }
 
 /* Diff Frame Container */
 .vpd-diff-frame {
   display: block !important;
   /* CRITICAL: honor aspect-ratio */
-  background: #0d1117 !important;
+  background: #010409 !important;
   position: relative !important;
   overflow: hidden !important;
-  min-height: 100px;
+  min-height: 150px;
 }
 
 /* Scaling children of the diff frame */
@@ -108,7 +130,7 @@
 }
 
 .vpd-diff-bg {
-  opacity: 0.7 !important;
+  opacity: 0.6 !important;
   /* Brighter for context */
   z-index: 1;
 }
@@ -140,10 +162,11 @@ label:has(input[value="onion-skin"]),
 .image-diff.three-up .shell p,
 .image-diff.three-up .shell .frame-label {
   font-size: 12px !important;
-  margin: 6px 0 !important;
+  margin: 10px 0 !important;
   text-align: center !important;
-  white-space: nowrap !important;
-  font-weight: 500 !important;
+  color: #8b949e !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
 }
 
 /* Hide 2-up Tab Safely */

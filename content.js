@@ -47,7 +47,10 @@
     const syncTabSelection = (fieldset) => {
         if (!fieldset) return;
         fieldset.querySelectorAll('label, .js-view-mode-item').forEach(label => {
-            const input = label.querySelector('input');
+            const input = label.querySelector('input') ||
+                fieldset.querySelector(`input#${label.getAttribute('for')}`) ||
+                [...fieldset.querySelectorAll('input')].find(i => i.value === label.textContent.trim().toLowerCase().replace(' ', '-'));
+
             if (input) {
                 if (input.checked) label.classList.add('selected');
                 else label.classList.remove('selected');
@@ -56,10 +59,9 @@
     };
 
     const setup3Up = (container) => {
-        const fieldset = container.querySelector('fieldset, .view-modes fieldset');
+        const fieldset = container.querySelector('fieldset, .view-modes fieldset, .js-image-diff-tabs fieldset');
         if (!fieldset) return;
 
-        // 1. Hook into native radio changes for perfect sync
         if (!fieldset.dataset.vpdObserved) {
             fieldset.dataset.vpdObserved = 'true';
             fieldset.addEventListener('change', (e) => {
@@ -67,7 +69,6 @@
                 const view = fieldset.closest('.image-diff, .view');
                 if (val === 'three-up') activate3Up(view);
                 else deactivate3Up(view);
-
                 syncTabSelection(fieldset);
             });
         }
