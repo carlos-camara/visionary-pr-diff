@@ -37,81 +37,39 @@
   margin: 0 !important;
 }
 
-/* Perfect Symmetrical Layout - Full Page Expansion */
-body:has(.vpd-active) .container-xl,
-body:has(.vpd-active) .container-lg,
-body:has(.vpd-active) .repository-content {
-  max-width: 98% !important;
-  width: 98% !important;
-}
-
-/* CRITICAL: Force native GitHub shells to allow expansion and visibility */
-.js-file-content:has(.vpd-active),
-.js-file:has(.vpd-active),
-.file:has(.vpd-active),
-.image-diff:has(.vpd-active) {
-  overflow: visible !important;
-  height: auto !important;
-  max-height: none !important;
-}
-
-.image-diff.vpd-active,
-.three-up.view.vpd-active {
-  /* Expand to 100% of our newly-widened GitHub containers */
-  width: 100% !important;
-  max-width: none !important;
-
-  height: auto !important;
-  min-height: min-content !important;
-
+/* Perfect Symmetrical Layout */
+.three-up.view.vpd-active,
+.image-diff[data-vpd-state="active"].vpd-active {
   display: flex !important;
   flex-direction: row !important;
-  flex-wrap: nowrap !important;
   gap: 24px !important;
   align-items: flex-start !important;
   justify-content: center !important;
-  padding: 24px !important;
-  /* SAFE ZONE: Ensure content is NEVER hidden behind bottom tab bars */
-  padding-bottom: 120px !important;
+  padding: 20px !important;
+  width: 100% !important;
   box-sizing: border-box !important;
-
-  overflow: visible !important;
 }
 
 .three-up.view.vpd-active .shell,
 .image-diff[data-vpd-state="active"].vpd-active .shell {
-  flex: 1 1 0% !important;
-  /* Flexible growth */
-  width: 100% !important;
-  max-width: 33.33% !important;
-  /* Perfect third-split */
+  flex: 0 0 calc(33.33% - 16px) !important;
   min-width: 0 !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
 }
 
-.three-up.view.vpd-active .shell .frame,
-.image-diff.vpd-active [data-vpd-state="active"] .shell .frame {
-  width: 100% !important;
-  height: auto !important;
-}
-
+.three-up.view.vpd-active .shell img,
 .three-up.view.vpd-active .shell .vpd-diff-frame,
+.image-diff.vpd-active [data-vpd-state="active"] .shell img,
 .image-diff.vpd-active [data-vpd-state="active"] .shell .vpd-diff-frame {
   width: 100% !important;
   height: auto !important;
+  max-height: 450px !important;
+  object-fit: contain !important;
   border-radius: 8px !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important;
-}
-
-.three-up.view.vpd-active .shell img,
-.image-diff.vpd-active [data-vpd-state="active"] .shell img {
-  max-width: 100% !important;
-  height: auto !important;
-  display: block !important;
-  border-radius: 8px !important;
 }
 
 /* Tab Management */
@@ -133,23 +91,24 @@ fieldset:has(.vpd-3up-tab) .js-view-mode-item.selected,
 
 /* Diff Frame Container */
 .vpd-diff-frame {
-  display: grid !important;
+  display: block !important;
   background: #0d1117 !important;
   position: relative !important;
-  overflow: visible !important;
+  overflow: hidden !important;
   min-height: 100px;
-  place-items: center;
-  /* Center contents */
 }
 
 .vpd-diff-frame .vpd-canvas-main,
 .vpd-diff-frame .vpd-diff-bg {
-  grid-area: 1 / 1;
-  /* Stack them in the same grid cell */
-  width: 100% !important;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  width: auto !important;
   height: auto !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
   object-fit: contain !important;
-  display: block !important;
 }
 
 .vpd-diff-bg {
@@ -217,15 +176,12 @@ fieldset:has(.vpd-3up-tab) .selected input {
   border-top: 2px solid #238636 !important;
   border-radius: 6px;
   padding: 8px 14px !important;
-  margin-top: 14px !important;
-  margin-bottom: 10px !important;
+  margin-top: 10px;
   display: inline-flex;
   gap: 12px;
   font-size: 11px !important;
   font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Courier, monospace !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
-  flex-shrink: 0 !important;
-  /* Prevent squishing */
 }
 
 .vpd-stats-card b {

@@ -274,6 +274,9 @@
             const frame = diffShell.querySelector('.vpd-diff-frame');
             frame.innerHTML = '';
 
+            const aspect = canvas.width / canvas.height;
+            frame.style.aspectRatio = aspect.toString();
+
             const ghost = document.createElement('img');
             ghost.src = decodedImgB.src;
             ghost.className = 'vpd-diff-bg';
