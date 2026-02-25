@@ -123,29 +123,36 @@ body:has(.vpd-active) .image-diff {
   /* Kill any relative/absolute shifts */
 }
 
-/* VISIONARY TRIPTYCH: Panoramic Grid Configuration */
-.three-up.view.vpd-active,
-.image-diff[data-vpd-state="active"].vpd-active {
+/* VISIONARY TRIPTYCH: NUCLEAR GRID ENFORCEMENT */
+.view.vpd-active,
+.image-diff.vpd-active,
+image-diff.vpd-active,
+[data-vpd-state="active"],
+.three-up.view.vpd-active {
   display: grid !important;
   grid-template-areas: "deleted diff added" !important;
   grid-template-columns: 1fr 1fr 1fr !important;
-  /* Perfect 1:1:1 Fit */
   gap: 12px !important;
   align-items: start !important;
   justify-items: stretch !important;
   padding: 10px !important;
-  /* Breathing room */
-  width: 100% !important;
+  width: 98% !important;
   max-width: none !important;
-  box-sizing: border-box !important;
-  background: transparent !important;
-  border: none !important;
   height: auto !important;
   max-height: 70vh !important;
-  /* Direct viewport fit */
-  min-height: 200px !important;
+  margin: 0 auto !important;
   overflow: visible !important;
-  margin-top: 0 !important;
+  box-sizing: border-box !important;
+}
+
+.shell,
+.vpd-diff-shell {
+  display: flex !important;
+  flex-direction: column !important;
+  width: 100% !important;
+  height: auto !important;
+  min-width: 0 !important;
+  position: relative !important;
 }
 
 /* Assign Grid Areas with Maximum Specificity */
