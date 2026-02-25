@@ -71,7 +71,7 @@
                 display: grid !important;
                 grid-template-areas: "deleted added" "diff diff" !important;
                 grid-template-columns: 1fr 1fr !important;
-                gap: 24px 16px !important;
+                gap: 32px 16px !important;
                 padding: 0 !important;
                 width: 100% !important;
                 max-width: none !important;
@@ -89,9 +89,21 @@
                 min-width: 0 !important;
                 overflow: visible !important;
             }
-            .shell:first-of-type { grid-area: deleted !important; }
-            .shell:last-of-type { grid-area: added !important; }
-            .vpd-diff-shell { grid-area: diff !important; }
+            .shell:first-of-type { 
+                grid-area: deleted !important; 
+                justify-self: start !important;
+                max-width: 48% !important;
+            }
+            .shell:last-of-type { 
+                grid-area: added !important; 
+                justify-self: end !important;
+                max-width: 48% !important;
+            }
+            .vpd-diff-shell { 
+                grid-area: diff !important; 
+                justify-self: center !important;
+                width: 100% !important;
+            }
 
             .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle, .swipe-handle, .js-drag-handle {
                 display: none !important;
