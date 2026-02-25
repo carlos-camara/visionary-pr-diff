@@ -70,11 +70,22 @@
   flex: 1 0 auto !important;
   width: calc(33.33% - 16px) !important;
   min-width: 450px !important;
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   padding-bottom: 24px !important;
   /* Ensure space for bottom content */
+}
+
+/* Un-clip any GitHub wrappers *inside* the shell (e.g., .image-container) */
+.three-up.view.vpd-active .shell>div:not(.vpd-diff-frame):not(.vpd-stats-card),
+.image-diff[data-vpd-state="active"].vpd-active .shell>div:not(.vpd-diff-frame):not(.vpd-stats-card) {
+  height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
 }
 
 .three-up.view.vpd-active .shell img,
@@ -83,9 +94,11 @@
 .image-diff.vpd-active [data-vpd-state="active"] .shell .vpd-diff-frame {
   width: 100% !important;
   height: auto !important;
+  max-height: none !important;
   border-radius: 8px !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important;
+  display: block !important;
 }
 
 /* Tab Management */
