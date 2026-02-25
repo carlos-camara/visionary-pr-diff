@@ -166,25 +166,19 @@ image-diff.vpd-active {
 .shell:first-of-type {
   grid-area: deleted !important;
   justify-self: start !important;
-  /* Push Deleted to far left */
-  max-width: 48% !important;
-  /* Keep top images smaller for better scale context */
+  /* Pin to far left */
 }
 
 .shell:last-of-type {
   grid-area: added !important;
   justify-self: end !important;
-  /* Push Added to far right */
-  max-width: 48% !important;
+  /* Pin to far right */
 }
 
 .vpd-diff-shell {
   grid-area: diff !important;
-  justify-self: center !important;
-  /* Center the Visionary Diff in the middle */
-  width: 100% !important;
-  /* Diff remains full width */
-  max-width: none !important;
+  justify-self: stretch !important;
+  /* Center diff takes majority space */
 }
 
 .three-up.view.vpd-active .shell img,
