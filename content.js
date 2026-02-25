@@ -86,11 +86,11 @@
             }
 
             ${is2Up ? `
-                /* 2-UP SPLIT DASHBOARD LOGIC (Strict 50/50) */
+                /* 2-UP SPLIT DASHBOARD LOGIC (Strict 50/50 Mirror) */
                 :host(.two-up) {
                     grid-template-areas: "originals diff" !important;
                     grid-template-columns: 1fr 1fr !important;
-                    align-items: start !important;
+                    align-items: stretch !important; /* Match height of cells */
                 }
                 .shell { 
                     grid-area: originals !important; 
@@ -100,6 +100,17 @@
                 }
                 .shell:first-of-type { margin-bottom: 12px !important; }
                 .shell:last-of-type { margin-top: 0 !important; display: flex !important; }
+                
+                .vpd-diff-shell {
+                    grid-area: diff !important;
+                    height: 100% !important;
+                    max-height: none !important;
+                    overflow: hidden !important;
+                }
+                .vpd-diff-frame {
+                    height: 100% !important;
+                    max-height: 100% !important;
+                }
             ` : ''}
 
             /* PREMIUM FLOATING GLASS LABELS */
