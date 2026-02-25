@@ -76,6 +76,8 @@
                 width: 100% !important;
                 max-width: none !important;
                 height: auto !important;
+                min-height: none !important;
+                overflow: visible !important;
             }
             .shell {
                 display: flex !important;
@@ -84,6 +86,7 @@
                 width: 100% !important;
                 height: auto !important;
                 min-width: 0 !important;
+                overflow: visible !important;
             }
             .shell:first-of-type { grid-area: deleted !important; }
             .shell:last-of-type { grid-area: added !important; }
