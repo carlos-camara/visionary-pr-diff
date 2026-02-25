@@ -155,19 +155,34 @@ image-diff.vpd-active,
 .two-up.view.vpd-active,
 .image-diff.vpd-active:not(.three-up) {
   grid-template-areas: "originals diff" !important;
-  grid-template-columns: minmax(200px, 350px) 1fr !important;
+  grid-template-columns: 35% 65% !important;
+  /* Balanced 2-up ratio */
+  align-items: stretch !important;
+  /* Stretch to fill height */
 }
 
 /* Stack originals in the left 'originals' area */
 .two-up.view.vpd-active .shell {
   grid-area: originals !important;
-  max-height: calc(50% - 6px) !important;
-  margin-bottom: 8px !important;
+  width: 100% !important;
+  height: calc(50% - 6px) !important;
+  position: relative !important;
+  /* Anchor for floating labels */
+}
+
+.two-up.view.vpd-active .shell:first-of-type {
+  margin-bottom: 12px !important;
 }
 
 .two-up.view.vpd-active .shell:last-of-type {
-  margin-bottom: 0 !important;
-  margin-top: auto !important;
+  margin-top: 0 !important;
+}
+
+/* Force Diff Visibility & Scale */
+.two-up.view.vpd-active .vpd-diff-shell {
+  grid-area: diff !important;
+  width: 100% !important;
+  max-width: 100% !important;
 }
 
 .shell,

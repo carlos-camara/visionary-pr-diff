@@ -87,14 +87,19 @@
 
             ${is2Up ? `
                 /* 2-UP SPLIT DASHBOARD LOGIC */
-                .shell:first-of-type { grid-area: originals !important; margin-bottom: 8px !important; }
-                .shell:last-of-type { display: none !important; } /* We will use a more sophisticated approach if needed, but for now GitHub often stacks them in one host */
-                
-                /* Note: In 2-up, GitHub often puts BOTH images in the first .shell or separate ones. 
-                   If they are separate, we need to stack them in the 'originals' area. */
                 :host(.two-up) {
-                    grid-template-columns: 350px 1fr !important; /* Fixed width for originals stack */
+                    grid-template-areas: "originals diff" !important;
+                    grid-template-columns: 35% 65% !important;
+                    align-items: stretch !important;
                 }
+                .shell { 
+                    grid-area: originals !important; 
+                    height: calc(50% - 6px) !important;
+                    width: 100% !important;
+                    position: relative !important;
+                }
+                .shell:first-of-type { margin-bottom: 12px !important; }
+                .shell:last-of-type { margin-top: 0 !important; display: flex !important; }
             ` : ''}
 
             .shell, .vpd-diff-shell {
@@ -103,7 +108,7 @@
                 position: relative !important;
                 width: 100% !important;
                 height: auto !important;
-                max-height: ${is2Up ? 'calc(50% - 4px)' : '70vh'} !important;
+                max-height: ${is2Up ? 'calc(50% - 6px)' : '70vh'} !important;
                 min-width: 0 !important;
                 overflow: visible !important;
                 animation: vpd-fade-up 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
