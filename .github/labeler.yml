@@ -1,0 +1,47 @@
+# PR Auto-Labeler Configuration
+# Automatically assigns labels to Pull Requests based on changed file paths.
+
+'DevOps':
+  - changed-files:
+      - any-glob-to-any-file:
+          - '.github/**'
+          - '.husky/**'
+          - 'Dockerfile*'
+          - 'docker-compose*'
+
+'dependencies':
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'package.json'
+          - 'package-lock.json'
+          - '.npmrc'
+
+'documentation':
+  - changed-files:
+      - any-glob-to-any-file:
+          - '**/*.md'
+          - 'docs/**'
+
+'testing':
+  - changed-files:
+      - any-glob-to-any-file:
+          - 'tests/**'
+          - '**/*.test.js'
+          - '**/*.spec.js'
+
+'core':
+  - changed-files:
+      - any-glob-to-any-file:
+          - '*.js'
+          - 'lib/**'
+          - 'src/**'
+
+'configuration':
+  - changed-files:
+      - any-glob-to-any-file:
+          - '*.json'
+          - '*.yml'
+          - '*.yaml'
+          - '.eslintrc*'
+          - 'eslint.config*'
+          - '.prettierrc*'

@@ -28,7 +28,7 @@
     };
 
     const calculateStats = (ctx, w, h) => {
-        if (!ctx || w === 0 || h === 0) return { diff: 0, pct: "0.00" };
+        if (!ctx || w === 0 || h === 0) return { diff: 0, pct: '0.00' };
         try {
             const data = ctx.getImageData(0, 0, w, h).data;
             let diff = 0;
@@ -39,7 +39,7 @@
             return { diff, pct: (diff / total * 100).toFixed(2) };
         } catch (e) {
             console.warn('[VPD] Stats failed:', e);
-            return { diff: 0, pct: "0.00" };
+            return { diff: 0, pct: '0.00' };
         }
     };
 
@@ -61,7 +61,7 @@
 
         // 1. Hook into native radio changes for perfect sync
         if (!fieldset.dataset.vpdObserved) {
-            fieldset.dataset.vpdObserved = "true";
+            fieldset.dataset.vpdObserved = 'true';
             fieldset.addEventListener('change', (e) => {
                 const val = e.target.value;
                 if (val === 'three-up') activate3Up();
