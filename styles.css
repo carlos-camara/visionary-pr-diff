@@ -178,14 +178,23 @@ image-diff.vpd-active,
   margin-top: 0 !important;
 }
 
-/* Constrained Diff Scale (Strictly Right Half) */
+/* Strict Right-Half Docking (No Bleeding) */
 .two-up.view.vpd-active .vpd-diff-shell {
   grid-area: diff !important;
   width: 100% !important;
   max-width: 100% !important;
+  height: 100% !important;
+  /* Perfect mirror of left span */
   justify-self: stretch !important;
-  /* Fill the right half starting from center */
   margin-left: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Ensure the frame inside obeys the docking box */
+.two-up.view.vpd-active .vpd-diff-frame {
+  height: 100% !important;
+  max-height: none !important;
+  min-height: 0 !important;
 }
 
 .shell,
