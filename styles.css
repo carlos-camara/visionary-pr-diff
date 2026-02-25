@@ -87,12 +87,22 @@
   overflow: visible !important;
 }
 
-/* Vertical Liberation: Target GitHub's restrictive containers */
+/* Vertical Liberation: Target GitHub's entire container stack */
 .js-file-content:has(.vpd-active),
-.js-image-diff:has(.vpd-active) {
+.js-image-diff:has(.vpd-active),
+.blob-wrapper:has(.vpd-active),
+.file:has(.vpd-active),
+.view.vpd-active {
   height: auto !important;
   max-height: none !important;
   overflow: visible !important;
+  display: block !important;
+}
+
+/* Ensure the grid itself takes full width and expands naturally */
+.image-diff[data-vpd-state="active"].vpd-active {
+  min-height: 500px !important;
+  height: auto !important;
 }
 
 /* Perfect Zenith Layout (Stacked: Top 2-up, Bottom Diff) */
@@ -103,14 +113,17 @@
     "deleted added"
     "diff diff" !important;
   grid-template-columns: 1fr 1fr !important;
-  gap: 24px !important;
+  gap: 32px 24px !important;
+  /* Larger vertical gap between rows */
   align-items: start !important;
   justify-items: center !important;
-  padding: 12px 16px !important;
+  padding: 24px !important;
   width: 100% !important;
   max-width: none !important;
   box-sizing: border-box !important;
-  background: radial-gradient(circle at top, rgba(var(--vpd-accent-rgb), 0.05), transparent) !important;
+  background: radial-gradient(circle at top, rgba(var(--vpd-accent-rgb), 0.08), transparent), #0d1117 !important;
+  border-radius: 16px !important;
+  border: 1px solid var(--vpd-border-glass) !important;
 }
 
 /* Shared column properties */
