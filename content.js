@@ -274,11 +274,6 @@
             const frame = diffShell.querySelector('.vpd-diff-frame');
             frame.innerHTML = '';
 
-            const aspect = canvas.width / canvas.height;
-            frame.style.aspectRatio = aspect.toString();
-
-            // Limit to actual image dimensions so we don't blow up small icons, but let big diffs take the width
-
             const ghost = document.createElement('img');
             ghost.src = decodedImgB.src;
             ghost.className = 'vpd-diff-bg';
