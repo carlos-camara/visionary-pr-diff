@@ -124,17 +124,16 @@ image-diff.vpd-active {
   display: grid !important;
 }
 
-/* Giga-Zenith Layout (Stacked: 3 Vertical Rows @ 100% Width) */
+/* Zenith Layout (Stacked: Top 2-up, Bottom Diff) */
 .three-up.view.vpd-active,
 .image-diff[data-vpd-state="active"].vpd-active {
   display: grid !important;
   grid-template-areas:
-    "deleted"
-    "added"
-    "diff" !important;
-  grid-template-columns: 100% !important;
-  gap: 32px 0 !important;
-  /* Vertical gap between rows */
+    "deleted added"
+    "diff diff" !important;
+  grid-template-columns: 1fr 1fr !important;
+  gap: 24px 16px !important;
+  /* Balanced spacing */
   align-items: start !important;
   justify-items: stretch !important;
   padding: 0 !important;
@@ -145,6 +144,8 @@ image-diff.vpd-active {
   background: transparent !important;
   border: none !important;
   border-radius: 0 !important;
+  height: auto !important;
+  overflow: visible !important;
 }
 
 /* Shared column properties */
