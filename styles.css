@@ -82,8 +82,8 @@
   font-weight: 600 !important;
 }
 
-.view-modes label.selected,
-.view-modes .js-view-mode-item.selected,
+fieldset:has(.vpd-3up-tab) label.selected,
+fieldset:has(.vpd-3up-tab) .js-view-mode-item.selected,
 .vpd-3up-tab.selected {
   background: #1f6feb !important;
   color: #fff !important;
@@ -153,17 +153,17 @@ label:has(input[value="onion-skin"]),
   margin-right: 8px !important;
 }
 
-.view-modes label:has(input:checked),
-.view-modes .js-view-mode-item:has(input:checked),
-.view-modes .selected,
+fieldset:has(.vpd-3up-tab) label:has(input:checked),
+fieldset:has(.vpd-3up-tab) .js-view-mode-item:has(input:checked),
+fieldset:has(.vpd-3up-tab) .selected,
 .vpd-3up-tab.selected {
   background: #1f6feb !important;
   color: #fff !important;
   border-color: #1f6feb !important;
 }
 
-.view-modes label:has(input:checked) input,
-.view-modes .selected input {
+fieldset:has(.vpd-3up-tab) label:has(input:checked) input,
+fieldset:has(.vpd-3up-tab) .selected input {
   opacity: 0;
   position: absolute;
 }
