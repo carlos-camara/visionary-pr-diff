@@ -58,6 +58,10 @@ body:has(.vpd-active) .repository-content {
   width: 100% !important;
   max-width: none !important;
 
+  height: auto !important;
+  /* CRITICAL: Override GitHub's inline height clip */
+  min-height: min-content !important;
+
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
@@ -67,29 +71,45 @@ body:has(.vpd-active) .repository-content {
   padding: 24px !important;
   box-sizing: border-box !important;
 
-  overflow: visible !important;
+  overflow-x: auto !important;
+  /* Allow scroll if screen is narrow */
+  overflow-y: hidden !important;
+  /* Clear floats */
 }
 
 .three-up.view.vpd-active .shell,
 .image-diff[data-vpd-state="active"].vpd-active .shell {
   flex: 1 1 0 !important;
   width: 100% !important;
-  min-width: 0 !important;
+  min-width: 450px !important;
+  /* CRITICAL: Force large size matching 2-up! */
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   padding-bottom: 30px !important;
 }
 
-.three-up.view.vpd-active .shell img,
+.three-up.view.vpd-active .shell .frame,
+.image-diff.vpd-active [data-vpd-state="active"] .shell .frame {
+  width: 100% !important;
+  height: auto !important;
+}
+
 .three-up.view.vpd-active .shell .vpd-diff-frame,
-.image-diff.vpd-active [data-vpd-state="active"] .shell img,
 .image-diff.vpd-active [data-vpd-state="active"] .shell .vpd-diff-frame {
   width: 100% !important;
   height: auto !important;
   border-radius: 8px !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+.three-up.view.vpd-active .shell img,
+.image-diff.vpd-active [data-vpd-state="active"] .shell img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block !important;
+  border-radius: 8px !important;
 }
 
 /* Tab Management */
