@@ -214,9 +214,19 @@
         if (!diffShell) {
             diffShell = document.createElement('div');
             diffShell.className = 'shell vpd-diff-shell';
+
+            // Premium Iconography
+            const sparkIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:2px;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>`;
+
             diffShell.innerHTML = `
-                <span class="frame-label">Visionary Diff</span>
-                <div class="vpd-diff-frame"><div class="vpd-loader" style="padding:40px;text-align:center;font-size:12px;color:#8b949e;">Initialing...</div></div>
+                <div class="frame-label vpd-premium-label">${sparkIcon} <span>Visionary Diff</span></div>
+                <div class="vpd-diff-frame">
+                    <div class="vpd-loader-container">
+                        <div class="vpd-skeleton-rect"></div>
+                        <div class="vpd-skeleton-rect" style="width: 60%"></div>
+                        <div class="vpd-loader" style="margin-top:20px; font-size:12px; color:#8b949e; font-family:monospace;">INITIALIZING PIXELS...</div>
+                    </div>
+                </div>
                 <div class="vpd-stats-card">...</div>
             `;
             const firstNativeShell = view.querySelector('.shell');
@@ -232,9 +242,19 @@
                     img.alt?.toLowerCase().includes(label.toLowerCase()) ||
                     img.closest('.shell')?.textContent.toLowerCase().includes(label.toLowerCase())
                 );
+                // Style the shell if found
+                const shell = shadowImg?.closest('.shell');
+                if (shell) {
+                    const lbl = shell.querySelector('.frame-label');
+                    if (lbl) lbl.classList.add('vpd-premium-label');
+                }
                 if (shadowImg) return shadowImg;
             }
             const el = [...view.querySelectorAll('.shell')].find(s => s.textContent.toLowerCase().includes(label.toLowerCase()));
+            if (el) {
+                const lbl = el.querySelector('.frame-label');
+                if (lbl) lbl.classList.add('vpd-premium-label');
+            }
             return el?.querySelector('img');
         };
 
@@ -288,7 +308,7 @@
             setStatus(diffShell, 'Calculating stats...');
             const stats = calculateStats(canvas.getContext('2d'), canvas.width, canvas.height);
             diffShell.querySelector('.vpd-stats-card').innerHTML = `
-                Change: <b>${stats.pct}%</b> | Delta: <b>${stats.diff.toLocaleString()}</b> px
+                <span>CHANGE</span> <b>${stats.pct}%</b> <span style="margin-left:8px; opacity:0.5;">|</span> <span>DELTA</span> <b>${stats.diff.toLocaleString()}</b> <span style="font-size:10px; opacity:0.6;">px</span>
             `;
             view.dataset.vpdState = 'active';
         } catch (e) {
