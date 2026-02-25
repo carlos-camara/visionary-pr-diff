@@ -25,156 +25,33 @@ jobs:
     steps:
       - name: 📝 Validate PR Hygiene
         if: github.actor != 'dependabot[bot]'
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          TITLE: ${{ github.event.pull_request.title }}
-          BODY: ${{ github.event.pull_request.body }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          REPO: ${{ github.repository }}
-        run: |
-          echo "📝 Validating PR standards..."
-          
-          # 1. Validate Title (Conventional Commits)
-          REGEX="^(feat|fix|chore|docs|style|refactor|test|perf)(\(.*\))?!?: .+$"
-          if [[ ! "$TITLE" =~ $REGEX ]]; then
-            MSG="❌ **Invalid PR Title**: Please use [Conventional Commits]"
-            MSG="$MSG (https://www.conventionalcommits.org/)."
-            echo "$MSG"
-            gh pr comment "$PR_NUMBER" --body "$MSG" --repo "$REPO"
-            exit 1
-          fi
-          
-          # 2. Validate Description
-          if [ -z "$BODY" ] || [ ${#BODY} -lt 15 ]; then
-            MSG="❌ **Incomplete Description**: Please provide a detailed description of your changes (>15 characters)."
-            echo "$MSG"
-            gh pr comment "$PR_NUMBER" --body "$MSG" --repo "$REPO"
-            exit 1
-          fi
-          
-          echo "✅ PR Hygiene standards met."
+        uses: carlos-camara/qa-hub-actions/pr-hygiene-validator@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          min-description-length: '15'
 
       - name: 📥 Checkout Repository
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
-      - name: 🏷️ Auto Label PR
+      - name: 🏷️ Auto Label PR (Paths)
         uses: carlos-camara/qa-hub-actions/pr-labeler@main
         with:
           sync-labels: true
 
       - name: 📏 Label PR by Size
         if: github.actor != 'dependabot[bot]'
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          REPO: ${{ github.repository }}
-        run: |
-          echo "📏 Calculating PR size..."
-          DIFF_LINES=$(git diff --shortstat origin/${{ github.base_ref }}...HEAD | awk '{print $4 + $6}')
-          
-          if [ -z "$DIFF_LINES" ]; then DIFF_LINES=0; fi
-          echo "Lines changed: $DIFF_LINES"
-          
-          if [ "$DIFF_LINES" -lt 50 ]; then
-            SIZE="size/S"
-          elif [ "$DIFF_LINES" -lt 200 ]; then
-            SIZE="size/M"
-          elif [ "$DIFF_LINES" -lt 500 ]; then
-            SIZE="size/L"
-          else
-            SIZE="size/XL"
-          fi
-          
-          echo "Target Label: $SIZE"
-          
-          # Create labels if they don't exist
-          gh label create "size/S" --color "0E8A16" \
-            --description "Quick review (< 50 lines)" --repo "$REPO" --force || true
-          gh label create "size/M" --color "FBCA04" \
-            --description "Standard review (50-200 lines)" --repo "$REPO" --force || true
-          gh label create "size/L" --color "EB6420" \
-            --description "Deep review (200-500 lines)" --repo "$REPO" --force || true
-          gh label create "size/XL" --color "D93F0B" \
-            --description "Significant change (> 500 lines)" --repo "$REPO" --force || true
-          
-          # Check current labels
-          CURRENT_LABELS=$(gh pr view "$PR_NUMBER" --json labels --template '{{range .labels}}{{.name}} {{end}}')
-          
-          HAS_CORRECT_LABEL=false
-          if [[ $CURRENT_LABELS == *"$SIZE"* ]]; then
-            HAS_CORRECT_LABEL=true
-          fi
-          
-          # Remove OTHER size labels if present
-          for L in $CURRENT_LABELS; do
-            if [[ $L == size/* ]] && [[ $L != "$SIZE" ]]; then
-              gh pr edit "$PR_NUMBER" --remove-label "$L" --repo "$REPO"
-            fi
-          done
-          
-          # Add the new size label only if not already present
-          if [ "$HAS_CORRECT_LABEL" = false ]; then
-            gh pr edit "$PR_NUMBER" --add-label "$SIZE" --repo "$REPO"
-            echo "✅ Applied $SIZE label to PR #$PR_NUMBER"
-          else
-            echo "⏭️ $SIZE already present, skipping redundant add."
-          fi
+        uses: carlos-camara/qa-hub-actions/pr-size-labeler@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 🤖 Perform Risk Analysis
         if: github.actor != 'dependabot[bot]'
-        shell: bash
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          PR_NUMBER: ${{ github.event.pull_request.number }}
-          REPO: ${{ github.repository }}
-        run: |
-          echo "🤖 Analyzing risk..."
-          CRITICAL_PATTERNS=("action.yml" "package.json" "package-lock.json" "requirements.txt" ".github/workflows/")
-          RISK_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
-          
-          IS_HIGH_RISK=false
-          MATCHED_FILES=""
-          
-          for file in $RISK_FILES; do
-            for pattern in "${CRITICAL_PATTERNS[@]}"; do
-              if [[ $file == *"$pattern"* ]]; then
-                echo "⚠️ Critical file modified: $file"
-                IS_HIGH_RISK=true
-                MATCHED_FILES="${MATCHED_FILES}- \`$file\`\n"
-              fi
-            done
-          done
-          
-          CURRENT_LABELS=$(gh pr view "$PR_NUMBER" --json labels --template '{{range .labels}}{{.name}} {{end}}')
-          
-          if [ "$IS_HIGH_RISK" = true ]; then
-            echo "Classification: HIGH RISK"
-            gh label create "high-risk" --color "B60205" --description "Critical system files modified" --repo "$REPO" --force || true
-            
-            if [[ $CURRENT_LABELS != *"high-risk"* ]]; then
-              gh pr edit "$PR_NUMBER" --add-label "high-risk" --repo "$REPO"
-            fi
-            
-            # Prepare warning for PR summary
-            WARNING="> [!CAUTION]\n> ### ⚠️ HIGH RISK CHANGE DETECTED\n"
-            WARNING="> This PR modifies critical system files:\n${MATCHED_FILES}\n---\n"
-            
-            CURRENT_BODY=$(gh pr view "$PR_NUMBER" --json body --template '{{.body}}')
-            # Inject at top if not already present
-            if [[ "$CURRENT_BODY" != *"!CAUTION"* ]]; then
-              echo -e "$WARNING\n$CURRENT_BODY" > new_body.md
-              gh pr edit "$PR_NUMBER" --body-file new_body.md --repo "$REPO"
-            fi
-          else
-            echo "Classification: Standard Risk"
-            if [[ $CURRENT_LABELS == *"high-risk"* ]]; then
-              gh pr edit "$PR_NUMBER" --remove-label "high-risk" --repo "$REPO"
-            fi
-          fi
+        uses: carlos-camara/qa-hub-actions/pr-risk-analyzer@main
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          critical-patterns: 'action.yml package.json package-lock.json requirements.txt .github/workflows/'
 
       - name: 📉 Analyze Coverage & Churn
         if: github.actor != 'dependabot[bot]'
@@ -186,12 +63,13 @@ jobs:
 
       - name: 👤 Auto Assign PR
         if: github.actor != 'dependabot[bot]'
-        run: gh pr edit "$PR_NUMBER" --add-assignee "$ASSIGNEE" --repo "$REPO"
+        shell: bash
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
           ASSIGNEE: ${{ github.actor }}
           REPO: ${{ github.repository }}
+        run: gh pr edit "$PR_NUMBER" --add-assignee "$ASSIGNEE" --repo "$REPO"
 
       - name: 🎯 Auto Milestone PR
         if: github.actor != 'dependabot[bot]'
