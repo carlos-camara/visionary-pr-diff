@@ -86,12 +86,14 @@
   overflow: visible !important;
 }
 
-/* Perfect Symmetrical Layout (Focus Mode: 20-60-20) */
+/* Perfect Zenith Layout (Stacked: Top 2-up, Bottom Diff) */
 .three-up.view.vpd-active,
 .image-diff[data-vpd-state="active"].vpd-active {
   display: grid !important;
-  grid-template-columns: 1fr 3fr 1fr !important;
-  /* Forces 20% - 60% - 20% */
+  grid-template-areas:
+    "deleted added"
+    "diff diff" !important;
+  grid-template-columns: 1fr 1fr !important;
   gap: 24px !important;
   align-items: start !important;
   justify-items: center !important;
@@ -115,17 +117,17 @@
   animation: vpd-fade-up 0.5s ease-out forwards;
 }
 
-/* Column order (Ensure Central is always middle) */
+/* Column order and Area assignment */
 .shell:first-of-type {
-  grid-column: 1;
+  grid-area: deleted;
 }
 
 .vpd-diff-shell {
-  grid-column: 2;
+  grid-area: diff;
 }
 
 .shell:last-of-type {
-  grid-column: 3;
+  grid-area: added;
 }
 
 .three-up.view.vpd-active .shell img,
