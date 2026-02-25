@@ -124,16 +124,14 @@ image-diff.vpd-active {
   display: grid !important;
 }
 
-/* Zenith Layout (Stacked: Top 2-up, Bottom Diff) */
+/* Trinity Row Layout (Horizontal: 1 Row, 3 Columns) */
 .three-up.view.vpd-active,
 .image-diff[data-vpd-state="active"].vpd-active {
   display: grid !important;
-  grid-template-areas:
-    "deleted added"
-    "diff diff" !important;
-  grid-template-columns: 1fr 1fr !important;
-  gap: 32px 16px !important;
-  /* Balanced spacing and breathing room */
+  grid-template-areas: "deleted diff added" !important;
+  grid-template-columns: 1fr 2fr 1fr !important;
+  gap: 0 24px !important;
+  /* Horizontal gap only */
   align-items: start !important;
   justify-items: stretch !important;
   padding: 0 !important;

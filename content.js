@@ -69,9 +69,9 @@
         style.textContent = `
             :host(.three-up), :host(.vpd-active), :host {
                 display: grid !important;
-                grid-template-areas: "deleted added" "diff diff" !important;
-                grid-template-columns: 1fr 1fr !important;
-                gap: 32px 16px !important;
+                grid-template-areas: "deleted diff added" !important;
+                grid-template-columns: 1fr 2.2fr 1fr !important;
+                gap: 0 24px !important;
                 padding: 0 !important;
                 width: 100% !important;
                 max-width: none !important;
@@ -92,17 +92,14 @@
             .shell:first-of-type { 
                 grid-area: deleted !important; 
                 justify-self: start !important;
-                max-width: 48% !important;
             }
             .shell:last-of-type { 
                 grid-area: added !important; 
                 justify-self: end !important;
-                max-width: 48% !important;
             }
             .vpd-diff-shell { 
                 grid-area: diff !important; 
-                justify-self: center !important;
-                width: 100% !important;
+                justify-self: stretch !important;
             }
 
             .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle, .swipe-handle, .js-drag-handle {
