@@ -19,7 +19,7 @@
     "author": "Carlos Cámara",
     "license": "MIT",
     "devDependencies": {
-        "eslint": "^9.0.0",
+        "eslint": "^10.0.2",
         "globals": "^17.3.0",
         "husky": "^9.1.7",
         "jest": "^30.2.0",
