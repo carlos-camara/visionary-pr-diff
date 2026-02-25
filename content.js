@@ -70,8 +70,8 @@
             :host(.three-up), :host(.vpd-active), :host {
                 display: grid !important;
                 grid-template-areas: "deleted diff added" !important;
-                grid-template-columns: 1.5fr 3fr 1.5fr !important;
-                gap: 0 16px !important;
+                grid-template-columns: 1fr 2fr 1fr !important;
+                gap: 0 !important;
                 padding: 0 !important;
                 width: 100% !important;
                 max-width: none !important;
@@ -91,15 +91,15 @@
             }
             .shell:first-of-type { 
                 grid-area: deleted !important; 
-                justify-self: start !important;
+                justify-self: stretch !important;
             }
             .shell:last-of-type { 
                 grid-area: added !important; 
-                justify-self: end !important;
+                justify-self: stretch !important;
             }
             .vpd-diff-shell { 
                 grid-area: diff !important; 
-                justify-self: center !important;
+                justify-self: stretch !important;
                 width: 100% !important;
             }
 
