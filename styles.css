@@ -123,51 +123,28 @@ body:has(.vpd-active) .image-diff {
   /* Kill any relative/absolute shifts */
 }
 
-/* Ensure the image-diff host is a grid */
-body:has(.vpd-active) .image-diff,
-body:has(.vpd-active) .three-up.view.vpd-active {
-  display: grid !important;
-  width: 100% !important;
-  max-width: none !important;
-  height: auto !important;
-  overflow: visible !important;
-}
-
-/* Visionary Triptych Layout (Strict 1x3 Row) */
+/* VISIONARY TRIPTYCH: Panoramic Grid Configuration */
 .three-up.view.vpd-active,
 .image-diff[data-vpd-state="active"].vpd-active {
   display: grid !important;
   grid-template-areas: "deleted diff added" !important;
   grid-template-columns: 1fr 1.8fr 1fr !important;
-  /* Elegant Triptych Proportions */
+  /* Premium Triptych Proportions */
   gap: 16px !important;
-  align-items: center !important;
-  /* Vertical balance */
+  align-items: start !important;
+  /* Strictly top-aligned - KILL vertical gap */
   justify-items: stretch !important;
-  padding: 12px 0 !important;
+  padding: 0 !important;
   width: 100% !important;
   max-width: none !important;
   box-sizing: border-box !important;
   background: transparent !important;
   border: none !important;
   height: auto !important;
+  min-height: 480px !important;
+  /* Ensure Diff is visible during load */
   overflow: visible !important;
-}
-
-/* Visionary Triptych Grid Configuration */
-.three-up.view.vpd-active,
-.image-diff[data-vpd-state="active"].vpd-active {
-  grid-template-areas: "deleted diff added" !important;
-  grid-template-columns: 1fr 1.8fr 1fr !important;
-  /* Elegant Triptych Proportions */
-  gap: 16px !important;
-  align-items: center !important;
-  /* Vertical balance */
-  justify-items: stretch !important;
-  padding: 12px 0 !important;
-  box-sizing: border-box !important;
-  background: transparent !important;
-  border: none !important;
+  margin-top: 0 !important;
 }
 
 /* Shared column properties */
