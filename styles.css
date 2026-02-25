@@ -9,12 +9,13 @@
 }
 
 /* 
-   SHIELD MODE (Passive Isolation) 
-   We neutralize native GitHub diff elements WITHOUT removing their classes.
+   PER-CONTAINER ISOLATION 
+   We neutralize native GitHub diff elements only when our mode is active on that container.
 */
-body.vpd-3up-active .image-diff.three-up .handle,
-body.vpd-3up-active .image-diff.three-up .swipe-bar,
-body.vpd-3up-active .image-diff.three-up .image-diff-swipe {
+.image-diff.three-up .handle,
+.image-diff.three-up .swipe-bar,
+.image-diff.three-up .image-diff-swipe,
+.image-diff.three-up .onion-skin-bar {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
@@ -22,7 +23,7 @@ body.vpd-3up-active .image-diff.three-up .image-diff-swipe {
 }
 
 /* Force native shells to behave like blocks in our 3-column grid */
-body.vpd-3up-active .image-diff.three-up .shell {
+.image-diff.three-up .shell {
   position: static !important;
   transform: none !important;
   display: block !important;
@@ -30,19 +31,8 @@ body.vpd-3up-active .image-diff.three-up .shell {
   margin: 0 !important;
 }
 
-body.vpd-3up-active .handle,
-body.vpd-3up-active .swipe-bar,
-body.vpd-3up-active .image-diff-swipe,
-body.vpd-3up-active .image-diff>div:not(.shell):not(.vpd-diff-shell) {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-/* Perfect Symmetrical Layout */
-body.vpd-3up-active .three-up,
-body.vpd-3up-active [data-vpd-state="active"] {
+/* Perfect Symmetrical Layout for Active Containers */
+.image-diff.three-up {
   display: flex !important;
   flex-direction: row !important;
   gap: 24px !important;
@@ -53,18 +43,16 @@ body.vpd-3up-active [data-vpd-state="active"] {
   box-sizing: border-box !important;
 }
 
-body.vpd-3up-active .three-up .shell,
-body.vpd-3up-active [data-vpd-state="active"] .shell {
+.image-diff.three-up .shell {
   flex: 0 0 calc(33.33% - 16px) !important;
-  /* Strict 1/3 width */
   min-width: 0 !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
 }
 
-body.vpd-3up-active .three-up .shell img,
-body.vpd-3up-active .three-up .shell .vpd-diff-frame {
+.image-diff.three-up .shell img,
+.image-diff.three-up .shell .vpd-diff-frame {
   width: 100% !important;
   height: auto !important;
   max-height: 450px !important;
@@ -74,69 +62,32 @@ body.vpd-3up-active .three-up .shell .vpd-diff-frame {
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important;
 }
 
-/* Tab Management */
-.vpd-hidden {
-  display: none !important;
-}
-
-.vpd-3up-tab {
-  cursor: pointer !important;
-  font-weight: 600 !important;
-}
-
-.view-modes label.selected,
-.view-modes .js-view-mode-item.selected,
+/* Tab Management - Global Selection Styling */
+.image-diff label.selected,
+.image-diff .js-view-mode-item.selected,
 .vpd-3up-tab.selected {
   background: #1f6feb !important;
   color: #fff !important;
+  border-color: #1f6feb !important;
 }
 
-/* Diff Frame Container */
-.vpd-diff-frame {
-  display: block !important;
-  /* CRITICAL: honor aspect-ratio */
-  background: #0d1117 !important;
-  position: relative !important;
-  overflow: hidden !important;
-  min-height: 100px;
+.image-diff label,
+.image-diff .js-view-mode-item,
+.vpd-3up-tab {
+  cursor: pointer !important;
+  font-weight: 600 !important;
+  padding: 4px 12px !important;
+  border-radius: 6px !important;
+  margin: 0 2px !important;
+  display: inline-flex !important;
+  align-items: center !important;
 }
 
-/* Scaling children of the diff frame */
-.vpd-diff-frame .vpd-canvas-main,
-.vpd-diff-frame .vpd-diff-bg {
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  width: auto !important;
-  height: auto !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
-  object-fit: contain !important;
-}
-
-.vpd-diff-bg {
-  opacity: 0.7 !important;
-  /* Brighter for context */
-  z-index: 1;
-}
-
-.vpd-canvas-main {
-  z-index: 2;
-  mix-blend-mode: screen;
-  /* Highlights pop more */
-}
-
-/* Hide native Onion Skin tab */
-label:has(input[value="onion-skin"]),
-.js-view-mode-item:has(input[value="onion-skin"]) {
-  display: none !important;
-}
-
-/* Hide native mode gunk */
-body.vpd-3up-active .js-drag-handle,
-body.vpd-3up-active .handle,
-body.vpd-3up-active .divider {
+/* Hide native modes gunk when active */
+.image-diff.three-up .js-drag-handle,
+.image-diff.three-up .handle,
+.image-diff.three-up .divider,
+.image-diff.three-up .image-diff-swipe-handle {
   display: none !important;
 }
 
