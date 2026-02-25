@@ -1,16 +1,7 @@
-# 🔍 Overview
-
 <!-- Provide a brief description of the changes in this PR and the motivation behind them -->
 
 ## 🛠️ Type of Change
-
-- [ ] 🚀 Feature
-- [ ] 🐛 Bug Fix
-- [ ] 🧹 Refactor
-- [ ] 📝 Documentation
-- [ ] ⚡ Performance Optimization
-- [ ] 🤖 CI/CD or Tooling
-
+...
 ## 🚀 Key Changes
 
 - [ ] Detailed change 1
@@ -34,8 +25,6 @@
 - [ ] Verified on GitHub Image Diff interface (2-up/3-up/Overlay)
 - [ ] Verified responsive alignment
 
-## 📸 Screenshots / Demos
-
 <!-- Add screenshots or recordings (GIFs preferred) showing the visual changes -->
 
 ## ✅ Final Checklist
@@ -45,6 +34,3 @@
 - [ ] 📖 **Documentation**: Corresponding changes made to [Technical Docs](docs/)
 - [ ] 👤 **Self-Review**: I have proofread my code and logic
 - [ ] 🚥 **Hygiene**: Title follows `type(scope): description` format
-
----
-*Powered by **Visionary Engineering PR Intelligence** 🤖🛡️*
