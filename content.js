@@ -70,12 +70,13 @@
             :host(.three-up), :host(.vpd-active), :host {
                 display: grid !important;
                 grid-template-areas: "deleted diff added" !important;
-                grid-template-columns: 1fr 1.8fr 1fr !important;
+                grid-template-columns: 1fr 1.2fr 1fr !important;
                 gap: 16px !important;
                 padding: 0 !important;
                 width: 100% !important;
                 max-width: none !important;
                 height: auto !important;
+                max-height: 85vh !important;
                 align-items: start !important; /* Top-aligned - remove gap */
                 overflow: visible !important;
                 margin-top: 0 !important;
@@ -86,6 +87,7 @@
                 position: relative !important; /* Required for floating labels */
                 width: 100% !important;
                 height: auto !important;
+                max-height: 100% !important;
                 min-width: 0 !important;
                 margin-top: 0 !important;
                 overflow: visible !important;
@@ -106,6 +108,8 @@
             img, .vpd-diff-frame {
                 width: 100% !important;
                 height: auto !important;
+                max-height: 85vh !important;
+                object-fit: contain !important;
                 display: block !important;
                 margin-top: 0 !important;
             }
