@@ -277,6 +277,11 @@
             const aspect = canvas.width / canvas.height;
             frame.style.aspectRatio = aspect.toString();
 
+            // Force container to match natural image dimensions to prevent clipping
+            frame.style.width = '100%';
+            // Limit to actual image dimensions so we don't blow up small icons, but let big diffs take the width
+            frame.style.maxWidth = `${canvas.width}px`;
+
             const ghost = document.createElement('img');
             ghost.src = decodedImgB.src;
             ghost.className = 'vpd-diff-bg';
