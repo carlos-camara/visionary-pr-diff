@@ -81,18 +81,26 @@
         const nativeClasses = ['swipe', 'onion-skin', 'two-up', '2-up', 'cross-fade', 'blink', 'three-up'];
         view.classList.remove(...nativeClasses);
 
-        // 2. Quantum Shield: Pierce Shadow DOM
+        // 2. THE ERASER: Force internal component state to passive
+        // This triggers GitHub's native cleanup of swipe/onion UI in the Shadow DOM
+        if (val === 'three-up') {
+            if (view.tagName === 'IMAGE-DIFF' || view.hasAttribute('mode')) {
+                view.setAttribute('mode', '2-up');
+            }
+        }
+
+        // 3. Quantum Shield: Pierce Shadow DOM (Secondary Defense)
         pierceShadowShield(view);
 
-        // 3. State Cleanup
+        // 4. State Cleanup
         document.body.classList.remove('vpd-3up-active');
 
-        // 4. Mode Activation
+        // 5. Mode Activation
         if (val === 'three-up') {
             view.classList.add('three-up');
             document.body.classList.add('vpd-3up-active');
 
-            // Explicitly neutralize native containers that might bypass classes
+            // Explicitly neutralize native containers in Light DOM
             view.querySelectorAll('.swipe-container, .onion-skin-container, .swipe-bar, .handle').forEach(el => {
                 el.style.setProperty('display', 'none', 'important');
             });
