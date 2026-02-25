@@ -169,9 +169,8 @@ fieldset:has(.vpd-3up-tab) label input {
   display: none !important;
 }
 
-/* Unified Premium Labels for all columns */
-.image-diff.vpd-active .shell .frame-label,
-.vpd-diff-shell .frame-label {
+/* Harmonized Glassmorphism Labels (Common for all 3 columns) */
+.frame-label.vpd-premium-label {
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
@@ -179,7 +178,9 @@ fieldset:has(.vpd-3up-tab) label input {
   background: var(--vpd-bg-glass) !important;
   backdrop-filter: blur(8px) !important;
   -webkit-backdrop-filter: blur(8px) !important;
-  padding: 4px 10px !important;
+  padding: 0 12px !important;
+  height: 24px !important;
+  /* Force identical height for vertical alignment */
   border-radius: 20px !important;
   border: 1px solid var(--vpd-border-glass) !important;
   color: var(--vpd-accent) !important;
@@ -188,15 +189,9 @@ fieldset:has(.vpd-3up-tab) label input {
   letter-spacing: 0.8px !important;
   text-transform: uppercase !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
-  margin: 0 auto 8px auto !important;
-  min-height: 22px !important;
+  margin: 0 auto 10px auto !important;
+  /* Centers label and sets consistent bottom gap */
   width: fit-content !important;
-  box-sizing: border-box !important;
-}
-
-/* Ensure native metadata paragraphs don't add extra margin */
-.view.vpd-active .shell p:not(.frame-label) {
-  display: none !important;
 }
 
 /* Diff Frame Container */
@@ -297,4 +292,11 @@ fieldset:has(.vpd-3up-tab) label input {
 .view.vpd-active .shell .frame-label:not(.vpd-premium-label) {
   opacity: 0.7;
   font-size: 10px !important;
+}
+
+/* Ensure no other margins leak from native GitHub labels */
+.three-up.view.vpd-active .shell p,
+.image-diff.vpd-active .shell p {
+  margin: 0 !important;
+  padding: 0 !important;
 }
