@@ -91,7 +91,8 @@
 .image-diff[data-vpd-state="active"].vpd-active {
   display: flex !important;
   flex-direction: row !important;
-  gap: 16px !important;
+  gap: 24px !important;
+  /* Increased gap for better "space" */
   align-items: flex-start !important;
   justify-content: center !important;
   padding: 12px 0 !important;
@@ -125,7 +126,7 @@
   border: 1px solid var(--vpd-border-glass) !important;
   box-shadow: var(--vpd-glow) !important;
   transition: var(--vpd-transition) !important;
-  background: #0d1117;
+  background: #0d1117 !important;
 }
 
 .image-diff.vpd-active .shell img:hover {
@@ -219,7 +220,7 @@ fieldset:has(.vpd-3up-tab) label input {
   background: rgba(63, 185, 80, 0.1) !important;
 }
 
-/* Diff Frame Container */
+/* Diff Frame Container (Unified styling with side images) */
 .vpd-diff-frame {
   display: block !important;
   background: #0d1117 !important;
@@ -227,8 +228,7 @@ fieldset:has(.vpd-3up-tab) label input {
   overflow: visible !important;
   /* Ensure no clipping */
   min-height: 120px;
-  border-radius: 12px !important;
-  border: 1px solid rgba(var(--vpd-accent-rgb), 0.3) !important;
+  /* Styling (border/radius/shadow) is now inherited from the shell img/vpd-diff-frame selectors above */
   animation: vpd-pulse-glow 3s infinite;
 }
 
