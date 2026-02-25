@@ -102,10 +102,10 @@
   background: radial-gradient(circle at top, rgba(var(--vpd-accent-rgb), 0.05), transparent) !important;
 }
 
-/* Side Columns (Deleted/Added) */
 .three-up.view.vpd-active .shell,
 .image-diff[data-vpd-state="active"].vpd-active .shell {
   flex: 0 0 calc(28% - 16px) !important;
+  /* Smaller side columns */
   min-width: 0 !important;
   display: flex !important;
   flex-direction: column !important;
@@ -113,9 +113,9 @@
   animation: vpd-fade-up 0.5s ease-out forwards;
 }
 
-/* Central Diff Column */
 .vpd-diff-shell {
   flex: 0 0 calc(40% - 16px) !important;
+  /* Larger central column */
   min-width: 0 !important;
   display: flex !important;
   flex-direction: column !important;
@@ -209,8 +209,7 @@ fieldset:has(.vpd-3up-tab) label input {
   font-weight: 700 !important;
   letter-spacing: 0.8px !important;
   text-transform: uppercase !important;
-  margin: 0 auto 3px auto !important;
-  /* Extremely tight grouping */
+  margin: 0 auto 5px auto !important;
   /* Reduced vertical gap to image */
   width: fit-content !important;
   color: var(--vpd-accent) !important;
@@ -296,10 +295,8 @@ fieldset:has(.vpd-3up-tab) label input {
   border: 1px solid rgba(var(--vpd-accent-rgb), 0.3) !important;
   border-radius: 50px !important;
   /* Pill shape like reference */
-  padding: 4px 16px !important;
-  /* More compact pill */
-  margin-top: 6px !important;
-  /* Reduced top margin */
+  padding: 6px 20px !important;
+  margin-top: 12px !important;
   display: inline-flex !important;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4) !important;
   transition: var(--vpd-transition) !important;
@@ -326,8 +323,7 @@ fieldset:has(.vpd-3up-tab) label input {
 
 /* Image Dimensions Metadata */
 .vpd-dimensions {
-  margin-top: 4px !important;
-  /* Tighter metadata spacing */
+  margin-top: 8px !important;
   font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, monospace !important;
   font-size: 10px !important;
   color: #8b949e !important;
