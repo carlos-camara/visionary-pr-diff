@@ -1,5 +1,6 @@
 /**
- * Visionary PR Diff — v26 (Instance Isolation & Multi-Image Fix)
+ * Visionary PR Diff — v26 (Instance Isolation & Shell Restoration)
+ * Standardized for all GitHub Image Diff modes (2-up, Swipe, Onion Skin)
  */
 
 (function () {
@@ -7,9 +8,17 @@
     let isIframe = false;
     try { isIframe = window.self !== window.top; } catch (e) { isIframe = true; }
 
+    // Keep active in iframes but only if on github domain
     if (!isIframe && window.location.hostname === 'github.com') return;
 
-    console.log(`[VPD] v26 Init: ${window.location.hostname}`);
+    console.log(`[VPD] v26 Core (Isolated): ${window.location.hostname}`);
+
+    const TAB_MAP = {
+        'two-up': '2-up',
+        'swipe': 'Swipe',
+        'onion-skin': 'Onion Skin',
+        'three-up': '3-up'
+    };
 
     const setStatus = (diffShell, text, isError = false) => {
         const loader = diffShell?.querySelector('.vpd-loader');
@@ -46,14 +55,26 @@
 
     const syncTabSelection = (fieldset) => {
         if (!fieldset) return;
-        fieldset.querySelectorAll('label, .js-view-mode-item').forEach(label => {
-            const input = label.querySelector('input') ||
-                fieldset.querySelector(`input#${label.getAttribute('for')}`) ||
-                [...fieldset.querySelectorAll('input')].find(i => i.value === label.textContent.trim().toLowerCase().replace(' ', '-'));
+        fieldset.querySelectorAll('label, .js-view-mode-item, button').forEach(tab => {
+            const input = tab.querySelector('input') ||
+                fieldset.querySelector(`input#${tab.getAttribute('for')}`);
 
-            if (input) {
-                if (input.checked) label.classList.add('selected');
-                else label.classList.remove('selected');
+            let val = '';
+            if (input) val = input.value;
+            else {
+                // Heuristic for button-based tabs
+                const text = tab.textContent.trim().toLowerCase();
+                val = Object.keys(TAB_MAP).find(k => TAB_MAP[k].toLowerCase() === text) || text;
+            }
+
+            // Get current selected value from radio or attributes
+            const currentVal = fieldset.querySelector('input:checked')?.value ||
+                fieldset.dataset.viewMode;
+
+            if (val === currentVal || (val === 'three-up' && fieldset.closest('.image-diff')?.classList.contains('three-up'))) {
+                tab.classList.add('selected');
+            } else {
+                tab.classList.remove('selected');
             }
         });
     };
@@ -67,6 +88,7 @@
             fieldset.addEventListener('change', (e) => {
                 const val = e.target.value;
                 const view = fieldset.closest('.image-diff, .view');
+                fieldset.dataset.viewMode = val;
                 if (val === 'three-up') activate3Up(view);
                 else deactivate3Up(view);
                 syncTabSelection(fieldset);
@@ -78,21 +100,21 @@
             return;
         }
 
-        // 2. Add our tab as a native radio item
+        // Add 3-up tab
         const tab = document.createElement('label');
         tab.className = 'js-view-mode-item vpd-3up-tab';
         tab.innerHTML = '<input type="radio" value="three-up" name="view-mode"> 3-up';
         fieldset.appendChild(tab);
 
-        // Auto-trigger only if this specific container hasn't been triggered
+        // Auto-trigger logic
         if (!container.dataset.vpdAutoTriggered) {
             container.dataset.vpdAutoTriggered = 'true';
             setTimeout(() => {
                 const radio = tab.querySelector('input');
                 if (radio) {
                     radio.checked = true;
-                    const view = fieldset.closest('.image-diff, .view');
-                    activate3Up(view);
+                    fieldset.dataset.viewMode = 'three-up';
+                    activate3Up(container);
                     syncTabSelection(fieldset);
                 }
             }, 500);
@@ -116,10 +138,12 @@
         view.dataset.vpdRequestId = requestId.toString();
         view.dataset.vpdState = 'loading';
 
-        console.log(`[VPD] Request ${requestId}: Starting Scoped Activation...`);
+        console.log(`[VPD] Request ${requestId}: Activating...`);
 
-        // ISOLATION: Explicitly hide native modes
-        view.classList.remove('swipe', 'onion-skin', 'two-up');
+        // DYNAMIC SHELL MANAGEMENT: 
+        // If we only have ONE shell (Swipe mode), we need to handle image discovery differently
+        const nativeShells = [...view.querySelectorAll('.shell:not(.vpd-diff-shell)')];
+
         view.classList.add('three-up');
         document.body.classList.add('vpd-3up-active');
 
@@ -129,45 +153,47 @@
             diffShell.className = 'shell vpd-diff-shell';
             diffShell.innerHTML = `
                 <span class="frame-label">Visionary Diff</span>
-                <div class="vpd-diff-frame"><div class="vpd-loader" style="padding:40px;text-align:center;font-size:12px;color:#8b949e;">Initialing...</div></div>
+                <div class="vpd-diff-frame"><div class="vpd-loader" style="padding:40px;text-align:center;font-size:12px;color:#8b949e;">Detecting Pixels...</div></div>
                 <div class="vpd-stats-card">...</div>
             `;
-            const firstNativeShell = view.querySelector('.shell');
-            if (firstNativeShell) firstNativeShell.after(diffShell);
+            const anchor = nativeShells[nativeShells.length - 1];
+            if (anchor) anchor.after(diffShell);
             else view.appendChild(diffShell);
         }
 
-        setStatus(diffShell, 'Waiting for source images...');
+        setStatus(diffShell, 'Searching for image targets...');
 
-        // Scoped Image Discovery
-        const findImg = (label) => {
-            const el = [...view.querySelectorAll('.shell')].find(s => s.textContent.toLowerCase().includes(label.toLowerCase()));
-            return el?.querySelector('img') || view.querySelector(`img[alt*="${label}"]`);
-        };
-
-        const imgA = findImg('Deleted') || findImg('Before') || view.querySelectorAll('img')[0];
-        const imgB = findImg('Added') || findImg('After') || view.querySelectorAll('img')[1];
+        // Improved Discovery
+        let imgA, imgB;
+        if (nativeShells.length === 1) {
+            // Swipe mode: images are siblings or layered in one shell
+            const imgs = nativeShells[0].querySelectorAll('img');
+            imgA = imgs[0];
+            imgB = imgs[1];
+        } else {
+            // 2-up mode: images are in separate shells
+            const findImgInShell = (label) => {
+                const shell = nativeShells.find(s => s.textContent.toLowerCase().includes(label.toLowerCase()));
+                return shell?.querySelector('img');
+            };
+            imgA = findImgInShell('Deleted') || findImgInShell('Before') || nativeShells[0]?.querySelector('img');
+            imgB = findImgInShell('Added') || findImgInShell('After') || nativeShells[1]?.querySelector('img');
+        }
 
         if (!imgA || !imgB) {
-            setStatus(diffShell, 'Error: Source images not found.', true);
+            setStatus(diffShell, 'Error: Failed to isolate images.', true);
             view.dataset.vpdState = 'error';
             return;
         }
 
-        const ready = await Promise.all([waitForImage(imgA), waitForImage(imgB)]);
+        await Promise.all([waitForImage(imgA), waitForImage(imgB)]);
         if (view.dataset.vpdRequestId !== requestId.toString()) return;
 
-        if (!imgA?.src || !imgB?.src || imgA.src.startsWith('data:')) {
-            setStatus(diffShell, 'Error: Invalid image sources.', true);
-            view.dataset.vpdState = 'idle';
-            return;
-        }
-
         try {
-            if (!chrome.runtime?.id) throw new Error('Refresh GitHub to re-connect.');
-            if (!window.VisionaryDiffEngine) throw new Error('Engine missing');
+            if (!chrome.runtime?.id) throw new Error('Refrescar Página (Connection Lost)');
+            if (!window.VisionaryDiffEngine) throw new Error('Engine Inactivo');
 
-            setStatus(diffShell, 'Streaming pixels...');
+            setStatus(diffShell, 'Streaming binary data...');
             const urlA = new URL(imgA.getAttribute('src'), window.location.href).href;
             const urlB = new URL(imgB.getAttribute('src'), window.location.href).href;
 
@@ -175,15 +201,9 @@
 
             if (view.dataset.vpdRequestId !== requestId.toString()) return;
 
-            // Track for cleanup
-            window._vpdUrls = window._vpdUrls || [];
-            if (decodedImgB.src.startsWith('blob:')) window._vpdUrls.push(decodedImgB.src);
-
             const frame = diffShell.querySelector('.vpd-diff-frame');
             frame.innerHTML = '';
-
-            const aspect = canvas.width / canvas.height;
-            frame.style.aspectRatio = aspect.toString();
+            frame.style.aspectRatio = (canvas.width / canvas.height).toString();
 
             const ghost = document.createElement('img');
             ghost.src = decodedImgB.src;
@@ -193,27 +213,15 @@
             canvas.className = 'vpd-canvas-main';
             frame.appendChild(canvas);
 
-            setStatus(diffShell, 'Calculating stats...');
             const stats = calculateStats(canvas.getContext('2d'), canvas.width, canvas.height);
             diffShell.querySelector('.vpd-stats-card').innerHTML = `
-                Change: <b>${stats.pct}%</b> | Delta: <b>${stats.diff.toLocaleString()}</b> px
+                DIFF: <b>${stats.pct}%</b> | PIXELS: <b>${stats.diff.toLocaleString()}</b>
             `;
             view.dataset.vpdState = 'active';
         } catch (e) {
             if (view.dataset.vpdRequestId === requestId.toString()) {
-                console.error(`[VPD] Request ${requestId} failed:`, e);
-                const isContextError = e.message.includes('refresh');
-                const frame = diffShell.querySelector('.vpd-diff-frame');
-                if (frame) {
-                    frame.innerHTML = `
-                        <div style="padding:40px; text-align:center;">
-                            <div style="color:#f85149; font-size:13px; margin-bottom:10px; font-weight:600;">
-                                ${e.message}
-                            </div>
-                            ${isContextError ? '<button onclick="window.location.reload()" style="background:#238636; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; font-weight:600;">Refrescar Página</button>' : ''}
-                        </div>
-                    `;
-                }
+                console.error(`[VPD] Failure:`, e);
+                setStatus(diffShell, e.message, true);
                 view.dataset.vpdState = 'error';
             }
         }
@@ -222,13 +230,13 @@
     const deactivate3Up = (view) => {
         if (!view) return;
         view.dataset.vpdRequestId = '0';
-        view.dataset.vpdState = 'inactive';
+        view.dataset.vpdState = 'idle';
         view.classList.remove('three-up');
 
         const shell = view.querySelector('.vpd-diff-shell');
         if (shell) shell.remove();
 
-        const allActive = document.querySelectorAll('[data-vpd-state="active"], [data-vpd-state="loading"]');
+        const allActive = document.querySelectorAll('.three-up');
         if (allActive.length === 0) {
             document.body.classList.remove('vpd-3up-active');
         }

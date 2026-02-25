@@ -1,45 +1,8 @@
 /* 
- * Visionary PR Diff - Premium Styling
- * Glassmorphism and Elegant UI for GitHub Integration
+ * Visionary PR Diff — v26 (Ultra-Robust Isolation)
  */
 
-/* Visionary Diff label */
-.vpd-diff-shell .frame-label {
-  color: #58a6ff !important;
-}
-
-/*
-   PER-CONTAINER ISOLATION
-   Aggressively hide native GitHub diff artifacts when 3-up is active.
-*/
-.image-diff.three-up .handle,
-.image-diff.three-up .swipe-bar,
-.image-diff.three-up .image-diff-swipe,
-.image-diff.three-up .onion-skin-bar,
-.image-diff.three-up .js-drag-handle,
-.image-diff.three-up .divider,
-.image-diff.three-up .image-diff-swipe-handle,
-.image-diff.three-up>div:not(.shell):not(.vpd-diff-shell):not(.view-modes):not(.js-image-diff-tabs) {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-/* Force native shells to behave like blocks in our 3-column grid */
-.image-diff.three-up .shell {
-  position: static !important;
-  transform: none !important;
-  display: flex !important;
-  flex-direction: column !important;
-  flex: 1 1 30% !important;
-  min-width: 0 !important;
-  align-items: center !important;
-  margin: 0 !important;
-  width: auto !important;
-}
-
-/* Perfect Symmetrical Layout for Active Containers */
+/* 1. PER-CONTAINER ISOLATION - Deep Shield */
 .image-diff.three-up {
   display: flex !important;
   flex-direction: row !important;
@@ -53,6 +16,35 @@
   background: #0d1117 !important;
   border-radius: 12px !important;
   border: 1px solid #30363d !important;
+  position: relative !important;
+}
+
+/* Hide native GitHub UI elements that cause overlap */
+.image-diff.three-up .handle,
+.image-diff.three-up .swipe-bar,
+.image-diff.three-up .image-diff-swipe,
+.image-diff.three-up .onion-skin-bar,
+.image-diff.three-up .js-drag-handle,
+.image-diff.three-up .divider,
+.image-diff.three-up .image-diff-swipe-handle,
+.image-diff.three-up>div:not(.shell):not(.vpd-diff-shell):not(.view-modes):not(.js-image-diff-tabs):not(fieldset) {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Force native shells to behave in 3-column grid */
+.image-diff.three-up .shell {
+  position: static !important;
+  transform: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  flex: 1 1 30% !important;
+  min-width: 0 !important;
+  align-items: center !important;
+  margin: 0 !important;
+  width: auto !important;
 }
 
 .image-diff.three-up .shell img,
@@ -64,17 +56,12 @@
   border-radius: 8px !important;
   border: 2px solid #30363d !important;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6) !important;
-  transition: border-color 0.2s ease;
 }
 
-.image-diff.three-up .shell:hover img,
-.image-diff.three-up .shell:hover .vpd-diff-frame {
-  border-color: #58a6ff !important;
-}
-
-/* Tab Management - Global Selection Styling */
+/* 2. TAB MANAGEMENT - Premium Selection */
 .image-diff label.selected,
 .image-diff .js-view-mode-item.selected,
+.image-diff button.selected,
 .vpd-3up-tab.selected {
   background: #1f6feb !important;
   color: #fff !important;
@@ -84,6 +71,7 @@
 
 .image-diff label,
 .image-diff .js-view-mode-item,
+.image-diff button,
 .vpd-3up-tab {
   cursor: pointer !important;
   font-weight: 600 !important;
@@ -96,26 +84,19 @@
   transition: all 0.2s ease !important;
   font-size: 13px !important;
   color: #8b949e !important;
+  background: transparent;
 }
 
-.image-diff label:hover,
-.image-diff .js-view-mode-item:hover,
-.vpd-3up-tab:hover {
-  background: #21262d !important;
-  color: #c9d1d9 !important;
-}
-
-/* Diff Frame Container */
+/* 3. CORE RENDERING ENGINE - Diff Frame */
 .vpd-diff-frame {
   display: block !important;
-  /* CRITICAL: honor aspect-ratio */
   background: #010409 !important;
   position: relative !important;
   overflow: hidden !important;
   min-height: 150px;
+  width: 100%;
 }
 
-/* Scaling children of the diff frame */
 .vpd-diff-frame .vpd-canvas-main,
 .vpd-diff-frame .vpd-diff-bg {
   position: absolute !important;
@@ -131,82 +112,44 @@
 
 .vpd-diff-bg {
   opacity: 0.6 !important;
-  /* Brighter for context */
   z-index: 1;
 }
 
 .vpd-canvas-main {
   z-index: 2;
   mix-blend-mode: screen;
-  /* Highlights pop more */
 }
 
-/* Hide native modes gunk when active */
-.image-diff.three-up .js-drag-handle,
-.image-diff.three-up .handle,
-.image-diff.three-up .divider,
-.image-diff.three-up .image-diff-swipe-handle,
-.image-diff.three-up .image-diff-swipe,
-.image-diff.three-up .swipe-bar,
-.image-diff.three-up .onion-skin-bar {
-  display: none !important;
-}
-
-/* Hide native Onion Skin tab */
-label:has(input[value="onion-skin"]),
-.js-view-mode-item:has(input[value="onion-skin"]) {
-  display: none !important;
-}
-
-/* Metadata tweaks for 3-up */
-.image-diff.three-up .shell p,
-.image-diff.three-up .shell .frame-label {
-  font-size: 12px !important;
-  margin: 10px 0 !important;
-  text-align: center !important;
-  color: #8b949e !important;
-  font-weight: 600 !important;
-  text-transform: uppercase !important;
-}
-
-/* Hide 2-up Tab Safely */
-.vpd-hidden {
-  display: none !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-/* Tab Selector Injection */
-.vpd-3up-tab {
-  border-right: 1px solid #30363d !important;
-  padding-right: 12px !important;
-  margin-right: 8px !important;
-  font-weight: 600 !important;
-}
-
-.label-vpd {
-  background-color: #58a6ff33 !important;
-  color: #58a6ff !important;
-  border: 1px solid #58a6ff4d !important;
-}
-
-/* High-Contrast Stats Card */
+/* 4. STATS & LABELS */
 .vpd-stats-card {
   background: #161b22 !important;
   color: #c9d1d9 !important;
   border: 1px solid #30363d !important;
-  border-top: 2px solid #238636 !important;
-  /* Green accent */
-  border-radius: 6px;
-  padding: 8px 16px !important;
-  margin-top: 12px;
+  border-top: 3px solid #238636 !important;
+  border-radius: 8px;
+  padding: 10px 20px !important;
+  margin-top: 15px;
   display: inline-flex;
   gap: 15px;
-  font-size: 13px !important;
-  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Courier, monospace !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  font-size: 12px !important;
+  font-family: ui-monospace, SFMono-Regular, monospace !important;
 }
 
 .vpd-stats-card b {
   color: #58a6ff !important;
+}
+
+.image-diff.three-up .shell .frame-label {
+  font-size: 11px !important;
+  margin: 10px 0 !important;
+  color: #8b949e !important;
+  font-weight: 700 !important;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Hide native Onion Skin tab natively */
+label:has(input[value="onion-skin"]),
+.js-view-mode-item:has(input[value="onion-skin"]) {
+  display: none !important;
 }
