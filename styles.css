@@ -88,6 +88,7 @@
 }
 
 /* Nuclear Space Liberation: Breakthrough the PR container limits */
+/* Nuclear Space Liberation: Breakthrough the PR container limits */
 .container-lg:has(.vpd-active),
 .discussion-item:has(.vpd-active),
 .js-discussion-item:has(.vpd-active),
@@ -98,7 +99,8 @@
 .blob-wrapper:has(.vpd-active),
 .view.vpd-active,
 image-diff:has(.vpd-active),
-.image-diff:has(.vpd-active) {
+.image-diff:has(.vpd-active),
+image-diff.vpd-active {
   width: 100% !important;
   max-width: none !important;
   padding-left: 0 !important;
@@ -106,6 +108,7 @@ image-diff:has(.vpd-active),
   margin-left: 0 !important;
   margin-right: 0 !important;
   height: auto !important;
+  min-height: none !important;
   max-height: none !important;
   overflow: visible !important;
   display: block !important;

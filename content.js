@@ -67,16 +67,17 @@
         }
 
         style.textContent = `
-            :host(.three-up), :host(.vpd-active) {
+            :host(.three-up), :host(.vpd-active), :host {
                 display: grid !important;
-                grid-template-areas: "deleted" "added" "diff" !important;
-                grid-template-columns: 100% !important;
-                gap: 32px 0 !important;
+                grid-template-areas: "deleted added" "diff diff" !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 24px 16px !important;
                 padding: 0 !important;
                 width: 100% !important;
                 max-width: none !important;
                 height: auto !important;
                 min-height: none !important;
+                max-height: none !important;
                 overflow: visible !important;
             }
             .shell {
@@ -100,6 +101,9 @@
                 width: 0 !important;
                 overflow: hidden !important;
             }
+            
+            /* Kill internal encapsulation scrollbars */
+            ::-webkit-scrollbar { display: none !important; }
         `;
     };
 
