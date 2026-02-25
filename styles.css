@@ -37,7 +37,13 @@
   margin: 0 !important;
 }
 
-/* Perfect Symmetrical Layout */
+/* Perfect Symmetrical Layout - Unclip Native Parents */
+.js-file-content:has(.vpd-active),
+.js-file-content:has(.vpd-active) * {
+  /* Some GitHub wrappers hide overflow; force them open if we are active inside them */
+  overflow: visible !important;
+}
+
 .image-diff.vpd-active,
 .three-up.view.vpd-active {
   overflow: auto !important;
