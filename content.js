@@ -70,16 +70,17 @@
             :host(.three-up), :host(.vpd-active), :host {
                 display: grid !important;
                 grid-template-areas: "deleted diff added" !important;
-                grid-template-columns: 1fr 1.2fr 1fr !important;
-                gap: 16px !important;
-                padding: 0 !important;
+                grid-template-columns: 1fr 1fr 1fr !important;
+                gap: 12px !important;
+                padding: 10px !important;
                 width: 100% !important;
                 max-width: none !important;
                 height: auto !important;
-                max-height: 85vh !important;
-                align-items: start !important; /* Top-aligned - remove gap */
+                max-height: 70vh !important;
+                align-items: start !important; /* Top-aligned */
                 overflow: visible !important;
                 margin-top: 0 !important;
+                box-sizing: border-box !important;
             }
             .shell {
                 display: flex !important;
@@ -95,7 +96,7 @@
             }
             .shell:first-of-type { grid-area: deleted !important; }
             .shell:last-of-type { grid-area: added !important; }
-            .vpd-diff-shell { grid-area: diff !important; min-height: 400px !important; }
+            .vpd-diff-shell { grid-area: diff !important; min-height: 200px !important; }
 
             .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle, .swipe-handle, .js-drag-handle {
                 display: none !important;
@@ -104,14 +105,15 @@
             /* Kill internal encapsulation scrollbars */
             ::-webkit-scrollbar { display: none !important; }
             
-            /* Ensure images stretch to column width and stick to top */
+            /* Ensure images stretch to column width and fit viewport height */
             img, .vpd-diff-frame {
                 width: 100% !important;
                 height: auto !important;
-                max-height: 85vh !important;
+                max-height: 70vh !important;
                 object-fit: contain !important;
                 display: block !important;
                 margin-top: 0 !important;
+                border-radius: 8px !important;
             }
         `;
     };
