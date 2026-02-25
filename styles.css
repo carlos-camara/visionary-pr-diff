@@ -8,33 +8,33 @@
   color: #58a6ff !important;
 }
 
-/* 
-   SHIELD MODE (Passive Isolation) 
-   We neutralize native GitHub diff elements WITHOUT removing their classes.
+/*
+   LIQUID SHIELD (Extreme Passive Isolation)
+   Target any descendant that might be leaking from native scripts.
 */
-body.vpd-3up-active .image-diff .handle,
+body.vpd-3up-active .image-diff .swipe-container,
+body.vpd-3up-active .image-diff .onion-skin-container,
+body.vpd-3up-active .image-diff .swipe-handle,
 body.vpd-3up-active .image-diff .swipe-bar,
-body.vpd-3up-active .image-diff .image-diff-swipe,
+body.vpd-3up-active .image-diff .handle,
 body.vpd-3up-active .image-diff .drag-handle,
-body.vpd-3up-active .image-diff .divider {
+body.vpd-3up-active .image-diff .divider,
+body.vpd-3up-active .image-diff>div:not(.shell):not(.vpd-diff-shell):not(.js-image-diff) {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
+  height: 0 !important;
+  overflow: hidden !important;
 }
 
 /* Force native shells to behave like blocks in our 3-column grid */
 body.vpd-3up-active .image-diff .shell {
   position: static !important;
   transform: none !important;
-  display: block !important;
+  display: flex !important;
   width: auto !important;
   margin: 0 !important;
-}
-
-/* Aggressive Cleanup: hide anything that isn't a shell or our diff */
-body.vpd-3up-active .image-diff>div:not(.shell):not(.vpd-diff-shell) {
-  display: none !important;
 }
 
 /* Perfect Symmetrical Layout */

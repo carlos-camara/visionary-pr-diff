@@ -47,30 +47,34 @@
         const fieldset = document.querySelector('fieldset, .view-modes fieldset');
         if (!fieldset) return;
         fieldset.querySelectorAll('label, .js-view-mode-item').forEach(label => {
-            const input = label.querySelector('input');
-            if (input) {
-                // FORCE: apply blue highlight if input is checked
-                if (input.checked) label.classList.add('selected');
-                else label.classList.remove('selected');
-            }
+            const radio = label.querySelector('input[type="radio"]');
+            if (radio?.checked) label.classList.add('selected');
+            else label.classList.remove('selected');
         });
     };
 
     const reconcileViewMode = (view, val) => {
         if (!view) return;
 
-        // 1. Clean slate: remove all known view-mode classes
-        view.classList.remove('swipe', 'onion-skin', 'two-up', '2-up', 'three-up');
+        // 1. LIQUID SHIELD: Aggressively strip native classes
+        const nativeClasses = ['swipe', 'onion-skin', 'two-up', '2-up', 'cross-fade', 'blink', 'three-up'];
+        view.classList.remove(...nativeClasses);
 
-        // 2. Clear Visionary specific styles
+        // 2. State Cleanup
         document.body.classList.remove('vpd-3up-active');
 
+        // 3. Mode Activation
         if (val === 'three-up') {
             view.classList.add('three-up');
             document.body.classList.add('vpd-3up-active');
+
+            // Explicitly neutralize native containers that might bypass classes
+            view.querySelectorAll('.swipe-container, .onion-skin-container, .swipe-bar, .handle').forEach(el => {
+                el.style.setProperty('display', 'none', 'important');
+            });
+
             activate3Up();
         } else {
-            // Restore native mode if known
             if (val) view.classList.add(val);
             deactivate3Up();
         }
