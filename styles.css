@@ -128,10 +128,9 @@ body:has(.vpd-active) .image-diff {
 .image-diff.vpd-active,
 image-diff.vpd-active,
 [data-vpd-state="active"],
-.three-up.view.vpd-active {
+.three-up.view.vpd-active,
+.two-up.view.vpd-active {
   display: grid !important;
-  grid-template-areas: "deleted diff added" !important;
-  grid-template-columns: 1fr 1fr 1fr !important;
   gap: 12px !important;
   align-items: start !important;
   justify-items: stretch !important;
@@ -143,6 +142,32 @@ image-diff.vpd-active,
   margin: 0 auto !important;
   overflow: visible !important;
   box-sizing: border-box !important;
+}
+
+/* 3rd-Party Grid Areas: 3-UP Mode */
+.three-up.view.vpd-active,
+.image-diff.vpd-active[data-vpd-mode="three-up"] {
+  grid-template-areas: "deleted diff added" !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+}
+
+/* 2-UP IMMERSIVE Mode: Split-Dual Dashboard */
+.two-up.view.vpd-active,
+.image-diff.vpd-active:not(.three-up) {
+  grid-template-areas: "originals diff" !important;
+  grid-template-columns: minmax(200px, 350px) 1fr !important;
+}
+
+/* Stack originals in the left 'originals' area */
+.two-up.view.vpd-active .shell {
+  grid-area: originals !important;
+  max-height: calc(50% - 6px) !important;
+  margin-bottom: 8px !important;
+}
+
+.two-up.view.vpd-active .shell:last-of-type {
+  margin-bottom: 0 !important;
+  margin-top: auto !important;
 }
 
 .shell,
