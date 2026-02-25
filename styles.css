@@ -122,7 +122,7 @@
   gap: 16px 8px !important;
   /* Tight spacing for maximal image data */
   align-items: start !important;
-  justify-items: center !important;
+  justify-items: stretch !important;
   padding: 0 !important;
   /* Zero padding for full-bleed immersion */
   width: 100% !important;
