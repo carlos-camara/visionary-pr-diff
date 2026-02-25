@@ -173,20 +173,20 @@ fieldset:has(.vpd-3up-tab) label input {
 .vpd-diff-shell .frame-label {
   display: flex !important;
   align-items: center !important;
-  gap: 8px !important;
+  gap: 6px !important;
   background: var(--vpd-bg-glass) !important;
   backdrop-filter: blur(8px) !important;
   -webkit-backdrop-filter: blur(8px) !important;
-  padding: 6px 14px !important;
+  padding: 4px 10px !important;
   border-radius: 20px !important;
   border: 1px solid var(--vpd-border-glass) !important;
   color: var(--vpd-accent) !important;
-  font-size: 11px !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.5px !important;
+  font-size: 9px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.8px !important;
   text-transform: uppercase !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
-  margin-bottom: 12px !important;
+  margin-bottom: 6px !important;
 }
 
 /* Diff Frame Container */
