@@ -37,47 +37,45 @@
   margin: 0 !important;
 }
 
-/* Perfect Symmetrical Layout - Unclip Native Parents */
+/* Perfect Symmetrical Layout - Full Bleed Breakout */
 .js-file-content:has(.vpd-active),
-.js-file-content:has(.vpd-active) * {
-  /* Some GitHub wrappers hide overflow; force them open if we are active inside them */
+.js-file:has(.vpd-active),
+.file:has(.vpd-active) {
+  /* Prevent parent clipping without destroying internal components */
   overflow: visible !important;
 }
 
 .image-diff.vpd-active,
 .three-up.view.vpd-active {
-  overflow: auto !important;
-  max-height: none !important;
-  height: auto !important;
-}
+  /* Break out of standard GitHub container limits for a massive, legible layout */
+  width: 94vw !important;
+  max-width: none !important;
+  position: relative !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
 
-.three-up.view.vpd-active,
-.image-diff[data-vpd-state="active"].vpd-active {
   display: flex !important;
   flex-direction: row !important;
   flex-wrap: nowrap !important;
   gap: 24px !important;
   align-items: flex-start !important;
-  justify-content: flex-start !important;
+  justify-content: center !important;
   padding: 24px !important;
-  width: 100% !important;
   box-sizing: border-box !important;
+
   overflow-x: auto !important;
+  overflow-y: visible !important;
 }
 
 .three-up.view.vpd-active .shell,
 .image-diff[data-vpd-state="active"].vpd-active .shell {
-  flex: 0 0 auto !important;
-  width: 750px !important;
-  /* Make it massive per user request */
-  max-width: 85vw !important;
-  /* Cap it on small screens */
+  flex: 1 1 0 !important;
+  width: 100% !important;
+  min-width: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  align-items: stretch !important;
-  /* Let children fill the width */
-  padding-bottom: 24px !important;
-  /* Ensure space for bottom content */
+  align-items: center !important;
+  padding-bottom: 30px !important;
 }
 
 .three-up.view.vpd-active .shell img,
@@ -110,28 +108,31 @@ fieldset:has(.vpd-3up-tab) .js-view-mode-item.selected,
 
 /* Diff Frame Container */
 .vpd-diff-frame {
-  display: block !important;
+  display: grid !important;
   background: #0d1117 !important;
   position: relative !important;
   overflow: visible !important;
   min-height: 100px;
-  width: 100% !important;
-  /* Fill the stretch shell */
+  place-items: center;
+  /* Center contents */
 }
 
+.vpd-diff-frame .vpd-canvas-main,
 .vpd-diff-frame .vpd-diff-bg {
-  display: block !important;
+  grid-area: 1 / 1;
+  /* Stack them in the same grid cell */
   width: 100% !important;
   height: auto !important;
-  opacity: 0.7 !important;
+  object-fit: contain !important;
+  display: block !important;
 }
 
-.vpd-diff-frame .vpd-canvas-main {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
-  width: 100% !important;
-  height: 100% !important;
+.vpd-diff-bg {
+  opacity: 0.7 !important;
+  z-index: 1;
+}
+
+.vpd-canvas-main {
   z-index: 2;
   mix-blend-mode: screen;
 }
@@ -194,8 +195,6 @@ fieldset:has(.vpd-3up-tab) .selected input {
   margin-top: 14px !important;
   margin-bottom: 10px !important;
   display: inline-flex;
-  align-self: center !important;
-  /* Centered in stretch shell */
   gap: 12px;
   font-size: 11px !important;
   font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Courier, monospace !important;
