@@ -87,12 +87,11 @@
   margin: 0 !important;
 }
 
-/* Asymmetric Gallery Grid: [Deleted+Added] | [Visionary Diff large] */
+/* Flexbox Layout: [Deleted+Added Stacked] | [Visionary Diff large] */
 .three-up.view.vpd-active,
 .image-diff[data-vpd-state="active"].vpd-active {
-  display: grid !important;
-  grid-template-columns: 38% 1fr !important;
-  grid-template-rows: 1fr 1fr !important;
+  display: flex !important;
+  flex-direction: row !important;
   gap: 8px !important;
   padding: 8px !important;
 
@@ -103,11 +102,11 @@
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
   overflow: hidden !important;
 
-  /* Let the grid expand naturally to the height of the main diff image */
+  /* Force absolutely massive height overriding everything */
   width: 100% !important;
-  height: auto !important;
-  min-height: 70vh !important;
-  max-height: none !important;
+  height: 85vh !important;
+  min-height: 85vh !important;
+  max-height: 85vh !important;
 }
 
 /* Force GitHub's outer wrapper to allow expansion */
@@ -120,14 +119,22 @@
 }
 
 
-/* Base shell: fill its grid cell, never overflow */
+/* Flex container for the left side (Deleted/Added) */
+.vpd-left-column {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+  flex: 0 0 35% !important;
+  /* Fixed 35% width for the left column */
+  height: 100% !important;
+}
+
+/* Base shell: fill its flex cell, never overflow */
 .three-up.view.vpd-active .shell,
 .image-diff[data-vpd-state="active"].vpd-active .shell,
 .vpd-diff-shell {
   width: 100% !important;
-  /* Must fill the grid cell */
   height: 100% !important;
-  /* Must fill the grid cell */
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
@@ -139,27 +146,18 @@
   animation: vpd-fade-up 0.5s ease-out forwards;
 }
 
-/* Deleted: top-left cell */
-.shell[data-vpd-type="deleted"] {
-  grid-column: 1 !important;
-  grid-row: 1 !important;
-}
-
-/* Added: bottom-left cell */
+/* Side shells inside left column */
+.shell[data-vpd-type="deleted"],
 .shell[data-vpd-type="added"] {
-  grid-column: 1 !important;
-  grid-row: 2 !important;
+  flex: 1 1 50% !important;
+  /* Stack evenly */
 }
 
-/* Visionary Diff: right column, spans both rows */
+/* Visionary Diff: right column */
 .vpd-diff-shell {
-  grid-column: 2 !important;
-  grid-row: 1 / span 2 !important;
-  max-width: none !important;
-  align-items: center !important;
-  justify-content: center !important;
-  height: auto !important;
-  /* Allow it to grow natively with the image */
+  flex: 1 1 auto !important;
+  /* Take remaining 65% width */
+  height: 100% !important;
 }
 
 /* Side images: 100% with box-sizing so border never overflows */
@@ -246,11 +244,13 @@ fieldset:has(.vpd-3up-tab) label input {
   display: none !important;
 }
 
-/* Overlay Labels - Zenith Integrated UI (Anti-Overlap Anchoring) */
+/* Overlay Labels - Zenith Integrated UI */
 .view.vpd-active .shell .frame-label,
 .vpd-diff-shell .frame-label {
-  display: none !important;
-  /* Pure Image Mode: No text overlays */
+  display: block !important;
+  position: absolute !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
 }
 
 /* Unique Corner Anchoring */

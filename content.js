@@ -275,6 +275,19 @@
             return;
         }
 
+        const shellA = imgA.closest('.shell');
+        const shellB = imgB.closest('.shell');
+
+        // Create the Flex column wrapper for the two side images if it doesn't exist
+        let leftCol = view.querySelector('.vpd-left-column');
+        if (!leftCol && shellA && shellB) {
+            leftCol = document.createElement('div');
+            leftCol.className = 'vpd-left-column';
+            shellA.before(leftCol);
+            leftCol.appendChild(shellA);
+            leftCol.appendChild(shellB);
+        }
+
         const ready = await Promise.all([waitForImage(imgA), waitForImage(imgB)]);
         if (requestId !== _currentRequestId) return;
 
@@ -340,6 +353,16 @@
             if (shield) shield.remove();
         }
         view.querySelectorAll('.vpd-diff-shell').forEach(s => s.remove());
+
+        // Unwrap the left column shells back to normal DOM flow
+        const leftCol = view.querySelector('.vpd-left-column');
+        if (leftCol) {
+            while (leftCol.firstChild) {
+                leftCol.before(leftCol.firstChild);
+            }
+            leftCol.remove();
+        }
+
         if (view._vpdUrls) {
             view._vpdUrls.forEach(url => URL.revokeObjectURL(url));
             view._vpdUrls = [];
