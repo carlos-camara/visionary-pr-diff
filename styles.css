@@ -92,7 +92,7 @@
 .image-diff[data-vpd-state="active"].vpd-active {
   display: flex !important;
   flex-direction: row !important;
-  gap: 8px !important;
+  gap: 4px !important;
   align-items: center !important;
   justify-content: center !important;
   padding: 12px !important;
@@ -129,14 +129,14 @@
 /* Distribution: central is priority but side ones stay visible */
 .three-up.view.vpd-active .shell:not(.vpd-diff-shell),
 .image-diff.vpd-active .shell:not(.vpd-diff-shell) {
-  flex: 0 0 12% !important;
+  flex: 0 0 8% !important;
   height: 100% !important;
 }
 
 .vpd-diff-shell {
-  flex: 1 1 76% !important;
+  flex: 1 1 84% !important;
   height: 100% !important;
-  max-width: 76% !important;
+  max-width: 84% !important;
   /* Force constraint for better scaling */
 }
 
