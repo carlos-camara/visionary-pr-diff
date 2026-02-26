@@ -96,13 +96,14 @@
   gap: 8px !important;
   padding: 8px !important;
 
-  /* Cover entire viewport including GitHub sidebar */
+  /* Cover viewport from below breadcrumb to above tab bar */
   position: fixed !important;
-  top: 0 !important;
+  top: 35px !important;
+  /* Start below the file breadcrumb bar */
   left: 0 !important;
   right: 0 !important;
   bottom: 40px !important;
-  /* Anchor above the tab bar - auto height */
+  /* End above the tab bar */
   width: 100vw !important;
   height: auto !important;
   transform: none !important;
