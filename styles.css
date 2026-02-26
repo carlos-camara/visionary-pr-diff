@@ -81,7 +81,7 @@
 .three-up.view.vpd-active,
 .image-diff[data-vpd-state="active"].vpd-active {
   display: grid !important;
-  grid-template-columns: 1fr 1fr 1fr !important;
+  grid-template-columns: 0.8fr 1.4fr 0.8fr !important;
   gap: 24px !important;
   align-items: start !important;
   padding: 32px !important;
