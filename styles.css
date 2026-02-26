@@ -120,7 +120,8 @@
   height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
-  align-items: center !important;
+  align-items: stretch !important;
+  /* STRETCH children to fill width */
   justify-content: center !important;
   min-width: 0 !important;
   animation: vpd-fade-up 0.5s ease-out forwards;
@@ -147,23 +148,19 @@
 }
 
 .three-up.view.vpd-active .shell img,
-.three-up.view.vpd-active .shell .vpd-diff-frame,
-.image-diff.vpd-active .shell img,
-.image-diff.vpd-active .shell .vpd-diff-frame {
+.image-diff.vpd-active .shell img {
   max-width: 100% !important;
   max-height: 96vh !important;
-  /* Max vertical stretch */
-  width: auto !important;
+  width: 100% !important;
+  /* Fill the full column width */
   height: auto !important;
   object-fit: contain !important;
   border-radius: 4px !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3) !important;
   transition: var(--vpd-transition) !important;
   background: transparent !important;
 }
 
-/* Strict visible thumbnails for side images - NO CLIPPING */
+/* Strict visible thumbnails for side images - NO CLIPPING, FILL COLUMN */
 .three-up.view.vpd-active .shell:not(.vpd-diff-shell) img,
 .image-diff.vpd-active .shell:not(.vpd-diff-shell) img {
   width: 100% !important;
@@ -171,7 +168,6 @@
   max-height: 96vh !important;
   object-fit: contain !important;
   border: none !important;
-  /* Keep sides ultra-clean */
 }
 
 /* Color Coded Accents */
@@ -333,16 +329,25 @@ fieldset:has(.vpd-3up-tab) label input {
   background: rgba(var(--vpd-accent-rgb), 0.15) !important;
 }
 
-/* Diff Frame Container */
+/* Diff Frame Container - Force fill the shell's available height */
 .vpd-diff-frame {
   display: block !important;
-  background: #0d1117 !important;
+  background: transparent !important;
   position: relative !important;
   overflow: hidden !important;
   min-height: 120px;
-  border-radius: 12px !important;
-  border: 1px solid rgba(var(--vpd-accent-rgb), 0.3) !important;
+  width: 100% !important;
+  /* Fill horizontal space */
+  flex: 1 1 auto !important;
+  /* Grow to fill all remaining height in the column */
+  border-radius: 8px !important;
+  border: 1px solid rgba(var(--vpd-accent-rgb), 0.25) !important;
   animation: vpd-pulse-glow 4s infinite ease-in-out;
+}
+
+/* Hide stats card to free space */
+.vpd-stats-card {
+  display: none !important;
 }
 
 .vpd-diff-frame .vpd-canvas-main,
