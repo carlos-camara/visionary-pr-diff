@@ -339,9 +339,8 @@ fieldset:has(.vpd-3up-tab) label input {
   /* Grow to fill column height */
   max-height: 100% !important;
   /* Never exceed the shell */
-  border-radius: 8px !important;
-  border: 1px solid rgba(var(--vpd-accent-rgb), 0.25) !important;
-  animation: vpd-pulse-glow 4s infinite ease-in-out;
+  border-radius: 0 !important;
+  border: none !important;
 }
 
 /* Stats card: visible but compact */
@@ -378,9 +377,7 @@ fieldset:has(.vpd-3up-tab) label input {
 }
 
 .vpd-diff-bg {
-  opacity: 0.6 !important;
-  z-index: 1;
-  filter: grayscale(0.5);
+  display: none !important;
 }
 
 .vpd-canvas-main {
