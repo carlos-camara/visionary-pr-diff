@@ -79,28 +79,32 @@
         `;
     };
 
-    const reconcileViewMode = (view, val) => {
+    const reconcileViewMode = (view, val, fieldset = null) => {
         if (!view) return;
 
         if (val === 'three-up') {
             // ── Measure BEFORE our CSS kicks in ──────────────────────────────
-            // The view is still in native (Onion Skin / 2-up) layout so its
-            // bounding rect reflects the real available content area.
-            const rect = view.getBoundingClientRect();
-            document.documentElement.style.setProperty('--vpd-view-top', rect.top + 'px');
-            document.documentElement.style.setProperty('--vpd-view-height', rect.height + 'px');
-            document.documentElement.style.setProperty('--vpd-view-left', rect.left + 'px');
-            document.documentElement.style.setProperty('--vpd-view-width', rect.width + 'px');
+            // Measure the real available content area: from view top to the
+            // fieldset (tab bar) top. This matches Onion Skin's content area exactly.
+            const viewRect = view.getBoundingClientRect();
+            const tabRect = fieldset ? fieldset.getBoundingClientRect() : null;
+            const contentTop = viewRect.top;
+            const contentHeight = tabRect ? (tabRect.top - viewRect.top) : viewRect.height;
+
+            document.documentElement.style.setProperty('--vpd-view-top', contentTop + 'px');
+            document.documentElement.style.setProperty('--vpd-view-height', contentHeight + 'px');
+            document.documentElement.style.setProperty('--vpd-view-left', viewRect.left + 'px');
+            document.documentElement.style.setProperty('--vpd-view-width', viewRect.width + 'px');
             // ─────────────────────────────────────────────────────────────────
 
             // ── Apply dimensions as inline styles (highest priority) ──────────
             // CSS variables can lose to GitHub's own !important rules; inline
             // styles with !important always win.
             view.style.setProperty('position', 'fixed', 'important');
-            view.style.setProperty('top', rect.top + 'px', 'important');
+            view.style.setProperty('top', contentTop + 'px', 'important');
             view.style.setProperty('left', '0', 'important');
             view.style.setProperty('width', '100vw', 'important');
-            view.style.setProperty('height', rect.height + 'px', 'important');
+            view.style.setProperty('height', contentHeight + 'px', 'important');
             view.style.setProperty('z-index', '9999', 'important');
             // ─────────────────────────────────────────────────────────────────
 
@@ -193,10 +197,10 @@
                             delete fieldset.dataset.vpdIgnore;
                         }
 
-                        reconcileViewMode(view, 'three-up');
+                        reconcileViewMode(view, 'three-up', fieldset);
                     } else {
                         // Native mode selected. Hand control back entirely.
-                        reconcileViewMode(view, val);
+                        reconcileViewMode(view, val, fieldset);
                     }
                     syncTabSelection(fieldset);
                 });
