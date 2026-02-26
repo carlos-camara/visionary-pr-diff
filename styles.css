@@ -340,17 +340,10 @@ fieldset:has(.vpd-3up-tab) label input {
 
 /* Diff Frame Container - fills the shell and clips properly */
 .vpd-diff-frame {
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  background: transparent !important;
+  display: block !important;
   position: relative !important;
-  overflow: hidden !important;
   width: 100% !important;
-  flex: 1 1 auto !important;
-  /* Grow to fill column height */
-  max-height: 100% !important;
-  /* Never exceed the shell */
+  height: auto !important;
   border-radius: 0 !important;
   border: none !important;
 }
@@ -360,19 +353,22 @@ fieldset:has(.vpd-3up-tab) label input {
   display: none !important;
 }
 
-.vpd-diff-frame .vpd-canvas-main,
-.vpd-diff-frame .vpd-diff-bg {
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  width: auto !important;
-  /* Proportional, don't force full width */
+.vpd-diff-frame .vpd-canvas-main {
+  position: relative !important;
+  /* Pushes the container height! */
+  display: block !important;
+  width: 100% !important;
   height: auto !important;
   max-width: 100% !important;
-  /* Clip to frame width */
-  max-height: 100% !important;
-  /* Clip to frame height */
+  object-fit: contain !important;
+}
+
+.vpd-diff-frame .vpd-diff-bg {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
   object-fit: contain !important;
 }
 
