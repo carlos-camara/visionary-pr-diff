@@ -377,7 +377,9 @@ fieldset:has(.vpd-3up-tab) label input {
 }
 
 .vpd-diff-bg {
-  display: none !important;
+  opacity: 0.6 !important;
+  z-index: 1;
+  filter: grayscale(0.5);
 }
 
 .vpd-canvas-main {
