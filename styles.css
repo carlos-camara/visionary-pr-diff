@@ -68,6 +68,16 @@
   overflow: hidden !important;
 }
 
+/* BURST-OUT parent overrides: Ensure no clipping on the expanded view */
+:has(> .vpd-active),
+.js-file:has(.three-up.vpd-active),
+.file-content:has(.three-up.vpd-active),
+.data:has(.three-up.vpd-active),
+.js-image-diff:has(.three-up.vpd-active) {
+  overflow: visible !important;
+  contain: none !important;
+}
+
 /* Force native shells to behave like blocks in our 3-column grid */
 .image-diff.vpd-active .shell {
   position: static !important;
@@ -77,21 +87,29 @@
   margin: 0 !important;
 }
 
-/* Perfect Symmetrical Layout - Grid Powered (Full-Bleed) */
+/* Perfect Symmetrical Layout - Grid Powered (Burst-Out Inmersive) */
 .three-up.view.vpd-active,
 .image-diff[data-vpd-state="active"].vpd-active {
   display: grid !important;
   grid-template-columns: 0.7fr 1.6fr 0.7fr !important;
-  gap: 16px !important;
+  gap: 20px !important;
   align-items: start !important;
-  padding: 24px 12px !important;
-  width: calc(100% + 40px) !important;
-  /* Break out of file content padding if needed */
-  margin-left: -20px !important;
-  /* Center the break-out */
-  max-width: none !important;
+  padding: 40px 20px !important;
+
+  /* Burst-out of GitHub container logic */
+  width: 94vw !important;
+  position: relative !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 100 !important;
+
+  border-radius: 16px !important;
   box-sizing: border-box !important;
-  background: radial-gradient(circle at top, rgba(var(--vpd-accent-rgb), 0.1), transparent) !important;
+  background: rgba(13, 17, 23, 0.95) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(var(--vpd-accent-rgb), 0.2) !important;
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(var(--vpd-accent-rgb), 0.1) !important;
 }
 
 .three-up.view.vpd-active .shell,
@@ -111,11 +129,11 @@
 .image-diff.vpd-active .shell .vpd-diff-frame {
   width: 100% !important;
   height: auto !important;
-  max-height: 80vh !important;
+  max-height: 85vh !important;
   object-fit: contain !important;
   border-radius: 12px !important;
-  border: 1px solid var(--vpd-border-glass) !important;
-  box-shadow: var(--vpd-glow) !important;
+  border: 2px solid var(--vpd-border-glass) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
   transition: var(--vpd-transition) !important;
   background: #0d1117;
 }
