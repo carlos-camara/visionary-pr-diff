@@ -93,11 +93,13 @@
   display: grid !important;
   grid-template-columns: 28% 1fr !important;
   grid-template-rows: 1fr 1fr !important;
-  gap: 10px !important;
-  padding: 14px !important;
+  gap: 8px !important;
+  padding: 6px !important;
+  /* Minimal padding = bigger images */
 
   width: 100vw !important;
-  height: 92vh !important;
+  height: 95vh !important;
+  /* Use more vertical space */
   position: relative !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
@@ -108,6 +110,7 @@
   border: none !important;
   box-shadow: none !important;
   overflow: hidden !important;
+  margin-top: 0 !important;
 }
 
 /* Base shell: fill its grid cell, never overflow */
