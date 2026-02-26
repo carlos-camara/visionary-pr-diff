@@ -87,7 +87,7 @@
   margin: 0 !important;
 }
 
-/* Clean Canvas Layout - Master Gallery (Burst-Out Flex) */
+/* Clean Canvas Layout - Invisible Pro (Full-Bleed Transparency) */
 .three-up.view.vpd-active,
 .image-diff[data-vpd-state="active"].vpd-active {
   display: flex !important;
@@ -95,25 +95,27 @@
   gap: 8px !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 12px !important;
+  padding: 0 !important;
+  /* Maximize internal space */
 
   /* Full Viewport Dominance */
-  width: 98vw !important;
+  width: 100vw !important;
   height: 92vh !important;
   position: relative !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   z-index: 100 !important;
 
-  border-radius: 12px !important;
+  border-radius: 0 !important;
+  /* Seamless integration */
   box-sizing: border-box !important;
-  background: rgba(13, 17, 23, 0.4) !important;
-  /* Subtle glass, no solid black */
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.7) !important;
-  overflow: hidden !important;
+  background: transparent !important;
+  /* Remove the "black box" */
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  overflow: visible !important;
 }
 
 .three-up.view.vpd-active .shell,
@@ -164,15 +166,15 @@
   /* Clear background */
 }
 
-/* Postage stamp scaling for side images */
+/* Postage stamp scaling for side images - NO HEIGHT CAP */
 .three-up.view.vpd-active .shell:not(.vpd-diff-shell) img,
 .image-diff.vpd-active .shell:not(.vpd-diff-shell) img {
   width: 100% !important;
-  max-height: 200px !important;
-  /* Limit thumbnail height to avoid giant vertical stamps */
+  max-height: 88vh !important;
+  /* Allow full vertical stretch if needed */
   object-fit: contain !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
-  background: rgba(0, 0, 0, 0.2) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  background: transparent !important;
 }
 
 /* Color Coded Accents */
