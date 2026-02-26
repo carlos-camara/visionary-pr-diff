@@ -113,12 +113,13 @@
                     wrapper.dataset.vpdOrigMinHeight = wrapper.style.minHeight || '';
                 }
                 wrapper.style.setProperty('height', 'auto', 'important');
-                wrapper.style.setProperty('min-height', '85vh', 'important');
-                wrapper.style.setProperty('display', 'flex', 'important'); // Ensure flex behavior propagates
+                wrapper.style.setProperty('min-height', 'auto', 'important');
+                wrapper.style.setProperty('overflow', 'visible', 'important');
             }
 
         } else {
             // User selected 2-up, Swipe, or Onion natively.
+            view.style.removeProperty('--vpd-onion-height');
             // Reset inline styles we applied, then remove our classes.
             ['position', 'top', 'left', 'width', 'height', 'z-index'].forEach(p => view.style.removeProperty(p));
 
@@ -305,21 +306,22 @@
         const shellA = imgA.closest('.shell');
         const shellB = imgB.closest('.shell');
 
-        // Create the Flex column wrapper for the two side images if it doesn't exist
-        let leftCol = view.querySelector('.vpd-left-column');
-        if (!leftCol && shellA && shellB) {
-            leftCol = document.createElement('div');
-            leftCol.className = 'vpd-left-column';
-            shellA.before(leftCol);
-            leftCol.appendChild(shellA);
-            leftCol.appendChild(shellB);
-        }
-
         const ready = await Promise.all([waitForImage(imgA), waitForImage(imgB)]);
         if (requestId !== _currentRequestId) return;
 
         if (!ready[0] || !ready[1]) {
             console.warn('[VPD] Target images failed to signal readiness.');
+        }
+
+        // MATHEMATICALLY MATCH ONION SKIN HEIGHT
+        // Onion skin perfectly scales the image width to 100% of the wrapper container.
+        const wrapper = view.closest('.js-file-content, .file');
+        const wrapperWidth = wrapper ? wrapper.clientWidth : (view.clientWidth || 1200);
+        if (imgB.naturalWidth && imgB.naturalHeight) {
+            const exactOnionHeight = Math.round((wrapperWidth / imgB.naturalWidth) * imgB.naturalHeight);
+            // Ensure a minimum height so tiny images still render nicely
+            const finalHeight = Math.max(exactOnionHeight, 300);
+            view.style.setProperty('--vpd-onion-height', `${finalHeight}px`);
         }
 
         try {

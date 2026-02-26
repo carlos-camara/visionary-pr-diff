@@ -87,13 +87,14 @@
   margin: 0 !important;
 }
 
-/* Flexbox Layout: [Deleted+Added Stacked] | [Visionary Diff large] */
+/* Grid Layout: [Deleted+Added] | [Visionary Diff large] */
 .three-up.view.vpd-active,
 .image-diff[data-vpd-state="active"].vpd-active {
-  display: flex !important;
-  flex-direction: row !important;
-  gap: 8px !important;
-  padding: 8px !important;
+  display: grid !important;
+  grid-template-columns: 35% 1fr !important;
+  grid-template-rows: 1fr 1fr !important;
+  gap: 12px !important;
+  padding: 12px !important;
 
   box-sizing: border-box !important;
   background: linear-gradient(180deg, #0d1117 0%, #161b22 100%) !important;
@@ -102,97 +103,81 @@
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
   overflow: hidden !important;
 
-  /* Force absolutely massive height overriding everything */
+  /* Mathematical Exact Height computed by JS to exactly match Onion Skin proportions */
   width: 100% !important;
-  height: 85vh !important;
-  min-height: 85vh !important;
-  max-height: 85vh !important;
+  height: var(--vpd-onion-height, 600px) !important;
+  min-height: var(--vpd-onion-height, 600px) !important;
+  max-height: none !important;
 }
 
 /* Force GitHub's outer wrapper to allow expansion */
 .js-file-content:has(.three-up.view.vpd-active),
 .js-file-content:has(.image-diff[data-vpd-state="active"].vpd-active) {
-  display: flex !important;
-  flex-direction: column !important;
+  display: block !important;
   height: auto !important;
-  min-height: 70vh !important;
+  min-height: var(--vpd-onion-height, 600px) !important;
+  overflow: visible !important;
 }
 
-
-/* Flex container for the left side (Deleted/Added) */
-.vpd-left-column {
-  display: flex !important;
-  flex-direction: column !important;
-  gap: 8px !important;
-  flex: 0 0 35% !important;
-  /* Fixed 35% width for the left column */
-  height: 100% !important;
-}
-
-/* Base shell: fill its flex cell, never overflow */
+/* Base shell: fill its grid cell, never overflow */
 .three-up.view.vpd-active .shell,
 .image-diff[data-vpd-state="active"].vpd-active .shell,
 .vpd-diff-shell {
   width: 100% !important;
   height: 100% !important;
   display: flex !important;
-  flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
   min-width: 0 !important;
   min-height: 0 !important;
-  overflow: hidden !important;
   position: relative !important;
   animation: vpd-fade-up 0.5s ease-out forwards;
+
+  /* Shell borders and background */
+  background: #010409 !important;
+  border: 1px solid #30363d !important;
+  border-radius: 6px !important;
+  overflow: hidden !important;
+  /* Keep strictly rectangular */
 }
 
-/* Side shells inside left column */
-.shell[data-vpd-type="deleted"],
+/* Deleted: top-left cell */
+.shell[data-vpd-type="deleted"] {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+}
+
+/* Added: bottom-left cell */
 .shell[data-vpd-type="added"] {
-  flex: 1 1 50% !important;
-  /* Stack evenly */
+  grid-column: 1 !important;
+  grid-row: 2 !important;
 }
 
-/* Visionary Diff: right column */
+/* Visionary Diff: right column, spans both rows */
 .vpd-diff-shell {
-  flex: 1 1 auto !important;
-  /* Take remaining 65% width */
-  height: 100% !important;
+  grid-column: 2 !important;
+  grid-row: 1 / span 2 !important;
 }
 
-/* Side images: 100% with box-sizing so border never overflows */
-.three-up.view.vpd-active .shell:not(.vpd-diff-shell) img,
-.image-diff.vpd-active .shell:not(.vpd-diff-shell) img {
+/* Absolutely position ALL images inside shells to guarantee 100% visible fit */
+.three-up.view.vpd-active .shell img,
+.three-up.view.vpd-active .shell canvas,
+.vpd-diff-bg {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
   width: 100% !important;
   height: 100% !important;
-  box-sizing: border-box !important;
   object-fit: contain !important;
-  border-radius: 6px !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
-  transition: var(--vpd-transition) !important;
+  /* NEVER crop */
+  border: none !important;
+  box-shadow: none !important;
   background: transparent !important;
 }
 
-/* Color Coded Accents */
-.shell[data-vpd-type="deleted"] img {
-  border-color: rgba(248, 81, 73, 0.3) !important;
-  box-shadow: 0 8px 32px rgba(248, 81, 73, 0.15) !important;
-}
-
-.shell[data-vpd-type="added"] img {
-  border-color: rgba(63, 185, 80, 0.3) !important;
-  box-shadow: 0 8px 32px rgba(63, 185, 80, 0.15) !important;
-}
-
-.vpd-diff-shell .vpd-diff-frame {
-  border-color: transparent !important;
-  box-shadow: none !important;
-}
-
+/* Overwrite hover effects since layout is absolute */
 .image-diff.vpd-active .shell img:hover {
-  transform: translateY(-4px) scale(1.02);
-  border-color: rgba(var(--vpd-accent-rgb), 0.5) !important;
+  transform: none !important;
 }
 
 /* Tab Management - Segmented Control Aesthetic */
@@ -253,29 +238,34 @@ fieldset:has(.vpd-3up-tab) label input {
   pointer-events: none !important;
 }
 
-/* Unique Corner Anchoring */
+/* Unique Corner Anchoring safely INSIDE the shell */
 .shell[data-vpd-type="deleted"] .frame-label {
-  top: 15px !important;
-  left: 15px !important;
+  top: 12px !important;
+  left: 12px !important;
   border-color: rgba(248, 81, 73, 0.4) !important;
   color: #ffa198 !important;
+  background: rgba(13, 17, 23, 0.8) !important;
+  font-size: 11px !important;
 }
 
 .shell[data-vpd-type="added"] .frame-label {
-  top: 15px !important;
-  right: 15px !important;
-  left: auto !important;
+  top: 12px !important;
+  left: 12px !important;
+  right: auto !important;
   border-color: rgba(63, 185, 80, 0.4) !important;
   color: #7ee787 !important;
+  background: rgba(13, 17, 23, 0.8) !important;
+  font-size: 11px !important;
 }
 
 .vpd-diff-shell .frame-label {
-  top: 15px !important;
+  top: 16px !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   border-color: rgba(var(--vpd-accent-rgb), 0.5) !important;
   color: var(--vpd-accent) !important;
   background: rgba(var(--vpd-accent-rgb), 0.15) !important;
+  font-size: 14px !important;
 }
 
 /* Shimmer Effect for Labels */
@@ -287,10 +277,7 @@ fieldset:has(.vpd-3up-tab) label input {
   left: -100% !important;
   width: 100% !important;
   height: 100% !important;
-  background: linear-gradient(120deg,
-      transparent,
-      rgba(255, 255, 255, 0.15),
-      transparent) !important;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.15), transparent) !important;
   animation: vpd-shimmer 4s infinite linear !important;
 }
 
@@ -306,36 +293,6 @@ fieldset:has(.vpd-3up-tab) label input {
   100% {
     left: 100%;
   }
-}
-
-/* Color Coding for Elite Labels */
-/* Corner tags for side thumbnails */
-.shell[data-vpd-type="deleted"] .frame-label,
-.shell[data-vpd-type="added"] .frame-label {
-  top: -10px !important;
-  /* Move above the tiny image */
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
-  font-size: 7px !important;
-  opacity: 0.6 !important;
-}
-
-.shell[data-vpd-type="deleted"] .frame-label {
-  left: 0 !important;
-}
-
-.shell[data-vpd-type="added"] .frame-label {
-  right: 0 !important;
-  left: auto !important;
-}
-
-.vpd-diff-shell .frame-label {
-  top: 15px !important;
-  left: 50% !important;
-  transform: translateX(-50%) !important;
-  border-bottom: 2px solid var(--vpd-accent) !important;
-  background: rgba(var(--vpd-accent-rgb), 0.15) !important;
 }
 
 /* Diff Frame Container - fills the shell and clips properly */
