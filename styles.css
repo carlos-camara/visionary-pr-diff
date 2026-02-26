@@ -98,10 +98,10 @@
 
   /* Fixed to viewport - no margin/flow issues, no clipping */
   position: fixed !important;
-  top: 35px !important;
+  top: 8px !important;
   left: 0 !important;
   width: 100vw !important;
-  height: calc(100vh - 80px) !important;
+  height: calc(100vh - 55px) !important;
   transform: none !important;
   z-index: 100 !important;
 
