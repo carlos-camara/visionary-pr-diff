@@ -74,150 +74,32 @@
   transform: none !important;
   display: flex !important;
   width: auto !important;
-  height: auto !important;
-  /* Liberate vertical space */
   margin: 0 !important;
 }
 
-.image-diff.vpd-active,
-.three-up.view.vpd-active {
-  height: auto !important;
-  min-height: 400px !important;
-  /* Prevent parent from clipping */
-  overflow: visible !important;
-}
-
-/* VISIONARY TRIPTYCH: Root-to-Branch Liberation */
-/* Force the entire GitHub PR hierarchy to expand to 98% width and stick to the TOP */
-body:has(.vpd-active) .container-xl,
-body:has(.vpd-active) .container-lg,
-body:has(.vpd-active) .repository-content,
-body:has(.vpd-active) .new-discussion-timeline,
-body:has(.vpd-active) .discussion-timeline,
-body:has(.vpd-active) .pull-discussion-timeline,
-body:has(.vpd-active) .timeline-comment-wrapper,
-body:has(.vpd-active) .discussion-item,
-body:has(.vpd-active) .js-discussion-item,
-body:has(.vpd-active) .timeline-comment,
-body:has(.vpd-active) .js-comment-container,
-body:has(.vpd-active) .file,
-body:has(.vpd-active) .js-file-content,
-body:has(.vpd-active) .blob-wrapper,
-body:has(.vpd-active) .view.vpd-active,
-body:has(.vpd-active) image-diff,
-body:has(.vpd-active) .image-diff {
-  width: 98% !important;
-  max-width: none !important;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  padding-top: 0 !important;
-  margin-top: 0 !important;
-  margin-left: auto !important;
-  margin-right: auto !important;
-  height: auto !important;
-  min-height: none !important;
-  max-height: none !important;
-  overflow: visible !important;
-  display: block !important;
-  position: static !important;
-  /* Kill any relative/absolute shifts */
-}
-
-/* VISIONARY TRIPTYCH: NUCLEAR GRID ENFORCEMENT */
-.view.vpd-active,
-.image-diff.vpd-active,
-image-diff.vpd-active,
-[data-vpd-state="active"],
+/* Perfect Symmetrical Layout */
 .three-up.view.vpd-active,
-.two-up.view.vpd-active {
-  display: grid !important;
-  gap: 12px !important;
-  align-items: start !important;
-  justify-items: stretch !important;
-  padding: 10px !important;
-  width: 98% !important;
-  max-width: none !important;
-  height: auto !important;
-  max-height: 70vh !important;
-  margin: 0 auto !important;
-  overflow: visible !important;
-  box-sizing: border-box !important;
-}
-
-/* 3rd-Party Grid Areas: 3-UP Mode */
-.three-up.view.vpd-active,
-.image-diff.vpd-active[data-vpd-mode="three-up"] {
-  grid-template-areas: "deleted diff added" !important;
-  grid-template-columns: 1fr 1fr 1fr !important;
-}
-
-/* 2-UP IMMERSIVE Mode: Split-Dual Dashboard (Explicit 2x2 Rescue) */
-.two-up.view.vpd-active,
-.image-diff.vpd-active:not(.three-up) {
-  grid-template-areas: none !important;
-  grid-template-columns: 50% 50% !important;
-  /* Strict Center Split */
-  grid-template-rows: auto auto !important;
-  align-items: start !important;
-}
-
-/* Pin originals to Left Column exclusively */
-.two-up.view.vpd-active .shell:first-of-type {
-  grid-column: 1 !important;
-  grid-row: 1 !important;
-  margin-bottom: 12px !important;
-}
-
-.two-up.view.vpd-active .shell:last-of-type {
-  grid-column: 1 !important;
-  grid-row: 2 !important;
-  margin-top: 0 !important;
-}
-
-/* Strict Right-Half Docking (No Bleeding) */
-/* Dock Diff to Right Column exclusively (Starts at center, spans both rows) */
-.two-up.view.vpd-active .vpd-diff-shell {
-  grid-area: none !important;
-  grid-column: 2 !important;
-  grid-row: 1 / span 2 !important;
+.image-diff[data-vpd-state="active"].vpd-active {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 20px !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  padding: 24px !important;
   width: 100% !important;
-  max-width: 100% !important;
-  height: 100% !important;
-  justify-self: stretch !important;
-  margin-left: 0 !important;
-  overflow: hidden !important;
+  box-sizing: border-box !important;
+  background: radial-gradient(circle at top, rgba(var(--vpd-accent-rgb), 0.05), transparent) !important;
 }
 
-/* Ensure the frame inside obeys the docking box */
-.two-up.view.vpd-active .vpd-diff-frame {
-  height: 100% !important;
-  max-height: none !important;
-  min-height: 0 !important;
-}
-
-.shell,
+.three-up.view.vpd-active .shell,
+.image-diff[data-vpd-state="active"].vpd-active .shell,
 .vpd-diff-shell {
+  flex: 0 0 calc(33.33% - 14px) !important;
+  min-width: 0 !important;
   display: flex !important;
   flex-direction: column !important;
-  width: 100% !important;
-  height: auto !important;
-  min-width: 0 !important;
-  position: relative !important;
-}
-
-/* Assign Grid Areas with Maximum Specificity */
-.shell:first-of-type,
-.shell[data-type="before"] {
-  grid-area: deleted !important;
-}
-
-.shell:last-of-type,
-.shell[data-type="after"] {
-  grid-area: added !important;
-}
-
-.vpd-diff-shell {
-  grid-area: diff !important;
+  align-items: center !important;
+  animation: vpd-fade-up 0.5s ease-out forwards;
 }
 
 .three-up.view.vpd-active .shell img,
@@ -226,14 +108,13 @@ image-diff.vpd-active,
 .image-diff.vpd-active .shell .vpd-diff-frame {
   width: 100% !important;
   height: auto !important;
-  max-height: none !important;
+  max-height: 500px !important;
   object-fit: contain !important;
-  border-radius: 8px !important;
+  border-radius: 12px !important;
   border: 1px solid var(--vpd-border-glass) !important;
   box-shadow: var(--vpd-glow) !important;
   transition: var(--vpd-transition) !important;
-  background: #000 !important;
-  /* Pure black background for data-heavy diffs */
+  background: #0d1117;
 }
 
 .image-diff.vpd-active .shell img:hover {
@@ -287,61 +168,35 @@ fieldset:has(.vpd-3up-tab) label input {
   display: none !important;
 }
 
-/* PREMIUM FLOATING GLASS LABELS */
-.frame-label.vpd-premium-label {
-  position: absolute !important;
-  top: 12px !important;
-  left: 12px !important;
-  z-index: 10 !important;
+/* Glassmorphism Labels */
+.vpd-diff-shell .frame-label {
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
-  background: rgba(13, 17, 23, 0.6) !important;
-  backdrop-filter: blur(16px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+  background: var(--vpd-bg-glass) !important;
+  backdrop-filter: blur(8px) !important;
+  -webkit-backdrop-filter: blur(8px) !important;
   padding: 6px 14px !important;
-  border-radius: 30px !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
-  font-size: 10px !important;
-  font-weight: 800 !important;
-  letter-spacing: 1px !important;
+  border-radius: 20px !important;
+  border: 1px solid var(--vpd-border-glass) !important;
+  color: var(--vpd-accent) !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.5px !important;
   text-transform: uppercase !important;
-  color: #fff !important;
-  transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1) !important;
-  pointer-events: none !important;
-  margin: 0 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
+  margin-bottom: 12px !important;
 }
 
-.shell:hover .frame-label.vpd-premium-label {
-  transform: translateY(-2px) scale(1.05) !important;
-  border-color: rgba(var(--vpd-accent-rgb), 0.5) !important;
-  background: rgba(var(--vpd-accent-rgb), 0.15) !important;
-}
-
-.frame-label.vpd-label-deleted {
-  color: #ff7b72 !important;
-  /* GitHub Red */
-  border-color: rgba(248, 81, 73, 0.3) !important;
-  background: rgba(248, 81, 73, 0.1) !important;
-}
-
-.frame-label.vpd-label-added {
-  color: #3fb950 !important;
-  /* GitHub Green */
-  border-color: rgba(63, 185, 80, 0.3) !important;
-  background: rgba(63, 185, 80, 0.1) !important;
-}
-
-/* Diff Frame Container (Unified styling with side images) */
+/* Diff Frame Container */
 .vpd-diff-frame {
   display: block !important;
   background: #0d1117 !important;
   position: relative !important;
-  overflow: visible !important;
-  /* Ensure no clipping */
+  overflow: hidden !important;
   min-height: 120px;
-  /* Styling (border/radius/shadow) is now inherited from the shell img/vpd-diff-frame selectors above */
+  border-radius: 12px !important;
+  border: 1px solid rgba(var(--vpd-accent-rgb), 0.3) !important;
   animation: vpd-pulse-glow 3s infinite;
 }
 
@@ -431,11 +286,4 @@ fieldset:has(.vpd-3up-tab) label input {
 .view.vpd-active .shell .frame-label:not(.vpd-premium-label) {
   opacity: 0.7;
   font-size: 10px !important;
-}
-
-/* Ensure no other margins leak from native GitHub labels */
-.three-up.view.vpd-active .shell p,
-.image-diff.vpd-active .shell p {
-  margin: 0 !important;
-  padding: 0 !important;
 }

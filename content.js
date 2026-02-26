@@ -56,7 +56,7 @@
         });
     };
 
-    const pierceShadowShield = (view, mode = 'three-up') => {
+    const pierceShadowShield = (view) => {
         if (!view || !view.shadowRoot) return;
 
         let style = view.shadowRoot.querySelector('#vpd-shadow-shield');
@@ -66,117 +66,15 @@
             view.shadowRoot.appendChild(style);
         }
 
-        const is2Up = mode === 'two-up';
-
         style.textContent = `
-            :host(.three-up), :host(.two-up), :host(.vpd-active), :host {
-                display: grid !important;
-                grid-template-areas: ${is2Up ? '"originals diff"' : '"deleted diff added"'} !important;
-                grid-template-columns: ${is2Up ? '0.8fr 1.2fr' : '1fr 1fr 1fr'} !important;
-                gap: 12px !important;
-                padding: 10px !important;
-                width: 100% !important;
-                max-width: none !important;
-                height: auto !important;
-                max-height: 70vh !important;
-                align-items: start !important;
-                overflow: visible !important;
-                margin: 0 auto !important;
-                box-sizing: border-box !important;
-            }
-
-            ${is2Up ? `
-                /* 2-UP SPLIT DASHBOARD RESCUE (Explicit Grid Pinning) */
-                :host(.two-up) {
-                    grid-template-areas: none !important;
-                    grid-template-columns: 50% 50% !important;
-                    grid-template-rows: auto auto !important;
-                    align-items: stretch !important;
-                }
-                .shell:first-of-type { 
-                    grid-column: 1 !important; 
-                    grid-row: 1 !important;
-                    max-height: calc(35vh - 12px) !important;
-                    width: 100% !important;
-                    position: relative !important;
-                    margin-bottom: 12px !important;
-                }
-                .shell:last-of-type { 
-                    grid-column: 1 !important;
-                    grid-row: 2 !important;
-                    margin-top: 0 !important; 
-                    display: flex !important;
-                    position: relative !important;
-                }
-                
-                .vpd-diff-shell {
-                    grid-column: 2 !important;
-                    grid-row: 1 / span 2 !important;
-                    height: 100% !important;
-                    max-height: none !important;
-                    overflow: hidden !important;
-                }
-                .vpd-diff-frame {
-                    height: 100% !important;
-                    max-height: 100% !important;
-                }
-            ` : ''}
-
-            /* PREMIUM FLOATING GLASS LABELS */
-            .frame-label.vpd-premium-label {
-                position: absolute !important;
-                top: 12px !important;
-                left: 12px !important;
-                z-index: 20 !important;
-                display: flex !important;
-                align-items: center !important;
-                gap: 8px !important;
-                background: rgba(13, 17, 23, 0.7) !important;
-                backdrop-filter: blur(12px) saturate(180%) !important;
-                -webkit-backdrop-filter: blur(12px) saturate(180%) !important;
-                padding: 6px 14px !important;
-                border-radius: 30px !important;
-                border: 1px solid rgba(255, 255, 255, 0.15) !important;
-                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
-                font-size: 10px !important;
-                font-weight: 800 !important;
-                letter-spacing: 1px !important;
-                text-transform: uppercase !important;
-                color: #fff !important;
-                pointer-events: none !important;
-                margin: 0 !important;
-            }
-            .vpd-label-deleted { color: #ff7b72 !important; border-color: rgba(248, 81, 73, 0.4) !important; }
-            .vpd-label-added { color: #3fb950 !important; border-color: rgba(63, 185, 80, 0.4) !important; }
-
-            .shell, .vpd-diff-shell {
-                display: flex !important;
-                flex-direction: column !important;
-                position: relative !important;
-                width: 100% !important;
-                height: auto !important;
-                max-height: ${is2Up ? 'calc(50% - 6px)' : '70vh'} !important;
-                min-width: 0 !important;
-                overflow: visible !important;
-                animation: vpd-fade-up 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
-            }
-            .shell:first-of-type { grid-area: ${is2Up ? 'originals' : 'deleted'} !important; }
-            .shell:last-of-type { grid-area: ${is2Up ? 'originals' : 'added'} !important; margin-top: ${is2Up ? 'auto' : '0'} !important; }
-            .vpd-diff-shell { grid-area: diff !important; min-height: 300px !important; max-height: 70vh !important; }
-
             .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle, .swipe-handle, .js-drag-handle {
                 display: none !important;
-            }
-            
-            ::-webkit-scrollbar { display: none !important; }
-            
-            img, .vpd-diff-frame {
-                width: 100% !important;
-                height: auto !important;
-                max-height: 100% !important;
-                object-fit: contain !important;
-                display: block !important;
-                border-radius: 8px !important;
+                visibility: hidden !important;
+                opacity: 0 !important;
+                pointer-events: none !important;
+                height: 0 !important;
+                width: 0 !important;
+                overflow: hidden !important;
             }
         `;
     };
@@ -184,24 +82,25 @@
     const reconcileViewMode = (view, val) => {
         if (!view) return;
 
-        if (val === 'three-up' || val === 'two-up') {
-            // Remove incompatible classes
+        if (val === 'three-up') {
+            // Remove native active classes visually, though Ghost 2-up should handle functionality
             view.classList.remove('swipe', 'onion-skin');
-            view.classList.add(val, 'vpd-active');
+            view.classList.add('three-up', 'vpd-active');
 
-            // Fallback Light DOM cleanup
+            // Fallback Light DOM cleanup just in case GitHub misses something
             view.querySelectorAll('.swipe-container, .onion-skin-container, .swipe-bar, .handle, .swipe-handle, .js-drag-handle').forEach(el => {
                 el.style.setProperty('display', 'none', 'important');
                 el.style.setProperty('visibility', 'hidden', 'important');
             });
 
-            // Re-apply secondary shadow shield with mode awareness
-            pierceShadowShield(view, val);
+            // Re-apply secondary shadow shield
+            pierceShadowShield(view);
             activate3Up(view);
             startPersistentCleanup(view);
         } else {
-            // User selected Swipe or Onion natively.
-            view.classList.remove('three-up', 'two-up', 'vpd-active');
+            // User selected 2-up, Swipe, or Onion natively.
+            // DO NOT FIGHT GITHUB'S DOM. Just remove our classes.
+            view.classList.remove('three-up', 'vpd-active');
             deactivate3Up(view);
             stopPersistentCleanup(view);
         }
@@ -211,8 +110,7 @@
         if (view._vpdObserver) return;
 
         const cleanup = () => {
-            const currentMode = view.classList.contains('two-up') ? 'two-up' : 'three-up';
-            pierceShadowShield(view, currentMode);
+            pierceShadowShield(view);
             view.querySelectorAll('.swipe-container, .onion-skin-container, .swipe-bar, .handle, .swipe-handle, .js-drag-handle').forEach(el => {
                 el.style.setProperty('display', 'none', 'important');
                 el.style.setProperty('visibility', 'hidden', 'important');
@@ -331,10 +229,9 @@
                 </div>
                 <div class="vpd-stats-card">...</div>
             `;
-            const targetRoot = view.shadowRoot || view;
-            const firstNativeShell = targetRoot.querySelector('.shell');
+            const firstNativeShell = view.querySelector('.shell');
             if (firstNativeShell) firstNativeShell.after(diffShell);
-            else targetRoot.appendChild(diffShell);
+            else view.appendChild(diffShell);
         }
 
         setStatus(diffShell, 'Waiting for source images...');
@@ -349,22 +246,14 @@
                 const shell = shadowImg?.closest('.shell');
                 if (shell) {
                     const lbl = shell.querySelector('.frame-label');
-                    if (lbl) {
-                        lbl.classList.add('vpd-premium-label');
-                        if (label.toLowerCase().includes('delete') || label.toLowerCase().includes('before')) lbl.classList.add('vpd-label-deleted');
-                        if (label.toLowerCase().includes('add') || label.toLowerCase().includes('after')) lbl.classList.add('vpd-label-added');
-                    }
+                    if (lbl) lbl.classList.add('vpd-premium-label');
                 }
                 if (shadowImg) return shadowImg;
             }
             const el = [...view.querySelectorAll('.shell')].find(s => s.textContent.toLowerCase().includes(label.toLowerCase()));
             if (el) {
                 const lbl = el.querySelector('.frame-label');
-                if (lbl) {
-                    lbl.classList.add('vpd-premium-label');
-                    if (label.toLowerCase().includes('delete') || label.toLowerCase().includes('before')) lbl.classList.add('vpd-label-deleted');
-                    if (label.toLowerCase().includes('add') || label.toLowerCase().includes('after')) lbl.classList.add('vpd-label-added');
-                }
+                if (lbl) lbl.classList.add('vpd-premium-label');
             }
             return el?.querySelector('img');
         };
