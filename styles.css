@@ -96,19 +96,10 @@
   gap: 8px !important;
   padding: 8px !important;
 
-  /* Cover viewport from below breadcrumb to above tab bar */
-  position: fixed !important;
-  top: var(--vpd-view-top, 35px) !important;
-  /* Set by JS from getBoundingClientRect() */
-  left: 0 !important;
-  /* Full width from edge to edge */
-  right: 0 !important;
-  height: var(--vpd-view-height, calc(100vh - 75px)) !important;
-  /* Exact native height */
-  width: 100vw !important;
+  /* position/top/height/width set exclusively by JS via inline styles */
+  /* to avoid !important cascade conflicts with GitHub CSS */
   transform: none !important;
   z-index: 9999 !important;
-  /* Above GitHub sidebar and all UI */
 
   box-sizing: border-box !important;
   background: #0d1117 !important;
