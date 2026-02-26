@@ -77,19 +77,21 @@
   margin: 0 !important;
 }
 
-/* Perfect Symmetrical Layout - Grid Powered */
+/* Perfect Symmetrical Layout - Grid Powered (Full-Bleed) */
 .three-up.view.vpd-active,
 .image-diff[data-vpd-state="active"].vpd-active {
   display: grid !important;
-  grid-template-columns: 0.8fr 1.4fr 0.8fr !important;
-  gap: 24px !important;
+  grid-template-columns: 0.7fr 1.6fr 0.7fr !important;
+  gap: 16px !important;
   align-items: start !important;
-  padding: 32px !important;
-  width: 100% !important;
-  max-width: 1400px !important;
-  margin: 0 auto !important;
+  padding: 24px 12px !important;
+  width: calc(100% + 40px) !important;
+  /* Break out of file content padding if needed */
+  margin-left: -20px !important;
+  /* Center the break-out */
+  max-width: none !important;
   box-sizing: border-box !important;
-  background: radial-gradient(circle at top, rgba(var(--vpd-accent-rgb), 0.08), transparent) !important;
+  background: radial-gradient(circle at top, rgba(var(--vpd-accent-rgb), 0.1), transparent) !important;
 }
 
 .three-up.view.vpd-active .shell,
@@ -109,7 +111,7 @@
 .image-diff.vpd-active .shell .vpd-diff-frame {
   width: 100% !important;
   height: auto !important;
-  max-height: 65vh !important;
+  max-height: 80vh !important;
   object-fit: contain !important;
   border-radius: 12px !important;
   border: 1px solid var(--vpd-border-glass) !important;
