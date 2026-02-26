@@ -129,14 +129,15 @@
 /* Distribution: central is priority but side ones stay visible */
 .three-up.view.vpd-active .shell:not(.vpd-diff-shell),
 .image-diff.vpd-active .shell:not(.vpd-diff-shell) {
-  flex: 0 0 8% !important;
+  flex: 0 0 6% !important;
+  /* Minimal thumbnail side columns */
   height: 100% !important;
 }
 
 .vpd-diff-shell {
-  flex: 1 1 84% !important;
+  flex: 1 1 88% !important;
   height: 100% !important;
-  max-width: 84% !important;
+  max-width: 88% !important;
   /* Force constraint for better scaling */
 }
 
@@ -155,6 +156,14 @@
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6) !important;
   transition: var(--vpd-transition) !important;
   background: #000;
+}
+
+/* Force side images to be fully completed as thumbnails */
+.three-up.view.vpd-active .shell:not(.vpd-diff-shell) img,
+.image-diff.vpd-active .shell:not(.vpd-diff-shell) img {
+  width: 100% !important;
+  height: auto !important;
+  object-fit: contain !important;
 }
 
 /* Color Coded Accents */
@@ -225,8 +234,7 @@ fieldset:has(.vpd-3up-tab) label input {
 }
 
 /* Overlay Labels - Studio Integrated Tags (Unique Corners) */
-.view.vpd-active .shell .frame-label,
-.vpd-diff-shell .frame-label {
+.view.vpd-active .shell .frame-label {
   position: absolute !important;
   z-index: 10 !important;
   display: flex !important;
@@ -244,6 +252,30 @@ fieldset:has(.vpd-3up-tab) label input {
   font-size: 10px !important;
   font-weight: 700 !important;
   letter-spacing: 1px !important;
+  text-transform: uppercase !important;
+  margin: 0 !important;
+  pointer-events: none !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
+}
+
+.vpd-diff-shell .frame-label {
+  position: absolute !important;
+  z-index: 10 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
+  background: rgba(0, 0, 0, 0.7) !important;
+  backdrop-filter: blur(30px) !important;
+  -webkit-backdrop-filter: blur(30px) !important;
+  padding: 4px 10px !important;
+  border-radius: 4px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #fff !important;
+  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace !important;
+  font-size: 8px !important;
+  /* Smaller for thumbnails */
+  font-weight: 700 !important;
+  letter-spacing: 0.5px !important;
   text-transform: uppercase !important;
   margin: 0 !important;
   pointer-events: none !important;
