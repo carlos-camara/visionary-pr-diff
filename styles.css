@@ -242,26 +242,8 @@ fieldset:has(.vpd-3up-tab) label input {
 /* Overlay Labels - Zenith Integrated UI (Anti-Overlap Anchoring) */
 .view.vpd-active .shell .frame-label,
 .vpd-diff-shell .frame-label {
-  position: absolute !important;
-  z-index: 10 !important;
-  display: flex !important;
-  align-items: center !important;
-  gap: 8px !important;
-  background: rgba(13, 17, 23, 0.6) !important;
-  backdrop-filter: blur(30px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(30px) saturate(180%) !important;
-  padding: 6px 14px !important;
-  border-radius: 40px !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
-  color: #fff !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
-  font-size: 11px !important;
-  font-weight: 800 !important;
-  letter-spacing: 0.5px !important;
-  text-transform: uppercase !important;
-  margin: 0 !important;
-  pointer-events: none !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+  display: none !important;
+  /* Pure Image Mode: No text overlays */
 }
 
 /* Unique Corner Anchoring */
