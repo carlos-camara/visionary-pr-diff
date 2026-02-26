@@ -117,6 +117,10 @@
 .three-up.view.vpd-active .shell,
 .image-diff[data-vpd-state="active"].vpd-active .shell,
 .vpd-diff-shell {
+  width: 100% !important;
+  /* Must fill the grid cell */
+  height: 100% !important;
+  /* Must fill the grid cell */
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
@@ -124,7 +128,6 @@
   min-width: 0 !important;
   min-height: 0 !important;
   overflow: hidden !important;
-  /* Clip any overflow at the cell boundary */
   position: relative !important;
   animation: vpd-fade-up 0.5s ease-out forwards;
 }
@@ -148,15 +151,16 @@
   max-width: none !important;
 }
 
-/* Side images: fill cell, proportional, zero clipping */
+/* Side images: fit ENTIRELY inside their cell, proportional scaling */
 .three-up.view.vpd-active .shell:not(.vpd-diff-shell) img,
 .image-diff.vpd-active .shell:not(.vpd-diff-shell) img {
-  width: auto !important;
-  height: auto !important;
-  max-width: 100% !important;
-  max-height: 100% !important;
+  width: 100% !important;
+  /* Fill the cell width */
+  height: 100% !important;
+  /* Fill the cell height */
   object-fit: contain !important;
-  border-radius: 8px !important;
+  /* Scale proportionally — never clip */
+  border-radius: 6px !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
   transition: var(--vpd-transition) !important;
