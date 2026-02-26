@@ -93,6 +93,17 @@
             document.documentElement.style.setProperty('--vpd-view-width', rect.width + 'px');
             // ─────────────────────────────────────────────────────────────────
 
+            // ── Apply dimensions as inline styles (highest priority) ──────────
+            // CSS variables can lose to GitHub's own !important rules; inline
+            // styles with !important always win.
+            view.style.setProperty('position', 'fixed', 'important');
+            view.style.setProperty('top', rect.top + 'px', 'important');
+            view.style.setProperty('left', '0', 'important');
+            view.style.setProperty('width', '100vw', 'important');
+            view.style.setProperty('height', rect.height + 'px', 'important');
+            view.style.setProperty('z-index', '9999', 'important');
+            // ─────────────────────────────────────────────────────────────────
+
             // Remove native active classes visually, though Ghost 2-up should handle functionality
             view.classList.remove('swipe', 'onion-skin');
             view.classList.add('three-up', 'vpd-active');
@@ -109,6 +120,8 @@
             startPersistentCleanup(view);
         } else {
             // User selected 2-up, Swipe, or Onion natively.
+            // Reset inline styles we applied, then remove our classes.
+            ['position', 'top', 'left', 'width', 'height', 'z-index'].forEach(p => view.style.removeProperty(p));
             // DO NOT FIGHT GITHUB'S DOM. Just remove our classes.
             view.classList.remove('three-up', 'vpd-active');
             deactivate3Up(view);
