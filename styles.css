@@ -179,8 +179,8 @@
 }
 
 .vpd-diff-shell .vpd-diff-frame {
-  border-color: rgba(var(--vpd-accent-rgb), 0.4) !important;
-  box-shadow: 0 8px 32px rgba(var(--vpd-accent-rgb), 0.2) !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
 }
 
 .image-diff.vpd-active .shell img:hover {
