@@ -159,7 +159,7 @@
   height: 100% !important;
   /* Fill the cell height */
   object-fit: contain !important;
-  /* Scale proportionally — never clip */
+  /* Scale proportionally Ã¢â‚¬â€ never clip */
   border-radius: 6px !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
@@ -398,6 +398,7 @@ fieldset:has(.vpd-3up-tab) label input {
   height: 200px;
 }
 
+
 .vpd-skeleton-rect {
   width: 80%;
   height: 20px;
@@ -406,28 +407,29 @@ fieldset:has(.vpd-3up-tab) label input {
   animation: vpd-skeleton 1.5s infinite linear;
   border-radius: 4px;
   margin-bottom: 10px;
+}
 
-  .vpd-stats-card:hover {
-    border-color: var(--vpd-accent) !important;
-    transform: translateY(-2px);
-  }
+.vpd-stats-card:hover {
+  border-color: var(--vpd-accent) !important;
+  transform: translateY(-2px);
+}
 
-  .vpd-stats-card b {
-    color: var(--vpd-accent) !important;
-    font-weight: 700 !important;
-    text-shadow: 0 0 8px rgba(var(--vpd-accent-rgb), 0.4);
-  }
+.vpd-stats-card b {
+  color: var(--vpd-accent) !important;
+  font-weight: 700 !important;
+  text-shadow: 0 0 8px rgba(var(--vpd-accent-rgb), 0.4);
+}
 
-  /* Hide native mode gunk (Force clean) */
-  .image-diff.vpd-active .js-drag-handle,
-  .image-diff.vpd-active .handle,
-  .image-diff.vpd-active .divider,
-  .image-diff.vpd-active .swipe-handle {
-    display: none !important;
-  }
+/* Hide native mode gunk (Force clean) */
+.image-diff.vpd-active .js-drag-handle,
+.image-diff.vpd-active .handle,
+.image-diff.vpd-active .divider,
+.image-diff.vpd-active .swipe-handle {
+  display: none !important;
+}
 
-  /* Metadata tweaks for native labels */
-  .view.vpd-active .shell .frame-label:not(.vpd-premium-label) {
-    opacity: 0.7;
-    font-size: 10px !important;
-  }
+/* Metadata tweaks for native labels */
+.view.vpd-active .shell .frame-label:not(.vpd-premium-label) {
+  opacity: 0.7;
+  font-size: 10px !important;
+}
