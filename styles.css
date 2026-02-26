@@ -102,7 +102,11 @@
   border-radius: 8px !important;
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
   overflow: hidden !important;
-  min-height: 0 !important;
+
+  /* Let the grid expand naturally to the height of the main diff image */
+  width: 100% !important;
+  height: auto !important;
+  min-height: 70vh !important;
   max-height: none !important;
 }
 
@@ -143,6 +147,10 @@
   grid-column: 2 !important;
   grid-row: 1 / span 2 !important;
   max-width: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: auto !important;
+  /* Allow it to grow natively with the image */
 }
 
 /* Side images: 100% with box-sizing so border never overflows */

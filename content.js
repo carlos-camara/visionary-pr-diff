@@ -83,29 +83,8 @@
         if (!view) return;
 
         if (val === 'three-up') {
-            // ── Measure BEFORE our CSS kicks in ──────────────────────────────
-            // Measure the real available content area: from view top to the
-            // fieldset (tab bar) top. This matches Onion Skin's content area exactly.
-            const viewRect = view.getBoundingClientRect();
-            const tabRect = fieldset ? fieldset.getBoundingClientRect() : null;
-            const contentTop = viewRect.top;
-            const contentHeight = tabRect ? (tabRect.top - viewRect.top) : viewRect.height;
-
-            document.documentElement.style.setProperty('--vpd-view-top', contentTop + 'px');
-            document.documentElement.style.setProperty('--vpd-view-height', contentHeight + 'px');
-            document.documentElement.style.setProperty('--vpd-view-left', viewRect.left + 'px');
-            document.documentElement.style.setProperty('--vpd-view-width', viewRect.width + 'px');
-            // ─────────────────────────────────────────────────────────────────
-
-            // ── Apply dimensions as inline styles (highest priority) ──────────
-            // CSS variables can lose to GitHub's own !important rules; inline
-            // styles with !important always win.
-            view.style.setProperty('position', 'fixed', 'important');
-            view.style.setProperty('top', contentTop + 'px', 'important');
-            view.style.setProperty('left', '0', 'important');
-            view.style.setProperty('width', '100vw', 'important');
-            view.style.setProperty('height', contentHeight + 'px', 'important');
-            view.style.setProperty('z-index', '9999', 'important');
+            // ── Remove JS constraints, let CSS natural flow dictate size ─────────
+            // We rely entirely on .three-up.view.vpd-active in styles.css for sizing
             // ─────────────────────────────────────────────────────────────────
 
             // Remove native active classes visually, though Ghost 2-up should handle functionality
