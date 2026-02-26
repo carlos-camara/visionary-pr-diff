@@ -1,36 +1,43 @@
-# 🔍 Overview
+<!-- Provide a brief description of the changes in this PR and the motivation behind them -->
 
-<!-- Provide a brief description of the changes in this PR -->
+## 🛠️ Type of Change
+
+- [ ] 🚀 Feature
+- [ ] 🐛 Bug Fix
+- [ ] 🧹 Refactor
+- [ ] 📝 Documentation
+- [ ] ⚡ Performance Optimization
+- [ ] 🤖 CI/CD or Tooling
 
 ## 🚀 Key Changes
 
-- [ ] Feature 1
-- [ ] Bug fix 2
-- [ ] Refactor 3
+- [ ] Detailed change 1
+- [ ] Detailed change 2
 
-## 🧪 Testing Matrix
+## 🤖 PR Intelligence Context
 
+<!-- This PR is monitored by PR Intelligence. Please ensure title follows Conventional Commits. -->
+- **Risk Level**: <!-- Low / Medium / High (Will be verified by AI Risk Analysis) -->
+- **Complexity**: <!-- Small / Medium / Large (Will be verified by Size Labeler) -->
+
+## 🧪 Testing & Quality
+
+### Automated Tests
+- [ ] `npm test` passes locally
+- [ ] New tests added for these changes
+- [ ] Existing tests still passing
+
+### Manual Verification
 - [ ] Verified on Chrome (Stable)
-- [ ] Verified on GitHub PR with multiple images
-- [ ] Verified "3-up" layout alignment
+- [ ] Verified on GitHub Image Diff interface (2-up/3-up/Overlay)
+- [ ] Verified responsive alignment
 
-## 📸 Screenshots / Demos
+<!-- Add screenshots or recordings (GIFs preferred) showing the visual changes -->
 
-<!-- Add screenshots or screen recordings showing the changes -->
+## ✅ Final Checklist
 
-## ✅ Quality Guardrails
-
-- [ ] My code passes all local linting checks (`npm run lint`)
-- [ ] I have added/updated [Jest tests](tests/) for new logic
-- [ ] I have verified the changes in "3-up" mode
-- [ ] I have updated the documentation in `docs/` or `README.md`
-
----
-*Automated Hygiene Check enabled. 🚥*
-
-## ✅ Checklist
-
-- [ ] My code follows the style guidelines of this project
-- [ ] I have performed a self-review of my own code
-- [ ] I have commented my code, particularly in hard-to-understand areas
-- [ ] I have made corresponding changes to the documentation
+- [ ] 🏗️ **Architecture**: My code follows the project's patterns
+- [ ] 🧹 **Linting**: No linting errors (`npm run lint`)
+- [ ] 📖 **Documentation**: Corresponding changes made to [Technical Docs](docs/)
+- [ ] 👤 **Self-Review**: I have proofread my code and logic
+- [ ] 🚥 **Hygiene**: Title follows `type(scope): description` format

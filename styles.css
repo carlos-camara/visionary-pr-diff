@@ -1,191 +1,387 @@
-/* 
- * Visionary PR Diff - Premium Styling
- * Glassmorphism and Elegant UI for GitHub Integration
+﻿/* 
+ * Visionary PR Diff - Premium Design System v2
+ * Glassmorphism | Accent Glows | Smooth Motion
  */
 
-/* Visionary Diff label */
-.vpd-diff-shell .frame-label {
-  color: #58a6ff !important;
+:root {
+  --vpd-accent: #58a6ff;
+  --vpd-accent-rgb: 88, 166, 255;
+  --vpd-bg-glass: rgba(13, 17, 23, 0.7);
+  --vpd-border-glass: rgba(255, 255, 255, 0.1);
+  --vpd-glow: 0 8px 32px rgba(0, 0, 0, 0.5);
+  --vpd-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 
-   SHIELD MODE (Passive Isolation) 
-   We neutralize native GitHub diff elements WITHOUT removing their classes.
-*/
-body.vpd-3up-active .image-diff.three-up .handle,
-body.vpd-3up-active .image-diff.three-up .swipe-bar,
-body.vpd-3up-active .image-diff.three-up .image-diff-swipe {
+/* Animations */
+@keyframes vpd-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes vpd-pulse-glow {
+  0% {
+    box-shadow: 0 0 0 0 rgba(var(--vpd-accent-rgb), 0.4);
+  }
+
+  70% {
+    box-shadow: 0 0 0 10px rgba(var(--vpd-accent-rgb), 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(var(--vpd-accent-rgb), 0);
+  }
+}
+
+@keyframes vpd-skeleton {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* LIQUID SHIELD (Scoped Version) */
+.image-diff.vpd-active .swipe-container,
+.image-diff.vpd-active .onion-skin-container,
+.image-diff.vpd-active .swipe-handle,
+.image-diff.vpd-active .swipe-bar,
+.image-diff.vpd-active .handle,
+.image-diff.vpd-active .drag-handle,
+.image-diff.vpd-active .js-drag-handle,
+.image-diff.vpd-active .divider,
+.image-diff.vpd-active>div:not(.shell):not(.vpd-diff-shell):not(.js-image-diff) {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
   pointer-events: none !important;
+  height: 0 !important;
+  width: 0 !important;
+  overflow: hidden !important;
+}
+
+/* BURST-OUT parent overrides: Ensure no clipping on the expanded view */
+:has(> .vpd-active),
+.js-file:has(.three-up.vpd-active),
+.file-content:has(.three-up.vpd-active),
+.data:has(.three-up.vpd-active),
+.js-image-diff:has(.three-up.vpd-active) {
+  overflow: visible !important;
+  contain: none !important;
 }
 
 /* Force native shells to behave like blocks in our 3-column grid */
-body.vpd-3up-active .image-diff.three-up .shell {
+.image-diff.vpd-active .shell {
   position: static !important;
   transform: none !important;
-  display: block !important;
+  display: flex !important;
   width: auto !important;
   margin: 0 !important;
 }
 
-body.vpd-3up-active .handle,
-body.vpd-3up-active .swipe-bar,
-body.vpd-3up-active .image-diff-swipe,
-body.vpd-3up-active .image-diff>div:not(.shell):not(.vpd-diff-shell) {
-  display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
+/* Grid Layout: [Deleted+Added] | [Visionary Diff large] */
+.three-up.view.vpd-active,
+.image-diff[data-vpd-state="active"].vpd-active {
+  display: grid !important;
+  grid-template-columns: 35% 1fr !important;
+  grid-template-rows: 1fr 1fr !important;
+  gap: 12px !important;
+  padding: 12px !important;
 
-/* Perfect Symmetrical Layout */
-body.vpd-3up-active .three-up,
-body.vpd-3up-active [data-vpd-state="active"] {
-  display: flex !important;
-  flex-direction: row !important;
-  gap: 24px !important;
-  align-items: flex-start !important;
-  justify-content: center !important;
-  padding: 20px !important;
-  width: 100% !important;
   box-sizing: border-box !important;
-}
-
-body.vpd-3up-active .three-up .shell,
-body.vpd-3up-active [data-vpd-state="active"] .shell {
-  flex: 0 0 calc(33.33% - 16px) !important;
-  /* Strict 1/3 width */
-  min-width: 0 !important;
-  display: flex !important;
-  flex-direction: column !important;
-  align-items: center !important;
-}
-
-body.vpd-3up-active .three-up .shell img,
-body.vpd-3up-active .three-up .shell .vpd-diff-frame {
-  width: 100% !important;
-  height: auto !important;
-  max-height: 450px !important;
-  object-fit: contain !important;
+  background: linear-gradient(180deg, #0d1117 0%, #161b22 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
   border-radius: 8px !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  overflow: hidden !important;
+
+  /* Mathematical Exact Height computed by JS to exactly match Onion Skin proportions */
+  width: 100% !important;
+  height: var(--vpd-onion-height, 600px) !important;
+  min-height: var(--vpd-onion-height, 600px) !important;
+  max-height: none !important;
 }
 
-/* Tab Management */
-.vpd-hidden {
-  display: none !important;
+/* Force GitHub's outer wrapper to allow expansion */
+.js-file-content:has(.three-up.view.vpd-active),
+.js-file-content:has(.image-diff[data-vpd-state="active"].vpd-active) {
+  display: block !important;
+  height: auto !important;
+  min-height: var(--vpd-onion-height, 600px) !important;
+  overflow: visible !important;
 }
 
+/* Base shell: fill its grid cell, never overflow */
+.three-up.view.vpd-active .shell,
+.image-diff[data-vpd-state="active"].vpd-active .shell,
+.vpd-diff-shell {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  position: relative !important;
+  animation: vpd-fade-up 0.5s ease-out forwards;
+
+  /* Shell borders and background */
+  background: #010409 !important;
+  border: 1px solid #30363d !important;
+  border-radius: 6px !important;
+  overflow: hidden !important;
+  /* Keep strictly rectangular */
+}
+
+/* Deleted: top-left cell */
+.shell[data-vpd-type="deleted"] {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+}
+
+/* Added: bottom-left cell */
+.shell[data-vpd-type="added"] {
+  grid-column: 1 !important;
+  grid-row: 2 !important;
+}
+
+/* Visionary Diff: right column, spans both rows */
+.vpd-diff-shell {
+  grid-column: 2 !important;
+  grid-row: 1 / span 2 !important;
+}
+
+/* Absolutely position ALL images inside shells to guarantee 100% visible fit */
+.three-up.view.vpd-active .shell img,
+.three-up.view.vpd-active .shell canvas,
+.vpd-diff-bg {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  /* NEVER crop */
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* Overwrite hover effects since layout is absolute */
+.image-diff.vpd-active .shell img:hover {
+  transform: none !important;
+}
+
+/* Tab Management - Segmented Control Aesthetic */
+fieldset:has(.vpd-3up-tab) {
+  background: #161b22 !important;
+  padding: 4px !important;
+  border-radius: 8px !important;
+  border: 1px solid #30363d !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 2px !important;
+}
+
+fieldset:has(.vpd-3up-tab) label,
+fieldset:has(.vpd-3up-tab) .js-view-mode-item,
 .vpd-3up-tab {
+  border: none !important;
+  border-radius: 6px !important;
+  padding: 6px 12px !important;
+  min-width: 80px !important;
+  /* Match Onion Skin tab width */
+  justify-content: center !important;
+  font-size: 12px !important;
+  font-weight: 500 !important;
+  color: #8b949e !important;
+  transition: var(--vpd-transition) !important;
+  margin: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 6px !important;
   cursor: pointer !important;
-  font-weight: 600 !important;
 }
 
+fieldset:has(.vpd-3up-tab) label:hover {
+  color: #c9d1d9 !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+}
+
+fieldset:has(.vpd-3up-tab) label.selected,
+fieldset:has(.vpd-3up-tab) .js-view-mode-item.selected,
+fieldset:has(.vpd-3up-tab) label:has(input:checked),
 .vpd-3up-tab.selected {
   background: #1f6feb !important;
   color: #fff !important;
+  box-shadow: 0 2px 8px rgba(31, 111, 235, 0.3) !important;
 }
 
-/* Diff Frame Container */
+fieldset:has(.vpd-3up-tab) label input {
+  display: none !important;
+}
+
+/* Overlay Labels - Zenith Integrated UI */
+.view.vpd-active .shell .frame-label,
+.vpd-diff-shell .frame-label {
+  display: block !important;
+  position: absolute !important;
+  z-index: 10 !important;
+  pointer-events: none !important;
+}
+
+/* Unique Corner Anchoring safely INSIDE the shell */
+.shell[data-vpd-type="deleted"] .frame-label {
+  top: 12px !important;
+  left: 12px !important;
+  border-color: rgba(248, 81, 73, 0.4) !important;
+  color: #ffa198 !important;
+  background: rgba(13, 17, 23, 0.8) !important;
+  font-size: 11px !important;
+}
+
+.shell[data-vpd-type="added"] .frame-label {
+  top: 12px !important;
+  left: 12px !important;
+  right: auto !important;
+  border-color: rgba(63, 185, 80, 0.4) !important;
+  color: #7ee787 !important;
+  background: rgba(13, 17, 23, 0.8) !important;
+  font-size: 11px !important;
+}
+
+.vpd-diff-shell .frame-label {
+  top: 16px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  border-color: rgba(var(--vpd-accent-rgb), 0.5) !important;
+  color: var(--vpd-accent) !important;
+  background: rgba(var(--vpd-accent-rgb), 0.15) !important;
+  font-size: 14px !important;
+}
+
+/* Shimmer Effect for Labels */
+.view.vpd-active .shell .frame-label::after,
+.vpd-diff-shell .frame-label::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.15), transparent) !important;
+  animation: vpd-shimmer 4s infinite linear !important;
+}
+
+@keyframes vpd-shimmer {
+  0% {
+    left: -100%;
+  }
+
+  25% {
+    left: 100%;
+  }
+
+  100% {
+    left: 100%;
+  }
+}
+
+/* Diff Frame Container - fills the shell and clips properly */
 .vpd-diff-frame {
   display: block !important;
-  /* CRITICAL: honor aspect-ratio */
-  background: #0d1117 !important;
   position: relative !important;
-  overflow: hidden !important;
-  min-height: 100px;
+  width: 100% !important;
+  height: auto !important;
+  border-radius: 0 !important;
+  border: none !important;
 }
 
-/* Scaling children of the diff frame */
-.vpd-diff-frame .vpd-canvas-main,
-.vpd-diff-frame .vpd-diff-bg {
-  position: absolute !important;
-  top: 50% !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  width: auto !important;
+/* Stats card: hidden - use full space for images */
+.vpd-stats-card {
+  display: none !important;
+}
+
+.vpd-diff-frame .vpd-canvas-main {
+  position: relative !important;
+  /* Pushes the container height! */
+  display: block !important;
+  width: 100% !important;
   height: auto !important;
   max-width: 100% !important;
-  max-height: 100% !important;
+  object-fit: contain !important;
+}
+
+.vpd-diff-frame .vpd-diff-bg {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
   object-fit: contain !important;
 }
 
 .vpd-diff-bg {
-  opacity: 0.7 !important;
-  /* Brighter for context */
+  opacity: 0.6 !important;
   z-index: 1;
+  filter: grayscale(0.5);
 }
 
 .vpd-canvas-main {
   z-index: 2;
   mix-blend-mode: screen;
-  /* Highlights pop more */
 }
 
-/* Hide native Onion Skin tab */
-label:has(input[value="onion-skin"]),
-.js-view-mode-item:has(input[value="onion-skin"]) {
-  display: none !important;
+/* Skeleton / Loader Styling */
+.vpd-loader-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 200px;
 }
 
-/* Hide native mode gunk */
-body.vpd-3up-active .js-drag-handle,
-body.vpd-3up-active .handle,
-body.vpd-3up-active .divider {
-  display: none !important;
+
+.vpd-skeleton-rect {
+  width: 80%;
+  height: 20px;
+  background: linear-gradient(90deg, #161b22 25%, #21262d 50%, #161b22 75%);
+  background-size: 200% 100%;
+  animation: vpd-skeleton 1.5s infinite linear;
+  border-radius: 4px;
+  margin-bottom: 10px;
 }
 
-/* Metadata tweaks for 3-up */
-body.vpd-3up-active .three-up.view .shell p,
-body.vpd-3up-active .three-up.view .shell .frame-label {
-  font-size: 12px !important;
-  margin: 6px 0 !important;
-  text-align: center !important;
-  white-space: nowrap !important;
-  font-weight: 500 !important;
-}
-
-/* Hide 2-up Tab Safely */
-.vpd-hidden {
-  display: none !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-}
-
-/* Tab Selector Injection */
-.vpd-3up-tab {
-  border-right: 1px solid #30363d !important;
-  padding-right: 12px !important;
-  margin-right: 8px !important;
-  font-weight: 600 !important;
-}
-
-.label-vpd {
-  background-color: #58a6ff33 !important;
-  color: #58a6ff !important;
-  border: 1px solid #58a6ff4d !important;
-}
-
-/* High-Contrast Stats Card */
-.vpd-stats-card {
-  background: #161b22 !important;
-  color: #c9d1d9 !important;
-  border: 1px solid #30363d !important;
-  border-top: 2px solid #238636 !important;
-  /* Green accent */
-  border-radius: 6px;
-  padding: 8px 16px !important;
-  margin-top: 12px;
-  display: inline-flex;
-  gap: 15px;
-  font-size: 13px !important;
-  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Courier, monospace !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+.vpd-stats-card:hover {
+  border-color: var(--vpd-accent) !important;
+  transform: translateY(-2px);
 }
 
 .vpd-stats-card b {
-  color: #58a6ff !important;
+  color: var(--vpd-accent) !important;
+  font-weight: 700 !important;
+  text-shadow: 0 0 8px rgba(var(--vpd-accent-rgb), 0.4);
+}
+
+/* Hide native mode gunk (Force clean) */
+.image-diff.vpd-active .js-drag-handle,
+.image-diff.vpd-active .handle,
+.image-diff.vpd-active .divider,
+.image-diff.vpd-active .swipe-handle {
+  display: none !important;
+}
+
+/* Metadata tweaks for native labels */
+.view.vpd-active .shell .frame-label:not(.vpd-premium-label) {
+  opacity: 0.7;
+  font-size: 10px !important;
 }
