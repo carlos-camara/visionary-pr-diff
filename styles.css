@@ -101,7 +101,8 @@
   top: 0 !important;
   left: 0 !important;
   width: 100vw !important;
-  height: calc(100vh - 48px) !important;
+  height: calc(100vh - 30px) !important;
+  /* Match Onion Skin available height */
   transform: none !important;
   z-index: 9999 !important;
   /* Above GitHub sidebar and all UI */
