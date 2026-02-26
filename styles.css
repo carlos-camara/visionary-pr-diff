@@ -221,49 +221,83 @@ fieldset:has(.vpd-3up-tab) label input {
   display: none !important;
 }
 
-/* Overlay Labels - Premium In-Image Placement */
+/* Overlay Labels - Watermark Elite Placement */
 .view.vpd-active .shell .frame-label,
 .vpd-diff-shell .frame-label {
   position: absolute !important;
-  top: 16px !important;
-  left: 16px !important;
+  top: 24px !important;
+  left: 24px !important;
   z-index: 10 !important;
   display: flex !important;
   align-items: center !important;
-  gap: 8px !important;
-  background: rgba(13, 17, 23, 0.75) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  padding: 6px 14px !important;
-  border-radius: 20px !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  gap: 10px !important;
+  background: rgba(13, 17, 23, 0.65) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  padding: 8px 18px !important;
+  border-radius: 24px !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
   color: #fff !important;
-  font-size: 10px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.8px !important;
+  font-size: 11px !important;
+  font-weight: 800 !important;
+  letter-spacing: 1.2px !important;
   text-transform: uppercase !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
   margin: 0 !important;
   pointer-events: none !important;
-  transition: var(--vpd-transition) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  overflow: hidden !important;
 }
 
-/* Color Coding for Labels */
+/* Shimmer Effect for Labels */
+.view.vpd-active .shell .frame-label::after,
+.vpd-diff-shell .frame-label::after {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(120deg,
+      transparent,
+      rgba(255, 255, 255, 0.15),
+      transparent) !important;
+  animation: vpd-shimmer 4s infinite linear !important;
+}
+
+@keyframes vpd-shimmer {
+  0% {
+    left: -100%;
+  }
+
+  25% {
+    left: 100%;
+  }
+
+  100% {
+    left: 100%;
+  }
+}
+
+/* Color Coding for Elite Labels */
 .shell[data-vpd-type="deleted"] .frame-label {
-  border-color: rgba(248, 81, 73, 0.4) !important;
+  border-color: rgba(248, 81, 73, 0.5) !important;
   color: #ffa198 !important;
+  box-shadow: 0 8px 32px rgba(248, 81, 73, 0.2) !important;
 }
 
 .shell[data-vpd-type="added"] .frame-label {
-  border-color: rgba(63, 185, 80, 0.4) !important;
+  border-color: rgba(63, 185, 80, 0.5) !important;
   color: #7ee787 !important;
+  box-shadow: 0 8px 32px rgba(63, 185, 80, 0.2) !important;
 }
 
 .vpd-diff-shell .frame-label {
-  border-color: rgba(var(--vpd-accent-rgb), 0.5) !important;
+  border-color: rgba(var(--vpd-accent-rgb), 0.6) !important;
   color: var(--vpd-accent) !important;
-  background: rgba(var(--vpd-accent-rgb), 0.1) !important;
-  backdrop-filter: blur(16px) !important;
+  background: rgba(var(--vpd-accent-rgb), 0.15) !important;
+  box-shadow: 0 8px 32px rgba(var(--vpd-accent-rgb), 0.3) !important;
 }
 
 /* Diff Frame Container */
