@@ -110,7 +110,7 @@
   overflow: hidden !important;
 }
 
-/* Base shell: fill its grid cell */
+/* Base shell: fill its grid cell, never overflow */
 .three-up.view.vpd-active .shell,
 .image-diff[data-vpd-state="active"].vpd-active .shell,
 .vpd-diff-shell {
@@ -120,6 +120,8 @@
   justify-content: center !important;
   min-width: 0 !important;
   min-height: 0 !important;
+  overflow: hidden !important;
+  /* Clip any overflow at the cell boundary */
   position: relative !important;
   animation: vpd-fade-up 0.5s ease-out forwards;
 }
@@ -143,15 +145,14 @@
   max-width: none !important;
 }
 
-/* All images: fill their cell proportionally, no clipping */
-.three-up.view.vpd-active .shell img,
-.image-diff.vpd-active .shell img {
-  width: 100% !important;
-  height: 100% !important;
+/* Side images: fill cell, proportional, zero clipping */
+.three-up.view.vpd-active .shell:not(.vpd-diff-shell) img,
+.image-diff.vpd-active .shell:not(.vpd-diff-shell) img {
+  width: auto !important;
+  height: auto !important;
   max-width: 100% !important;
   max-height: 100% !important;
   object-fit: contain !important;
-  /* Scale proportionally, fully visible */
   border-radius: 8px !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
