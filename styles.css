@@ -94,12 +94,13 @@
   grid-template-columns: 28% 1fr !important;
   grid-template-rows: 1fr 1fr !important;
   gap: 8px !important;
-  padding: 6px !important;
-  /* Minimal padding = bigger images */
+  padding: 0 !important;
+  /* Zero padding */
+  margin-top: -48px !important;
+  /* Pull up past GitHub's native top bar */
 
   width: 100vw !important;
-  height: 95vh !important;
-  /* Use more vertical space */
+  height: 96vh !important;
   position: relative !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
@@ -110,8 +111,8 @@
   border: none !important;
   box-shadow: none !important;
   overflow: hidden !important;
-  margin-top: 0 !important;
 }
+
 
 /* Base shell: fill its grid cell, never overflow */
 .three-up.view.vpd-active .shell,
