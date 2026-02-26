@@ -97,10 +97,13 @@
   padding: 8px !important;
 
   box-sizing: border-box !important;
-  background: transparent !important;
-  border: none !important;
-  box-shadow: none !important;
+  background: linear-gradient(180deg, #0d1117 0%, #161b22 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  border-radius: 8px !important;
+  box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
   overflow: hidden !important;
+  min-height: 0 !important;
+  max-height: none !important;
 }
 
 
