@@ -98,10 +98,12 @@
 
   /* Fixed to viewport - no margin/flow issues, no clipping */
   position: fixed !important;
-  top: 8px !important;
+  top: 0 !important;
+  /* No space at top */
   left: 0 !important;
   width: 100vw !important;
-  height: calc(100vh - 55px) !important;
+  height: calc(100vh - 48px) !important;
+  /* Only leave room for the tab bar */
   transform: none !important;
   z-index: 100 !important;
 
@@ -343,21 +345,9 @@ fieldset:has(.vpd-3up-tab) label input {
   border: none !important;
 }
 
-/* Stats card: visible but compact */
+/* Stats card: hidden - use full space for images */
 .vpd-stats-card {
-  display: inline-flex !important;
-  padding: 4px 10px !important;
-  margin-top: 6px !important;
-  gap: 10px !important;
-  font-size: 9px !important;
-  font-family: ui-monospace, monospace !important;
-  background: rgba(13, 17, 23, 0.6) !important;
-  backdrop-filter: blur(12px) !important;
-  color: #8b949e !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  border-radius: 4px !important;
-  box-shadow: none !important;
-  flex-shrink: 0 !important;
+  display: none !important;
 }
 
 .vpd-diff-frame .vpd-canvas-main,
