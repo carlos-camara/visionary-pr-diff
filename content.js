@@ -83,6 +83,16 @@
         if (!view) return;
 
         if (val === 'three-up') {
+            // ── Measure BEFORE our CSS kicks in ──────────────────────────────
+            // The view is still in native (Onion Skin / 2-up) layout so its
+            // bounding rect reflects the real available content area.
+            const rect = view.getBoundingClientRect();
+            document.documentElement.style.setProperty('--vpd-view-top', rect.top + 'px');
+            document.documentElement.style.setProperty('--vpd-view-height', rect.height + 'px');
+            document.documentElement.style.setProperty('--vpd-view-left', rect.left + 'px');
+            document.documentElement.style.setProperty('--vpd-view-width', rect.width + 'px');
+            // ─────────────────────────────────────────────────────────────────
+
             // Remove native active classes visually, though Ghost 2-up should handle functionality
             view.classList.remove('swipe', 'onion-skin');
             view.classList.add('three-up', 'vpd-active');

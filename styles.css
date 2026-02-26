@@ -98,14 +98,14 @@
 
   /* Cover viewport from below breadcrumb to above tab bar */
   position: fixed !important;
-  top: 35px !important;
-  /* Start below the file breadcrumb bar */
+  top: var(--vpd-view-top, 35px) !important;
+  /* Set by JS from getBoundingClientRect() */
   left: 0 !important;
+  /* Full width from edge to edge */
   right: 0 !important;
-  bottom: 40px !important;
-  /* End above the tab bar */
+  height: var(--vpd-view-height, calc(100vh - 75px)) !important;
+  /* Exact native height */
   width: 100vw !important;
-  height: auto !important;
   transform: none !important;
   z-index: 9999 !important;
   /* Above GitHub sidebar and all UI */
