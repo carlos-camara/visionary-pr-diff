@@ -138,16 +138,12 @@
 .shell[data-vpd-type="deleted"] {
   grid-column: 1 !important;
   grid-row: 1 !important;
-  padding: 6px !important;
-  /* Inset image so it fits fully */
 }
 
 /* Added: bottom-left cell */
 .shell[data-vpd-type="added"] {
   grid-column: 1 !important;
   grid-row: 2 !important;
-  padding: 6px !important;
-  /* Inset image so it fits fully */
 }
 
 /* Visionary Diff: right column, spans both rows */
