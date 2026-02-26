@@ -100,9 +100,11 @@
   position: fixed !important;
   top: 0 !important;
   left: 0 !important;
+  right: 0 !important;
+  bottom: 40px !important;
+  /* Anchor above the tab bar - auto height */
   width: 100vw !important;
-  height: calc(100vh - 30px) !important;
-  /* Match Onion Skin available height */
+  height: auto !important;
   transform: none !important;
   z-index: 9999 !important;
   /* Above GitHub sidebar and all UI */
