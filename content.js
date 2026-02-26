@@ -236,15 +236,15 @@
 
         setStatus(diffShell, 'Waiting for source images...');
 
-        const findImg = (label) => {
+        const findImg = (label, type) => {
             if (view.shadowRoot) {
                 const shadowImg = [...view.shadowRoot.querySelectorAll('img')].find(img =>
                     img.alt?.toLowerCase().includes(label.toLowerCase()) ||
                     img.closest('.shell')?.textContent.toLowerCase().includes(label.toLowerCase())
                 );
-                // Style the shell if found
                 const shell = shadowImg?.closest('.shell');
                 if (shell) {
+                    shell.dataset.vpdType = type;
                     const lbl = shell.querySelector('.frame-label');
                     if (lbl) lbl.classList.add('vpd-premium-label');
                 }
@@ -252,14 +252,15 @@
             }
             const el = [...view.querySelectorAll('.shell')].find(s => s.textContent.toLowerCase().includes(label.toLowerCase()));
             if (el) {
+                el.dataset.vpdType = type;
                 const lbl = el.querySelector('.frame-label');
                 if (lbl) lbl.classList.add('vpd-premium-label');
             }
             return el?.querySelector('img');
         };
 
-        const imgA = findImg('Deleted') || findImg('Before') || view.shadowRoot?.querySelectorAll('img')[0] || view.querySelectorAll('img')[0];
-        const imgB = findImg('Added') || findImg('After') || view.shadowRoot?.querySelectorAll('img')[1] || view.querySelectorAll('img')[1];
+        const imgA = findImg('Deleted', 'deleted') || findImg('Before', 'deleted') || view.shadowRoot?.querySelectorAll('img')[0] || view.querySelectorAll('img')[0];
+        const imgB = findImg('Added', 'added') || findImg('After', 'added') || view.shadowRoot?.querySelectorAll('img')[1] || view.querySelectorAll('img')[1];
 
         if (!imgA || !imgB) {
             setStatus(diffShell, 'Error: Source images not found.', true);

@@ -77,24 +77,25 @@
   margin: 0 !important;
 }
 
-/* Perfect Symmetrical Layout */
+/* Perfect Symmetrical Layout - Grid Powered */
 .three-up.view.vpd-active,
 .image-diff[data-vpd-state="active"].vpd-active {
-  display: flex !important;
-  flex-direction: row !important;
-  gap: 20px !important;
-  align-items: flex-start !important;
-  justify-content: center !important;
-  padding: 24px !important;
+  display: grid !important;
+  grid-template-columns: 1fr 1fr 1fr !important;
+  gap: 24px !important;
+  align-items: start !important;
+  padding: 32px !important;
   width: 100% !important;
+  max-width: 1400px !important;
+  margin: 0 auto !important;
   box-sizing: border-box !important;
-  background: radial-gradient(circle at top, rgba(var(--vpd-accent-rgb), 0.05), transparent) !important;
+  background: radial-gradient(circle at top, rgba(var(--vpd-accent-rgb), 0.08), transparent) !important;
 }
 
 .three-up.view.vpd-active .shell,
 .image-diff[data-vpd-state="active"].vpd-active .shell,
 .vpd-diff-shell {
-  flex: 0 0 calc(33.33% - 14px) !important;
+  width: 100% !important;
   min-width: 0 !important;
   display: flex !important;
   flex-direction: column !important;
@@ -108,13 +109,29 @@
 .image-diff.vpd-active .shell .vpd-diff-frame {
   width: 100% !important;
   height: auto !important;
-  max-height: 500px !important;
+  max-height: 65vh !important;
   object-fit: contain !important;
   border-radius: 12px !important;
   border: 1px solid var(--vpd-border-glass) !important;
   box-shadow: var(--vpd-glow) !important;
   transition: var(--vpd-transition) !important;
   background: #0d1117;
+}
+
+/* Color Coded Accents */
+.shell[data-vpd-type="deleted"] img {
+  border-color: rgba(248, 81, 73, 0.3) !important;
+  box-shadow: 0 8px 32px rgba(248, 81, 73, 0.15) !important;
+}
+
+.shell[data-vpd-type="added"] img {
+  border-color: rgba(63, 185, 80, 0.3) !important;
+  box-shadow: 0 8px 32px rgba(63, 185, 80, 0.15) !important;
+}
+
+.vpd-diff-shell .vpd-diff-frame {
+  border-color: rgba(var(--vpd-accent-rgb), 0.4) !important;
+  box-shadow: 0 8px 32px rgba(var(--vpd-accent-rgb), 0.2) !important;
 }
 
 .image-diff.vpd-active .shell img:hover {
@@ -197,7 +214,7 @@ fieldset:has(.vpd-3up-tab) label input {
   min-height: 120px;
   border-radius: 12px !important;
   border: 1px solid rgba(var(--vpd-accent-rgb), 0.3) !important;
-  animation: vpd-pulse-glow 3s infinite;
+  animation: vpd-pulse-glow 4s infinite ease-in-out;
 }
 
 .vpd-diff-frame .vpd-canvas-main,
