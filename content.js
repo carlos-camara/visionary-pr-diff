@@ -101,10 +101,37 @@
             pierceShadowShield(view);
             activate3Up(view);
             startPersistentCleanup(view);
+
+            // FORCE GITHUB'S OUTER WRAPPER TO EXPAND
+            // GitHub sets hardcoded inline heights on .js-file-content or .file
+            // based on the native image dimension. We must destroy those limits.
+            const wrapper = view.closest('.js-file-content, .file');
+            if (wrapper) {
+                // Save original inline styles to restore them later
+                if (wrapper.dataset.vpdOrigHeight === undefined) {
+                    wrapper.dataset.vpdOrigHeight = wrapper.style.height || '';
+                    wrapper.dataset.vpdOrigMinHeight = wrapper.style.minHeight || '';
+                }
+                wrapper.style.setProperty('height', 'auto', 'important');
+                wrapper.style.setProperty('min-height', '85vh', 'important');
+                wrapper.style.setProperty('display', 'flex', 'important'); // Ensure flex behavior propagates
+            }
+
         } else {
             // User selected 2-up, Swipe, or Onion natively.
             // Reset inline styles we applied, then remove our classes.
             ['position', 'top', 'left', 'width', 'height', 'z-index'].forEach(p => view.style.removeProperty(p));
+
+            // Restore outer wrapper
+            const wrapper = view.closest('.js-file-content, .file');
+            if (wrapper && wrapper.dataset.vpdOrigHeight !== undefined) {
+                wrapper.style.setProperty('height', wrapper.dataset.vpdOrigHeight);
+                wrapper.style.setProperty('min-height', wrapper.dataset.vpdOrigMinHeight);
+                wrapper.style.removeProperty('display');
+                delete wrapper.dataset.vpdOrigHeight;
+                delete wrapper.dataset.vpdOrigMinHeight;
+            }
+
             // DO NOT FIGHT GITHUB'S DOM. Just remove our classes.
             view.classList.remove('three-up', 'vpd-active');
             deactivate3Up(view);
