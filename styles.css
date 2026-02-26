@@ -87,16 +87,17 @@
   margin: 0 !important;
 }
 
-/* Zenith Gallery Overhaul - World-Class Integration & Visibility */
+/* Zenith Gallery Overhaul - Rigid Grid Architecture (World-Class Integration) */
 .three-up.view.vpd-active,
 .image-diff[data-vpd-state="active"].vpd-active {
-  display: flex !important;
-  flex-direction: row !important;
-  gap: 12px !important;
+  display: grid !important;
+  grid-template-columns: 8% 84% 8% !important;
+  /* Precise space allocation */
+  gap: 8px !important;
   align-items: center !important;
   justify-content: center !important;
   padding: 0 !important;
-  /* Zero padding for maximum image use */
+  /* Zero padding to maximize image use */
 
   /* Full Viewport Dominance */
   width: 100vw !important;
@@ -104,7 +105,8 @@
   position: relative !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
-  z-index: 100 !important;
+  z-index: 1000 !important;
+  /* Higher to avoid overlap */
 
   border-radius: 0 !important;
   box-sizing: border-box !important;
@@ -114,39 +116,24 @@
   overflow: visible !important;
 }
 
+/* Each shell acts as its own coordinate system for labels */
 .three-up.view.vpd-active .shell,
-.image-diff[data-vpd-state="active"].vpd-active .shell,
+.image-diff.vpd-active .shell,
 .vpd-diff-shell {
+  position: relative !important;
+  /* CRITICAL for absolute labels inside */
+  width: 100% !important;
   height: 100% !important;
   display: flex !important;
-  flex-direction: column !important;
   align-items: center !important;
   justify-content: center !important;
   min-width: 0 !important;
+  overflow: hidden !important;
+  /* Keep labels from leaking into other columns */
   animation: vpd-fade-up 0.5s ease-out forwards;
 }
 
-/* Distribution: central is priority but side ones stay visible as non-clipped miniatures */
-.three-up.view.vpd-active .shell:not(.vpd-diff-shell),
-.image-diff.vpd-active .shell:not(.vpd-diff-shell) {
-  flex: 0 0 10% !important;
-  /* Fixed-width side references */
-  height: 100% !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  position: relative !important;
-  /* Base for internal labels */
-}
-
-.vpd-diff-shell {
-  flex: 1 1 78% !important;
-  /* Maximized central focus */
-  height: 100% !important;
-  max-width: 80% !important;
-  position: relative !important;
-  /* Base for internal labels */
-}
+/* No explicit flex rules needed anymore as Grid handles it */
 
 .three-up.view.vpd-active .shell img,
 .three-up.view.vpd-active .shell .vpd-diff-frame,
@@ -243,31 +230,38 @@ fieldset:has(.vpd-3up-tab) label input {
   display: none !important;
 }
 
-/* Overlay Labels - Zenith Integrated UI (Strict Internal Placement) */
+/* Overlay Labels - Zenith Precise UI (Locked INSIDE images) */
 .view.vpd-active .shell .frame-label,
 .vpd-diff-shell .frame-label {
   position: absolute !important;
-  top: 12px !important;
-  left: 12px !important;
-  z-index: 10 !important;
+  top: 15px !important;
+  left: 15px !important;
+  z-index: 50 !important;
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
-  background: rgba(13, 17, 23, 0.45) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  padding: 6px 14px !important;
-  border-radius: 40px !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  background: rgba(13, 17, 23, 0.7) !important;
+  backdrop-filter: blur(25px) saturate(200%) !important;
+  -webkit-backdrop-filter: blur(25px) saturate(200%) !important;
+  padding: 8px 16px !important;
+  border-radius: 50px !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
   color: #fff !important;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif !important;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif !important;
   font-size: 11px !important;
   font-weight: 800 !important;
   letter-spacing: 0.5px !important;
   text-transform: uppercase !important;
   margin: 0 !important;
   pointer-events: none !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6) !important;
+  white-space: nowrap !important;
+}
+
+/* Unique side positioning for added label to keep symmetry */
+.shell[data-vpd-type="added"] .frame-label {
+  left: auto !important;
+  right: 15px !important;
 }
 
 .shell[data-vpd-type="deleted"] .frame-label {
