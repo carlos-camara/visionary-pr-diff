@@ -87,17 +87,19 @@
   margin: 0 !important;
 }
 
-/* Perfect Symmetrical Layout - Grid Powered (Burst-Out Inmersive) */
+/* Perfect Symmetrical Layout - Guaranteed Visibility (Burst-Out Flex) */
 .three-up.view.vpd-active,
 .image-diff[data-vpd-state="active"].vpd-active {
-  display: grid !important;
-  grid-template-columns: 0.7fr 1.6fr 0.7fr !important;
-  gap: 20px !important;
-  align-items: start !important;
-  padding: 40px 20px !important;
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 16px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px 12px !important;
 
-  /* Burst-out of GitHub container logic */
-  width: 94vw !important;
+  /* Full Viewport Dominance */
+  width: 96vw !important;
+  height: 85vh !important;
   position: relative !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
@@ -105,31 +107,45 @@
 
   border-radius: 16px !important;
   box-sizing: border-box !important;
-  background: rgba(13, 17, 23, 0.95) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(var(--vpd-accent-rgb), 0.2) !important;
-  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.8), 0 0 40px rgba(var(--vpd-accent-rgb), 0.1) !important;
+  background: rgba(13, 17, 23, 0.98) !important;
+  backdrop-filter: blur(30px) !important;
+  -webkit-backdrop-filter: blur(30px) !important;
+  border: 1px solid rgba(var(--vpd-accent-rgb), 0.3) !important;
+  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.9) !important;
+  overflow: hidden !important;
 }
 
 .three-up.view.vpd-active .shell,
 .image-diff[data-vpd-state="active"].vpd-active .shell,
 .vpd-diff-shell {
-  width: 100% !important;
-  min-width: 0 !important;
+  height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
+  justify-content: center !important;
+  min-width: 0 !important;
   animation: vpd-fade-up 0.5s ease-out forwards;
+}
+
+/* Distribution: central is priority but side ones stay visible */
+.three-up.view.vpd-active .shell:not(.vpd-diff-shell),
+.image-diff.vpd-active .shell:not(.vpd-diff-shell) {
+  flex: 0 0 22% !important;
+}
+
+.vpd-diff-shell {
+  flex: 1 1 50% !important;
 }
 
 .three-up.view.vpd-active .shell img,
 .three-up.view.vpd-active .shell .vpd-diff-frame,
 .image-diff.vpd-active .shell img,
 .image-diff.vpd-active .shell .vpd-diff-frame {
-  width: 100% !important;
+  max-width: 100% !important;
+  max-height: 70vh !important;
+  /* Strictly limited by viewport */
+  width: auto !important;
   height: auto !important;
-  max-height: 85vh !important;
   object-fit: contain !important;
   border-radius: 12px !important;
   border: 2px solid var(--vpd-border-glass) !important;
