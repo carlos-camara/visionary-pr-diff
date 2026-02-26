@@ -120,8 +120,8 @@
   height: 100% !important;
   display: flex !important;
   flex-direction: column !important;
-  align-items: stretch !important;
-  /* STRETCH children to fill width */
+  align-items: center !important;
+  /* Center content, don't stretch */
   justify-content: center !important;
   min-width: 0 !important;
   animation: vpd-fade-up 0.5s ease-out forwards;
@@ -151,8 +151,8 @@
 .image-diff.vpd-active .shell img {
   max-width: 100% !important;
   max-height: 96vh !important;
-  width: 100% !important;
-  /* Fill the full column width */
+  width: auto !important;
+  /* Natural aspect ratio - NO STRETCH */
   height: auto !important;
   object-fit: contain !important;
   border-radius: 4px !important;
@@ -160,12 +160,13 @@
   background: transparent !important;
 }
 
-/* Strict visible thumbnails for side images - NO CLIPPING, FILL COLUMN */
+/* Side thumbnails - fully visible, proportional */
 .three-up.view.vpd-active .shell:not(.vpd-diff-shell) img,
 .image-diff.vpd-active .shell:not(.vpd-diff-shell) img {
   width: 100% !important;
   height: auto !important;
-  max-height: 96vh !important;
+  max-height: 80vh !important;
+  /* Cap height so they don't overflow */
   object-fit: contain !important;
   border: none !important;
 }
@@ -329,17 +330,21 @@ fieldset:has(.vpd-3up-tab) label input {
   background: rgba(var(--vpd-accent-rgb), 0.15) !important;
 }
 
-/* Diff Frame Container - Force fill the shell's available height */
+/* Diff Frame Container - fill shell, clip overflow */
 .vpd-diff-frame {
-  display: block !important;
+  display: flex !important;
+  /* Use flex to center canvas within */
+  align-items: center !important;
+  justify-content: center !important;
   background: transparent !important;
   position: relative !important;
   overflow: hidden !important;
+  /* Clip anything that escapes */
   min-height: 120px;
   width: 100% !important;
-  /* Fill horizontal space */
   flex: 1 1 auto !important;
-  /* Grow to fill all remaining height in the column */
+  /* Grow to fill available column height */
+  max-height: 96vh !important;
   border-radius: 8px !important;
   border: 1px solid rgba(var(--vpd-accent-rgb), 0.25) !important;
   animation: vpd-pulse-glow 4s infinite ease-in-out;
@@ -357,9 +362,12 @@ fieldset:has(.vpd-3up-tab) label input {
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
   width: auto !important;
+  /* Proportional, don't force full width */
   height: auto !important;
   max-width: 100% !important;
+  /* Clip to frame width */
   max-height: 100% !important;
+  /* Clip to frame height */
   object-fit: contain !important;
 }
 
