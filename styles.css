@@ -87,7 +87,7 @@
   margin: 0 !important;
 }
 
-/* Perfect Symmetrical Layout - Guaranteed Visibility (Burst-Out Flex) */
+/* Perfect Symmetrical Layout - Master Gallery (Burst-Out Flex) */
 .three-up.view.vpd-active,
 .image-diff[data-vpd-state="active"].vpd-active {
   display: flex !important;
@@ -95,23 +95,22 @@
   gap: 8px !important;
   align-items: center !important;
   justify-content: center !important;
-  padding: 24px 12px !important;
+  padding: 12px !important;
 
   /* Full Viewport Dominance */
-  width: 96vw !important;
-  height: 85vh !important;
+  width: 98vw !important;
+  height: 92vh !important;
   position: relative !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   z-index: 100 !important;
 
-  border-radius: 16px !important;
+  border-radius: 12px !important;
   box-sizing: border-box !important;
-  background: rgba(13, 17, 23, 0.98) !important;
-  backdrop-filter: blur(30px) !important;
-  -webkit-backdrop-filter: blur(30px) !important;
-  border: 1px solid rgba(var(--vpd-accent-rgb), 0.3) !important;
-  box-shadow: 0 30px 100px rgba(0, 0, 0, 0.9) !important;
+  background: #080a0c !important;
+  /* Deeper contrast background */
+  border: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 1) !important;
   overflow: hidden !important;
 }
 
@@ -131,10 +130,14 @@
 .three-up.view.vpd-active .shell:not(.vpd-diff-shell),
 .image-diff.vpd-active .shell:not(.vpd-diff-shell) {
   flex: 0 0 12% !important;
+  height: 100% !important;
 }
 
 .vpd-diff-shell {
   flex: 1 1 76% !important;
+  height: 100% !important;
+  max-width: 76% !important;
+  /* Force constraint for better scaling */
 }
 
 .three-up.view.vpd-active .shell img,
@@ -142,16 +145,16 @@
 .image-diff.vpd-active .shell img,
 .image-diff.vpd-active .shell .vpd-diff-frame {
   max-width: 100% !important;
-  max-height: 80vh !important;
-  /* Recovered space allows for more height */
+  max-height: 88vh !important;
+  /* Ultra-large images */
   width: auto !important;
   height: auto !important;
   object-fit: contain !important;
-  border-radius: 12px !important;
-  border: 2px solid var(--vpd-border-glass) !important;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5) !important;
+  border-radius: 8px !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6) !important;
   transition: var(--vpd-transition) !important;
-  background: #0d1117;
+  background: #000;
 }
 
 /* Color Coded Accents */
@@ -221,33 +224,30 @@ fieldset:has(.vpd-3up-tab) label input {
   display: none !important;
 }
 
-/* Overlay Labels - Watermark Elite Placement */
+/* Overlay Labels - Studio Integrated Tags (Unique Corners) */
 .view.vpd-active .shell .frame-label,
 .vpd-diff-shell .frame-label {
   position: absolute !important;
-  top: 24px !important;
-  left: 24px !important;
   z-index: 10 !important;
   display: flex !important;
   align-items: center !important;
-  gap: 10px !important;
-  background: rgba(13, 17, 23, 0.65) !important;
-  backdrop-filter: blur(20px) saturate(180%) !important;
-  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
-  padding: 8px 18px !important;
-  border-radius: 24px !important;
-  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  gap: 8px !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  backdrop-filter: blur(30px) !important;
+  -webkit-backdrop-filter: blur(30px) !important;
+  padding: 6px 14px !important;
+  border-radius: 4px !important;
+  /* Sharper "Studio" look */
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
   color: #fff !important;
-  font-size: 11px !important;
-  font-weight: 800 !important;
-  letter-spacing: 1.2px !important;
+  font-family: ui-monospace, SFMono-Regular, SF Mono, Menlo, Consolas, Liberation Mono, monospace !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 1px !important;
   text-transform: uppercase !important;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) !important;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
   margin: 0 !important;
   pointer-events: none !important;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
-  overflow: hidden !important;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
 }
 
 /* Shimmer Effect for Labels */
@@ -281,23 +281,26 @@ fieldset:has(.vpd-3up-tab) label input {
 }
 
 /* Color Coding for Elite Labels */
+/* Unique Corner Placement */
 .shell[data-vpd-type="deleted"] .frame-label {
-  border-color: rgba(248, 81, 73, 0.5) !important;
-  color: #ffa198 !important;
-  box-shadow: 0 8px 32px rgba(248, 81, 73, 0.2) !important;
+  top: 15px !important;
+  left: 15px !important;
+  border-left: 3px solid #f85149 !important;
 }
 
 .shell[data-vpd-type="added"] .frame-label {
-  border-color: rgba(63, 185, 80, 0.5) !important;
-  color: #7ee787 !important;
-  box-shadow: 0 8px 32px rgba(63, 185, 80, 0.2) !important;
+  top: 15px !important;
+  right: 15px !important;
+  left: auto !important;
+  border-right: 3px solid #3fb950 !important;
 }
 
 .vpd-diff-shell .frame-label {
-  border-color: rgba(var(--vpd-accent-rgb), 0.6) !important;
-  color: var(--vpd-accent) !important;
+  top: 15px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  border-bottom: 2px solid var(--vpd-accent) !important;
   background: rgba(var(--vpd-accent-rgb), 0.15) !important;
-  box-shadow: 0 8px 32px rgba(var(--vpd-accent-rgb), 0.3) !important;
 }
 
 /* Diff Frame Container */
