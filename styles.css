@@ -110,6 +110,15 @@
   max-height: none !important;
 }
 
+/* Force GitHub's outer wrapper to allow expansion */
+.js-file-content:has(.three-up.view.vpd-active),
+.js-file-content:has(.image-diff[data-vpd-state="active"].vpd-active) {
+  display: flex !important;
+  flex-direction: column !important;
+  height: auto !important;
+  min-height: 70vh !important;
+}
+
 
 /* Base shell: fill its grid cell, never overflow */
 .three-up.view.vpd-active .shell,
