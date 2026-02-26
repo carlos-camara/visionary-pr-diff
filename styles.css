@@ -142,8 +142,8 @@
 .image-diff.vpd-active .shell img,
 .image-diff.vpd-active .shell .vpd-diff-frame {
   max-width: 100% !important;
-  max-height: 70vh !important;
-  /* Strictly limited by viewport */
+  max-height: 80vh !important;
+  /* Recovered space allows for more height */
   width: auto !important;
   height: auto !important;
   object-fit: contain !important;
@@ -221,24 +221,49 @@ fieldset:has(.vpd-3up-tab) label input {
   display: none !important;
 }
 
-/* Glassmorphism Labels */
+/* Overlay Labels - Premium In-Image Placement */
+.view.vpd-active .shell .frame-label,
 .vpd-diff-shell .frame-label {
+  position: absolute !important;
+  top: 16px !important;
+  left: 16px !important;
+  z-index: 10 !important;
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
-  background: var(--vpd-bg-glass) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
+  background: rgba(13, 17, 23, 0.75) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
   padding: 6px 14px !important;
   border-radius: 20px !important;
-  border: 1px solid var(--vpd-border-glass) !important;
-  color: var(--vpd-accent) !important;
-  font-size: 11px !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.5px !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: #fff !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.8px !important;
   text-transform: uppercase !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2) !important;
-  margin-bottom: 12px !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
+  margin: 0 !important;
+  pointer-events: none !important;
+  transition: var(--vpd-transition) !important;
+}
+
+/* Color Coding for Labels */
+.shell[data-vpd-type="deleted"] .frame-label {
+  border-color: rgba(248, 81, 73, 0.4) !important;
+  color: #ffa198 !important;
+}
+
+.shell[data-vpd-type="added"] .frame-label {
+  border-color: rgba(63, 185, 80, 0.4) !important;
+  color: #7ee787 !important;
+}
+
+.vpd-diff-shell .frame-label {
+  border-color: rgba(var(--vpd-accent-rgb), 0.5) !important;
+  color: var(--vpd-accent) !important;
+  background: rgba(var(--vpd-accent-rgb), 0.1) !important;
+  backdrop-filter: blur(16px) !important;
 }
 
 /* Diff Frame Container */
