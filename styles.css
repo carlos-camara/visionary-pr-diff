@@ -96,19 +96,19 @@
   gap: 8px !important;
   padding: 8px !important;
 
-  /* Fixed to viewport - no margin/flow issues, no clipping */
+  /* Cover entire viewport including GitHub sidebar */
   position: fixed !important;
   top: 0 !important;
-  /* No space at top */
   left: 0 !important;
   width: 100vw !important;
   height: calc(100vh - 48px) !important;
-  /* Only leave room for the tab bar */
   transform: none !important;
-  z-index: 100 !important;
+  z-index: 9999 !important;
+  /* Above GitHub sidebar and all UI */
 
   box-sizing: border-box !important;
-  background: transparent !important;
+  background: #0d1117 !important;
+  /* Cover sidebar content behind */
   border: none !important;
   box-shadow: none !important;
   overflow: hidden !important;
