@@ -96,14 +96,8 @@
   gap: 8px !important;
   padding: 8px !important;
 
-  /* position/top/height/width set exclusively by JS via inline styles */
-  /* to avoid !important cascade conflicts with GitHub CSS */
-  transform: none !important;
-  z-index: 9999 !important;
-
   box-sizing: border-box !important;
-  background: #0d1117 !important;
-  /* Cover sidebar content behind */
+  background: transparent !important;
   border: none !important;
   box-shadow: none !important;
   overflow: hidden !important;
