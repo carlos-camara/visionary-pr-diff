@@ -294,7 +294,7 @@
             view.style.setProperty('--vpd-onion-height', `${finalHeight}px`);
 
             // DYNAMIC 3-UP HEIGHT CALCULATION
-            const availableWidth = Math.max(wrapperWidth - 64, 100);
+            const availableWidth = Math.max(wrapperWidth - 84, 100); // More padding for external labels
             const leftWidth = availableWidth * 0.35;
             const rightWidth = availableWidth * 0.65;
 
@@ -306,16 +306,16 @@
             let leftBottomHeight = leftWidth;
             leftBottomHeight = (leftWidth / imgB.naturalWidth) * imgB.naturalHeight;
 
-            const expectedLeftHeight = leftTopHeight + leftBottomHeight + 16;
+            const expectedLeftHeight = leftTopHeight + leftBottomHeight + 24; // row gap
             const expectedRightHeight = (rightWidth / imgB.naturalWidth) * imgB.naturalHeight;
 
             const maxContentHeight = Math.max(expectedLeftHeight, expectedRightHeight);
-            const exact3UpHeight = Math.round(maxContentHeight + 48);
+            const exact3UpHeight = Math.round(maxContentHeight + 84); // Giant top padding for beautiful external labels
 
             view.style.setProperty('--vpd-3up-height', `${exact3UpHeight}px`);
 
             const stretchRatio = maxContentHeight > expectedLeftHeight
-                ? (maxContentHeight - 16) / (leftTopHeight + leftBottomHeight)
+                ? (maxContentHeight - 24) / (leftTopHeight + leftBottomHeight)
                 : 1;
 
             const adjustedTopRow = leftTopHeight * stretchRatio;
