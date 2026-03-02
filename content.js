@@ -294,7 +294,7 @@
             view.style.setProperty('--vpd-onion-height', `${finalHeight}px`);
 
             // DYNAMIC 3-UP HEIGHT CALCULATION
-            const availableWidth = Math.max(wrapperWidth - 64, 100); // Padding for external labels
+            const availableWidth = Math.max(wrapperWidth - 84, 100); // Inner width minus paddings
             const leftWidth = availableWidth * 0.35;
             const rightWidth = availableWidth * 0.65;
 
@@ -306,11 +306,11 @@
             let leftBottomHeight = leftWidth;
             leftBottomHeight = (leftWidth / imgB.naturalWidth) * imgB.naturalHeight;
 
-            const expectedLeftHeight = leftTopHeight + leftBottomHeight + 24; // row gap
+            const expectedLeftHeight = leftTopHeight + leftBottomHeight + 40; // 40px grid row-gap
             const expectedRightHeight = (rightWidth / imgB.naturalWidth) * imgB.naturalHeight;
 
             const maxContentHeight = Math.max(expectedLeftHeight, expectedRightHeight);
-            const exact3UpHeight = Math.round(maxContentHeight + 64); // Top padding for smaller floating external labels
+            const exact3UpHeight = Math.round(maxContentHeight + 112); // Top padding 56px + Bottom padding 56px
 
             view.style.setProperty('--vpd-3up-height', `${exact3UpHeight}px`);
 
@@ -371,7 +371,7 @@
             setStatus(diffShell, 'Calculating stats...');
             const stats = calculateStats(canvas.getContext('2d'), canvas.width, canvas.height);
             diffShell.querySelector('.vpd-stats-card').innerHTML = `
-                <span>CHANGE</span> <b>${stats.pct}%</b> <span style="margin-left:8px; opacity:0.5;">|</span> <span>DELTA</span> <b>${stats.diff.toLocaleString()}</b> <span style="font-size:10px; opacity:0.6;">px</span>
+                <span>CHANGE</span> <b style="margin-left:4px">${stats.pct}%</b> <span style="margin:0 10px; opacity:0.3;">|</span> <span>DELTA</span> <b style="margin-left:4px">${stats.diff.toLocaleString()}</b> <span style="font-size:10px; opacity:0.5; margin-left:3px;">px</span>
             `;
             view.dataset.vpdState = 'active';
         } catch (e) {
