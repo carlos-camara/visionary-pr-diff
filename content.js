@@ -248,7 +248,11 @@
                 if (shell) {
                     shell.dataset.vpdType = type;
                     const lbl = shell.querySelector('.frame-label');
-                    if (lbl) lbl.classList.add('vpd-premium-label');
+                    if (lbl) {
+                        lbl.classList.add('vpd-premium-label');
+                        if (type === 'deleted') lbl.textContent = 'Removed';
+                        if (type === 'added') lbl.textContent = 'Added';
+                    }
                 }
                 if (shadowImg) return shadowImg;
             }
@@ -256,7 +260,11 @@
             if (el) {
                 el.dataset.vpdType = type;
                 const lbl = el.querySelector('.frame-label');
-                if (lbl) lbl.classList.add('vpd-premium-label');
+                if (lbl) {
+                    lbl.classList.add('vpd-premium-label');
+                    if (type === 'deleted') lbl.textContent = 'Removed';
+                    if (type === 'added') lbl.textContent = 'Added';
+                }
             }
             return el?.querySelector('img');
         };
@@ -310,7 +318,7 @@
             const expectedRightHeight = (rightWidth / imgB.naturalWidth) * imgB.naturalHeight;
 
             const maxContentHeight = Math.max(expectedLeftHeight, expectedRightHeight);
-            const exact3UpHeight = Math.round(maxContentHeight + 54); // Top padding for smaller floating external labels
+            const exact3UpHeight = Math.round(maxContentHeight + 64); // Top padding for smaller floating external labels
 
             view.style.setProperty('--vpd-3up-height', `${exact3UpHeight}px`);
 

@@ -193,28 +193,16 @@
   z-index: 5 !important;
 }
 
-/* Deleted & Added cells: Remove borders entirely for clean floating images */
-.three-up.view.vpd-active .shell[data-vpd-type="deleted"],
-.three-up.view.vpd-active .shell[data-vpd-type="added"] {
-  grid-column: 1 !important;
-  background: transparent !important;
-  border-color: transparent !important;
-  box-shadow: none !important;
-}
-
+/* Deleted: top-left cell */
 .three-up.view.vpd-active .shell[data-vpd-type="deleted"] {
+  grid-column: 1 !important;
   grid-row: 1 !important;
 }
 
+/* Added: bottom-left cell */
 .three-up.view.vpd-active .shell[data-vpd-type="added"] {
+  grid-column: 1 !important;
   grid-row: 2 !important;
-}
-
-.three-up.view.vpd-active .shell[data-vpd-type="deleted"]:hover,
-.three-up.view.vpd-active .shell[data-vpd-type="added"]:hover {
-  transform: translateY(-2px) scale(1.01) !important;
-  box-shadow: none !important;
-  border-color: transparent !important;
 }
 
 /* Visionary Diff: right column, spans both rows */
@@ -337,57 +325,57 @@ fieldset:has(.vpd-3up-tab) label input {
 .shell[data-vpd-type="added"] .frame-label {
   display: flex !important;
   position: absolute !important;
-  top: -20px !important;
+  top: -24px !important;
   left: 0 !important;
   z-index: 10 !important;
-  font-size: 7.5px !important;
+  font-size: 9px !important;
   font-weight: 700 !important;
   letter-spacing: 0.8px !important;
   text-transform: uppercase !important;
-  padding: 2px 6px !important;
+  padding: 3px 8px !important;
   border-radius: 4px !important;
   color: rgba(255, 255, 255, 0.95) !important;
   background: rgba(13, 17, 23, 0.4) !important;
   backdrop-filter: blur(8px) !important;
   -webkit-backdrop-filter: blur(8px) !important;
   border: 1px solid rgba(255, 255, 255, 0.05) !important;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
   text-shadow: none !important;
   overflow: hidden !important;
   transition: all 0.3s ease !important;
 }
 
 .shell[data-vpd-type="deleted"] .frame-label {
-  border-bottom: 1px solid rgba(248, 81, 73, 0.8) !important;
+  border-bottom: 2px solid rgba(248, 81, 73, 0.8) !important;
   color: #ff7b72 !important;
 }
 
 .shell[data-vpd-type="added"] .frame-label {
-  border-bottom: 1px solid rgba(63, 185, 80, 0.8) !important;
+  border-bottom: 2px solid rgba(63, 185, 80, 0.8) !important;
   color: #56d364 !important;
 }
 
 .vpd-diff-shell .frame-label {
   display: flex !important;
   position: absolute !important;
-  top: -24px !important;
+  top: -28px !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   z-index: 10 !important;
-  font-size: 8.5px !important;
+  font-size: 10px !important;
   font-weight: 700 !important;
   letter-spacing: 1px !important;
   text-transform: uppercase !important;
-  padding: 3px 10px !important;
-  border-radius: 4px !important;
+  padding: 4px 12px !important;
+  border-radius: 6px !important;
   color: #fff !important;
   background: linear-gradient(180deg, rgba(31, 111, 235, 0.15) 0%, rgba(13, 17, 23, 0.5) 100%) !important;
   backdrop-filter: blur(16px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
   border: 1px solid rgba(88, 166, 255, 0.2) !important;
-  border-bottom: 1px solid #58a6ff !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 0 8px rgba(88, 166, 255, 0.15) !important;
-  text-shadow: 0 0 4px rgba(88, 166, 255, 0.4) !important;
+  border-bottom: 2px solid #58a6ff !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 0 12px rgba(88, 166, 255, 0.15) !important;
+  text-shadow: 0 0 8px rgba(88, 166, 255, 0.4) !important;
   transition: all 0.3s ease !important;
   overflow: hidden !important;
 }
