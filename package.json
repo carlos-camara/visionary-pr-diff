@@ -39,5 +39,8 @@
         "*.md": [
             "prettier --write"
         ]
+    },
+    "dependencies": {
+        "puppeteer": "^24.37.5"
     }
 }

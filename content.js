@@ -67,7 +67,10 @@
         }
 
         style.textContent = `
-            .handle, .swipe-bar, .swipe-container, .onion-skin-container, .divider, .drag-handle, .swipe-handle, .js-drag-handle {
+            .swipe-container, .onion-skin-container {
+                display: contents !important;
+            }
+            .handle, .swipe-bar, .divider, .drag-handle, .swipe-handle, .js-drag-handle {
                 display: none !important;
                 visibility: hidden !important;
                 opacity: 0 !important;
@@ -83,31 +86,19 @@
         if (!view) return;
 
         if (val === 'three-up') {
-            // ── Remove JS constraints, let CSS natural flow dictate size ─────────
-            // We rely entirely on .three-up.view.vpd-active in styles.css for sizing
-            // ─────────────────────────────────────────────────────────────────
-
             // Remove native active classes visually, though Ghost 2-up should handle functionality
             view.classList.remove('swipe', 'onion-skin');
             view.classList.add('three-up', 'vpd-active');
 
-            // Fallback Light DOM cleanup just in case GitHub misses something
-            view.querySelectorAll('.swipe-container, .onion-skin-container, .swipe-bar, .handle, .swipe-handle, .js-drag-handle').forEach(el => {
-                el.style.setProperty('display', 'none', 'important');
-                el.style.setProperty('visibility', 'hidden', 'important');
-            });
+            // Fallback Light DOM cleanup is handled completely by styles.css and display:contents hooks
 
-            // Re-apply secondary shadow shield
+
             pierceShadowShield(view);
             activate3Up(view);
             startPersistentCleanup(view);
 
-            // FORCE GITHUB'S OUTER WRAPPER TO EXPAND
-            // GitHub sets hardcoded inline heights on .js-file-content or .file
-            // based on the native image dimension. We must destroy those limits.
             const wrapper = view.closest('.js-file-content, .file');
             if (wrapper) {
-                // Save original inline styles to restore them later
                 if (wrapper.dataset.vpdOrigHeight === undefined) {
                     wrapper.dataset.vpdOrigHeight = wrapper.style.height || '';
                     wrapper.dataset.vpdOrigMinHeight = wrapper.style.minHeight || '';
@@ -116,14 +107,11 @@
                 wrapper.style.setProperty('min-height', 'auto', 'important');
                 wrapper.style.setProperty('overflow', 'visible', 'important');
             }
-
         } else {
-            // User selected 2-up, Swipe, or Onion natively.
+            // User selected Swipe or Onion natively.
             view.style.removeProperty('--vpd-onion-height');
-            // Reset inline styles we applied, then remove our classes.
             ['position', 'top', 'left', 'width', 'height', 'z-index'].forEach(p => view.style.removeProperty(p));
 
-            // Restore outer wrapper
             const wrapper = view.closest('.js-file-content, .file');
             if (wrapper && wrapper.dataset.vpdOrigHeight !== undefined) {
                 wrapper.style.setProperty('height', wrapper.dataset.vpdOrigHeight);
@@ -133,7 +121,6 @@
                 delete wrapper.dataset.vpdOrigMinHeight;
             }
 
-            // DO NOT FIGHT GITHUB'S DOM. Just remove our classes.
             view.classList.remove('three-up', 'vpd-active');
             deactivate3Up(view);
             stopPersistentCleanup(view);
@@ -145,10 +132,6 @@
 
         const cleanup = () => {
             pierceShadowShield(view);
-            view.querySelectorAll('.swipe-container, .onion-skin-container, .swipe-bar, .handle, .swipe-handle, .js-drag-handle').forEach(el => {
-                el.style.setProperty('display', 'none', 'important');
-                el.style.setProperty('visibility', 'hidden', 'important');
-            });
         };
 
         view._vpdObserver = new MutationObserver(cleanup);
@@ -187,28 +170,13 @@
                 fieldset.dataset.vpdObserved = 'true';
                 fieldset.addEventListener('change', (e) => {
                     if (e.target.name !== 'view-mode') return;
-                    if (fieldset.dataset.vpdIgnore) return;
 
                     const val = e.target.value;
+                    const dynamicView = fieldset.closest('.js-file, .file')?.querySelector('.view, .image-diff, image-diff')
+                        || fieldset.parentElement?.querySelector('.view, .image-diff, image-diff')
+                        || view;
 
-                    if (val === 'three-up') {
-                        // THE GHOST 2-UP TRICK: Proxy through native 2-up to trigger pristine cleanup
-                        const twoUpRadio = fieldset.querySelector('input[value="2-up"], input[value="two-up"]');
-                        if (twoUpRadio) {
-                            fieldset.dataset.vpdIgnore = 'true';
-                            twoUpRadio.checked = true;
-                            twoUpRadio.dispatchEvent(new Event('change', { bubbles: true })); // Trigger native cleanup
-
-                            // Restore our physical radio state visually
-                            e.target.checked = true;
-                            delete fieldset.dataset.vpdIgnore;
-                        }
-
-                        reconcileViewMode(view, 'three-up', fieldset);
-                    } else {
-                        // Native mode selected. Hand control back entirely.
-                        reconcileViewMode(view, val, fieldset);
-                    }
+                    reconcileViewMode(dynamicView, val, fieldset);
                     syncTabSelection(fieldset);
                 });
             }
@@ -313,16 +281,62 @@
             console.warn('[VPD] Target images failed to signal readiness.');
         }
 
-        // MATHEMATICALLY MATCH ONION SKIN HEIGHT
-        // Onion skin perfectly scales the image width to 100% of the wrapper container.
         const wrapper = view.closest('.js-file-content, .file');
-        const wrapperWidth = wrapper ? wrapper.clientWidth : (view.clientWidth || 1200);
-        if (imgB.naturalWidth && imgB.naturalHeight) {
+
+        const updateMetrics = () => {
+            if (view.dataset.vpdState !== 'active' && view.dataset.vpdState !== 'loading') return;
+            const wrapperWidth = wrapper ? wrapper.clientWidth : (view.clientWidth || 1200);
+            if (!imgB.naturalWidth || !imgB.naturalHeight) return;
+
+            // MATHEMATICALLY MATCH ONION SKIN HEIGHT
             const exactOnionHeight = Math.round((wrapperWidth / imgB.naturalWidth) * imgB.naturalHeight);
-            // Ensure a minimum height so tiny images still render nicely
             const finalHeight = Math.max(exactOnionHeight, 300);
             view.style.setProperty('--vpd-onion-height', `${finalHeight}px`);
-        }
+
+            // DYNAMIC 3-UP HEIGHT CALCULATION
+            const availableWidth = Math.max(wrapperWidth - 64, 100);
+            const leftWidth = availableWidth * 0.35;
+            const rightWidth = availableWidth * 0.65;
+
+            let leftTopHeight = leftWidth;
+            if (imgA && imgA.naturalWidth) {
+                leftTopHeight = (leftWidth / imgA.naturalWidth) * imgA.naturalHeight;
+            }
+
+            let leftBottomHeight = leftWidth;
+            leftBottomHeight = (leftWidth / imgB.naturalWidth) * imgB.naturalHeight;
+
+            const expectedLeftHeight = leftTopHeight + leftBottomHeight + 16;
+            const expectedRightHeight = (rightWidth / imgB.naturalWidth) * imgB.naturalHeight;
+
+            const maxContentHeight = Math.max(expectedLeftHeight, expectedRightHeight);
+            const exact3UpHeight = Math.round(maxContentHeight + 48);
+
+            view.style.setProperty('--vpd-3up-height', `${exact3UpHeight}px`);
+
+            const stretchRatio = maxContentHeight > expectedLeftHeight
+                ? (maxContentHeight - 16) / (leftTopHeight + leftBottomHeight)
+                : 1;
+
+            const adjustedTopRow = leftTopHeight * stretchRatio;
+            const adjustedBottomRow = leftBottomHeight * stretchRatio;
+
+            view.style.setProperty('--vpd-3up-row-1', `${Math.round(adjustedTopRow)}px`);
+            view.style.setProperty('--vpd-3up-row-2', `${Math.round(adjustedBottomRow)}px`);
+
+            if (wrapper) {
+                wrapper.style.setProperty('height', `${exact3UpHeight + 20}px`, 'important');
+                wrapper.style.setProperty('min-height', `${exact3UpHeight + 20}px`, 'important');
+            }
+        };
+
+        if (view._vpdResizeObserver) view._vpdResizeObserver.disconnect();
+        view._vpdResizeObserver = new ResizeObserver(updateMetrics);
+        if (wrapper) view._vpdResizeObserver.observe(wrapper);
+        view._vpdResizeObserver.observe(view);
+
+        // Initial setup
+        updateMetrics();
 
         try {
             if (!chrome.runtime?.id) throw new Error('Refresh GitHub to re-connect.');
@@ -395,6 +409,11 @@
         if (view._vpdUrls) {
             view._vpdUrls.forEach(url => URL.revokeObjectURL(url));
             view._vpdUrls = [];
+        }
+
+        if (view._vpdResizeObserver) {
+            view._vpdResizeObserver.disconnect();
+            delete view._vpdResizeObserver;
         }
     };
 
