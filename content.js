@@ -248,11 +248,7 @@
                 if (shell) {
                     shell.dataset.vpdType = type;
                     const lbl = shell.querySelector('.frame-label');
-                    if (lbl) {
-                        lbl.classList.add('vpd-premium-label');
-                        if (type === 'deleted') lbl.textContent = 'Removed';
-                        if (type === 'added') lbl.textContent = 'Added';
-                    }
+                    if (lbl) lbl.classList.add('vpd-premium-label');
                 }
                 if (shadowImg) return shadowImg;
             }
@@ -260,11 +256,7 @@
             if (el) {
                 el.dataset.vpdType = type;
                 const lbl = el.querySelector('.frame-label');
-                if (lbl) {
-                    lbl.classList.add('vpd-premium-label');
-                    if (type === 'deleted') lbl.textContent = 'Removed';
-                    if (type === 'added') lbl.textContent = 'Added';
-                }
+                if (lbl) lbl.classList.add('vpd-premium-label');
             }
             return el?.querySelector('img');
         };

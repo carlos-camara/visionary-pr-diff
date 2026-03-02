@@ -320,39 +320,55 @@ fieldset:has(.vpd-3up-tab) label input {
   /* Hide stray native labels completely */
 }
 
-/* Re-instate Added/Deleted Text Labels as beautiful external indicators */
+/* Re-instate Added/Deleted Text Labels as minimalist elegant indicators */
 .shell[data-vpd-type="deleted"] .frame-label,
 .shell[data-vpd-type="added"] .frame-label {
   display: flex !important;
+  align-items: center !important;
   position: absolute !important;
   top: -24px !important;
   left: 0 !important;
   z-index: 10 !important;
-  font-size: 9px !important;
-  font-weight: 700 !important;
-  letter-spacing: 0.8px !important;
+  font-size: 11px !important;
+  font-weight: 600 !important;
+  letter-spacing: 1.2px !important;
   text-transform: uppercase !important;
-  padding: 3px 8px !important;
-  border-radius: 4px !important;
-  color: rgba(255, 255, 255, 0.95) !important;
-  background: rgba(13, 17, 23, 0.4) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
-  text-shadow: none !important;
-  overflow: hidden !important;
+  padding: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6) !important;
   transition: all 0.3s ease !important;
 }
 
+.shell[data-vpd-type="deleted"] .frame-label::before,
+.shell[data-vpd-type="added"] .frame-label::before {
+  content: "" !important;
+  display: inline-block !important;
+  width: 6px !important;
+  height: 6px !important;
+  border-radius: 50% !important;
+  margin-right: 8px !important;
+}
+
 .shell[data-vpd-type="deleted"] .frame-label {
-  border-bottom: 2px solid rgba(248, 81, 73, 0.8) !important;
   color: #ff7b72 !important;
 }
 
+.shell[data-vpd-type="deleted"] .frame-label::before {
+  background: #ff7b72 !important;
+  box-shadow: 0 0 8px rgba(255, 123, 114, 0.6) !important;
+}
+
 .shell[data-vpd-type="added"] .frame-label {
-  border-bottom: 2px solid rgba(63, 185, 80, 0.8) !important;
   color: #56d364 !important;
+}
+
+.shell[data-vpd-type="added"] .frame-label::before {
+  background: #56d364 !important;
+  box-shadow: 0 0 8px rgba(86, 211, 100, 0.6) !important;
 }
 
 .vpd-diff-shell .frame-label {
