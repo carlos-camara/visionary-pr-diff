@@ -337,40 +337,61 @@ fieldset:has(.vpd-3up-tab) label input {
 /* Re-instate Added/Deleted Text Labels as beautiful external indicators */
 .shell[data-vpd-type="deleted"] .frame-label,
 .shell[data-vpd-type="added"] .frame-label {
-  display: flex !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   position: absolute !important;
-  top: -34px !important;
+  top: -38px !important;
   left: 0 !important;
   z-index: 10 !important;
   font-size: 11px !important;
-  font-weight: 700 !important;
-  letter-spacing: 1px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.8px !important;
   text-transform: uppercase !important;
   padding: 6px 14px !important;
-  border-radius: 6px !important;
-  color: rgba(255, 255, 255, 0.95) !important;
-  background: rgba(13, 17, 23, 0.4) !important;
-  backdrop-filter: blur(8px) !important;
-  -webkit-backdrop-filter: blur(8px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
+  border-radius: 16px !important;
+  color: #fff !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
   text-shadow: none !important;
   overflow: hidden !important;
   transition: all 0.3s ease !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+  gap: 6px !important;
+}
+
+/* Reset GitHub tags inside labels */
+.view.vpd-active .shell .frame-label *,
+.vpd-diff-shell .frame-label * {
+  color: inherit !important;
+  background: transparent !important;
+  border: none !important;
+  text-decoration: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  line-height: 1 !important;
 }
 
 .shell[data-vpd-type="deleted"] .frame-label {
-  border-bottom: 2px solid #f85149 !important;
+  border: 1px solid rgba(248, 81, 73, 0.4) !important;
+  background: linear-gradient(180deg, rgba(248, 81, 73, 0.15) 0%, rgba(13, 17, 23, 0.8) 100%) !important;
   color: #ff7b72 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 16px rgba(248, 81, 73, 0.1) !important;
 }
 
 .shell[data-vpd-type="added"] .frame-label {
-  border-bottom: 2px solid #3fb950 !important;
+  border: 1px solid rgba(63, 185, 80, 0.4) !important;
+  background: linear-gradient(180deg, rgba(63, 185, 80, 0.15) 0%, rgba(13, 17, 23, 0.8) 100%) !important;
   color: #56d364 !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 16px rgba(63, 185, 80, 0.1) !important;
 }
 
 .vpd-diff-shell .frame-label {
-  display: flex !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   position: absolute !important;
   top: -42px !important;
   left: 50% !important;
@@ -380,18 +401,21 @@ fieldset:has(.vpd-3up-tab) label input {
   font-weight: 700 !important;
   letter-spacing: 1.2px !important;
   text-transform: uppercase !important;
-  padding: 8px 20px !important;
-  border-radius: 8px !important;
+  padding: 8px 24px !important;
+  border-radius: 24px !important;
   color: #fff !important;
-  background: linear-gradient(180deg, rgba(31, 111, 235, 0.15) 0%, rgba(13, 17, 23, 0.6) 100%) !important;
+  background: linear-gradient(180deg, rgba(31, 111, 235, 0.2) 0%, rgba(13, 17, 23, 0.8) 100%) !important;
   backdrop-filter: blur(16px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
-  border: 1px solid rgba(88, 166, 255, 0.2) !important;
-  border-bottom: 2px solid #58a6ff !important;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 16px rgba(88, 166, 255, 0.15) !important;
+  border: 1px solid rgba(88, 166, 255, 0.4) !important;
+  border-top-color: rgba(121, 192, 255, 0.6) !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 20px rgba(88, 166, 255, 0.2) !important;
   text-shadow: 0 0 8px rgba(88, 166, 255, 0.4) !important;
   transition: all 0.3s ease !important;
   overflow: hidden !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+  gap: 8px !important;
 }
 
 .vpd-diff-shell .frame-label svg {
