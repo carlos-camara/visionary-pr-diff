@@ -105,6 +105,9 @@
 .render-wrapper:has(.three-up.vpd-active) {
   overflow: visible !important;
   contain: none !important;
+  height: auto !important;
+  min-height: auto !important;
+  max-width: 100% !important;
 }
 
 /* Force native shells to behave like blocks in our 3-column grid */
