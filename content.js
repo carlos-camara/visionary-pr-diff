@@ -206,11 +206,9 @@
 
             container.innerHTML = `
                 <div class="shell" data-vpd-type="deleted">
-                    <div class="frame-label vpd-premium-label">DELETED</div>
                     <img class="vpd-source-img" src="" alt="Deleted">
                 </div>
                 <div class="shell" data-vpd-type="added">
-                    <div class="frame-label vpd-premium-label">ADDED</div>
                     <img class="vpd-source-img" src="" alt="Added">
                 </div>
                 <div class="vpd-diff-shell">

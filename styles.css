@@ -382,37 +382,7 @@ fieldset:has(.vpd-3up-tab) label input {
 
 /* Re-instate Added/Deleted Text Labels as beautiful glassmorphism pills */
 /* SCOPED to our container to prevent leaking into native 2-up */
-.vpd-3up-container .shell[data-vpd-type="deleted"] .frame-label,
-.vpd-3up-container .shell[data-vpd-type="added"] .frame-label {
-  display: flex !important;
-  position: absolute !important;
-  top: 14px !important;
-  left: 14px !important;
-  z-index: 10 !important;
-  font-size: 11px !important;
-  font-weight: 600 !important;
-  letter-spacing: 0.5px !important;
-  text-transform: uppercase !important;
-  padding: 4px 10px !important;
-  border-radius: 6px !important;
-  color: rgba(255, 255, 255, 0.95) !important;
-  background: rgba(13, 17, 23, 0.7) !important;
-  backdrop-filter: blur(12px) !important;
-  -webkit-backdrop-filter: blur(12px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3) !important;
-  text-shadow: none !important;
-  overflow: hidden !important;
-  transition: all 0.3s ease !important;
-}
-
-.vpd-3up-container .shell[data-vpd-type="deleted"] .frame-label {
-  border-left: 3px solid #f85149 !important;
-}
-
-.vpd-3up-container .shell[data-vpd-type="added"] .frame-label {
-  border-left: 3px solid #3fb950 !important;
-}
+/* Deleted/Added labels removed as per user request for 3-up view */
 
 .vpd-diff-shell .frame-label {
   display: flex !important;
