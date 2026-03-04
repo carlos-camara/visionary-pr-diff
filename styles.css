@@ -73,29 +73,13 @@
   }
 }
 
-/* LIQUID SHIELD (Scoped Version) */
-/* Dynamically un-wrap any native container holding a shell to allow the grid to absorb them */
-.vpd-active .swipe,
-.vpd-active .swipe-frame,
-.vpd-active .onion-skin-container,
-.vpd-active .side-by-side-image-diff,
-.vpd-active :has(> .shell) {
-  display: contents !important;
+/* LIQUID SHIELD: Hide all native elements entirely when our 3-up view is active */
+.vpd-active>*:not(.vpd-3up-container):not(style) {
+  display: none !important;
 }
 
-.vpd-active .swipe-handle,
-.vpd-active .swipe-bar,
-.vpd-active .handle,
-.vpd-active .drag-handle,
-.vpd-active .js-drag-handle,
-.vpd-active .divider {
+:host(.vpd-active)>*:not(.vpd-3up-container):not(style) {
   display: none !important;
-  visibility: hidden !important;
-  opacity: 0 !important;
-  pointer-events: none !important;
-  height: 0 !important;
-  width: 0 !important;
-  overflow: hidden !important;
 }
 
 /* BURST-OUT parent overrides: Ensure no clipping on the expanded view */
@@ -115,7 +99,7 @@
 }
 
 /* Force native shells to behave like blocks in our 3-column grid */
-.vpd-active .shell {
+.vpd-3up-container .shell {
   position: static !important;
   transform: none !important;
   display: flex !important;
@@ -124,7 +108,7 @@
 }
 
 /* Grid Layout: [Deleted+Added] | [Visionary Diff large] */
-.vpd-active {
+.vpd-3up-container {
   display: grid !important;
   grid-template-columns: 35% 1fr !important;
   grid-template-rows: auto auto !important;
@@ -134,13 +118,21 @@
   /* Balanced inner padding for premium framing */
 
   box-sizing: border-box !important;
-  background: linear-gradient(145deg, rgba(22, 27, 34, 0.95) 0%, rgba(9, 11, 15, 0.98) 100%) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.08) !important;
-  border-top-color: rgba(255, 255, 255, 0.15) !important;
-  border-radius: 12px !important;
-  box-shadow: 0 32px 64px -16px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+  background-color: #0d1117 !important;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(31, 111, 235, 0.15) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(88, 166, 255, 0.1) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(35, 134, 54, 0.05) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(248, 81, 73, 0.05) 0px, transparent 50%) !important;
+  backdrop-filter: blur(20px) saturate(180%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top-color: rgba(255, 255, 255, 0.2) !important;
+  border-radius: 16px !important;
+  box-shadow:
+    0 24px 48px -12px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 0 1px rgba(255, 255, 255, 0.02) !important;
   overflow: hidden !important;
 
   /* Autonomously scalable fluid height bounds delegating to Grid */
@@ -165,8 +157,8 @@
 }
 
 /* Base shell: fill its grid cell, never overflow */
-.vpd-active .shell,
-.vpd-active .vpd-diff-shell {
+.vpd-3up-container .shell,
+.vpd-3up-container .vpd-diff-shell {
   width: 100% !important;
   height: 100% !important;
   display: flex !important;
@@ -178,26 +170,28 @@
   animation: vpd-fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
   /* Shell borders and background */
-  background: radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.04) 0%, transparent 70%), rgba(13, 17, 23, 0.7) !important;
-  border: 1px solid rgba(255, 255, 255, 0.06) !important;
-  border-top: 1px solid rgba(255, 255, 255, 0.12) !important;
-  border-radius: 10px !important;
+  background: rgba(22, 27, 34, 0.4) !important;
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  border-radius: 12px !important;
   overflow: visible !important;
   /* Critical so labels can break out */
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02), 0 8px 24px rgba(0, 0, 0, 0.5) !important;
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.4s ease !important;
+  box-shadow:
+    0 4px 20px rgba(0, 0, 0, 0.4),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.02) !important;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 /* Hover effects for individual shells to add a premium feel */
 /* Apply overflow hidden temporarily on the canvas wrapper instead so labels stay out */
 .vpd-diff-frame,
 .vpd-canvas-main,
-.vpd-active .shell img {
+.vpd-3up-container .shell img {
   border-radius: 10px !important;
 }
 
-.vpd-active .shell:hover,
-.vpd-active .vpd-diff-shell:hover {
+.vpd-3up-container .shell:hover,
+.vpd-3up-container .vpd-diff-shell:hover {
   transform: translateY(-4px) scale(1.005) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 16px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(var(--vpd-accent-rgb), 0.2) !important;
   border-color: rgba(255, 255, 255, 0.15) !important;
@@ -205,41 +199,41 @@
 }
 
 /* Deleted: top-left cell - Apply Red Premium State */
-.vpd-active .shell[data-vpd-type="deleted"] {
+.vpd-3up-container .shell[data-vpd-type="deleted"] {
   grid-column: 1 !important;
   grid-row: 1 !important;
   border-color: rgba(248, 81, 73, 0.4) !important;
   box-shadow: inset 0 0 0 1px rgba(248, 81, 73, 0.1), 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(248, 81, 73, 0.15) !important;
 }
 
-.vpd-active .shell[data-vpd-type="deleted"]:hover {
+.vpd-3up-container .shell[data-vpd-type="deleted"]:hover {
   border-color: rgba(248, 81, 73, 0.7) !important;
   box-shadow: inset 0 1px 0 rgba(248, 81, 73, 0.2), 0 16px 32px rgba(0, 0, 0, 0.5), 0 0 25px rgba(248, 81, 73, 0.25) !important;
 }
 
 /* Added: bottom-left cell - Apply Green Premium State */
-.vpd-active .shell[data-vpd-type="added"] {
+.vpd-3up-container .shell[data-vpd-type="added"] {
   grid-column: 1 !important;
   grid-row: 2 !important;
   border-color: rgba(63, 185, 80, 0.4) !important;
   box-shadow: inset 0 0 0 1px rgba(63, 185, 80, 0.1), 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(63, 185, 80, 0.15) !important;
 }
 
-.vpd-active .shell[data-vpd-type="added"]:hover {
+.vpd-3up-container .shell[data-vpd-type="added"]:hover {
   border-color: rgba(63, 185, 80, 0.7) !important;
   box-shadow: inset 0 1px 0 rgba(63, 185, 80, 0.2), 0 16px 32px rgba(0, 0, 0, 0.5), 0 0 25px rgba(63, 185, 80, 0.25) !important;
 }
 
 /* Visionary Diff: right column, spans both rows */
-.vpd-active .vpd-diff-shell {
+.vpd-3up-container .vpd-diff-shell {
   grid-column: 2 !important;
   grid-row: 1 / span 2 !important;
   animation: vpd-fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards, vpd-diff-shell-glow 4s ease-in-out infinite alternate !important;
 }
 
 /* Naturally position base native image elements so they dictate their shell sizes */
-.vpd-active .shell[data-vpd-type="deleted"] img,
-.vpd-active .shell[data-vpd-type="added"] img {
+.vpd-3up-container .shell[data-vpd-type="deleted"] img,
+.vpd-3up-container .shell[data-vpd-type="added"] img {
   position: static !important;
   width: 100% !important;
   height: auto !important;
@@ -254,8 +248,8 @@
 }
 
 /* Maintain absolutely stacked overlapping inside the JS composite frame ONLY */
-.vpd-active .vpd-diff-frame canvas,
-.vpd-active .vpd-diff-frame img.vpd-diff-bg {
+.vpd-3up-container .vpd-diff-frame canvas,
+.vpd-3up-container .vpd-diff-frame img.vpd-diff-bg {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
@@ -268,7 +262,7 @@
 }
 
 /* Overwrite hover effects since layout is contained */
-.vpd-active .shell img:hover {
+.vpd-3up-container .shell img:hover {
   transform: none !important;
 }
 
