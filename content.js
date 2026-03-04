@@ -238,9 +238,11 @@
             container.innerHTML = `
                 <div class="shell" data-vpd-type="deleted">
                     <img class="vpd-source-img" src="" alt="Deleted">
+                    <span class="vpd-shell-badge vpd-shell-badge--deleted">Deleted</span>
                 </div>
                 <div class="shell" data-vpd-type="added">
                     <img class="vpd-source-img" src="" alt="Added">
+                    <span class="vpd-shell-badge vpd-shell-badge--added">Added</span>
                 </div>
                 <div class="vpd-diff-shell">
                     <div class="frame-label vpd-premium-label">${sparkIcon} <span>Visionary Diff</span></div>

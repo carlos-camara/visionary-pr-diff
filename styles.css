@@ -426,9 +426,39 @@ fieldset:has(.vpd-3up-tab) label input {
   /* Hide stray native labels completely */
 }
 
-/* Re-instate Added/Deleted Text Labels as beautiful glassmorphism pills */
-/* SCOPED to our container to prevent leaking into native 2-up */
-/* Deleted/Added labels removed as per user request for 3-up view */
+/* Small bubble badges for Deleted / Added shells in 3-up view */
+.vpd-shell-badge {
+  position: absolute !important;
+  bottom: 12px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 10 !important;
+  font-size: 10px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0.8px !important;
+  text-transform: uppercase !important;
+  padding: 3px 10px !important;
+  border-radius: 20px !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  background: rgba(13, 17, 23, 0.65) !important;
+  backdrop-filter: blur(10px) saturate(160%) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(160%) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+  pointer-events: none !important;
+  white-space: nowrap !important;
+  transition: opacity 0.3s ease !important;
+}
+
+.vpd-shell-badge--deleted {
+  border-left: 2px solid #f85149 !important;
+  color: rgba(248, 129, 121, 0.95) !important;
+}
+
+.vpd-shell-badge--added {
+  border-left: 2px solid #3fb950 !important;
+  color: rgba(86, 211, 100, 0.95) !important;
+}
 
 .vpd-diff-shell .frame-label {
   display: flex !important;
