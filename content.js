@@ -93,38 +93,13 @@
 
             // Fallback Light DOM cleanup is handled completely by styles.css and display:contents hooks
 
-
             pierceShadowShield(view);
             activate3Up(view);
             startPersistentCleanup(view);
-
-            const wrapper = view.closest('.js-file-content, .file');
-            if (wrapper) {
-                if (wrapper.dataset.vpdOrigHeight === undefined) {
-                    wrapper.dataset.vpdOrigHeight = wrapper.style.height || '';
-                    wrapper.dataset.vpdOrigMinHeight = wrapper.style.minHeight || '';
-                    wrapper.dataset.vpdOrigOverflow = wrapper.style.overflow || '';
-                }
-                wrapper.style.setProperty('height', 'auto', 'important');
-                wrapper.style.setProperty('min-height', 'auto', 'important');
-                wrapper.style.setProperty('overflow', 'visible', 'important');
-            }
         } else {
             // User selected Swipe or Onion natively.
             view.style.removeProperty('--vpd-onion-height');
             ['position', 'top', 'left', 'width', 'height', 'z-index'].forEach(p => view.style.removeProperty(p));
-
-            const wrapper = view.closest('.js-file-content, .file');
-            if (wrapper && wrapper.dataset.vpdOrigHeight !== undefined) {
-                wrapper.style.setProperty('height', wrapper.dataset.vpdOrigHeight);
-                wrapper.style.setProperty('min-height', wrapper.dataset.vpdOrigMinHeight);
-                wrapper.style.setProperty('overflow', wrapper.dataset.vpdOrigOverflow);
-                if (wrapper.dataset.vpdOrigOverflow === '') wrapper.style.removeProperty('overflow');
-                wrapper.style.removeProperty('display');
-                delete wrapper.dataset.vpdOrigHeight;
-                delete wrapper.dataset.vpdOrigMinHeight;
-                delete wrapper.dataset.vpdOrigOverflow;
-            }
 
             view.classList.remove('three-up', 'vpd-active');
             deactivate3Up(view);
@@ -288,58 +263,8 @@
 
         const wrapper = view.closest('.js-file-content, .file');
 
-        const updateMetrics = () => {
-            if (view.dataset.vpdState !== 'active' && view.dataset.vpdState !== 'loading') return;
-            const wrapperWidth = wrapper ? wrapper.clientWidth : (view.clientWidth || 1200);
-            if (!imgB.naturalWidth || !imgB.naturalHeight) return;
-
-            // MATHEMATICALLY MATCH ONION SKIN HEIGHT
-            const exactOnionHeight = Math.round((wrapperWidth / imgB.naturalWidth) * imgB.naturalHeight);
-            const finalHeight = Math.max(exactOnionHeight, 300);
-            view.style.setProperty('--vpd-onion-height', `${finalHeight}px`);
-
-            // DYNAMIC 3-UP HEIGHT CALCULATION
-            const availableWidth = Math.max(wrapperWidth - 64, 100);
-            const leftWidth = availableWidth * 0.35;
-            const rightWidth = availableWidth * 0.65;
-
-            let leftTopHeight = leftWidth;
-            if (imgA && imgA.naturalWidth) {
-                leftTopHeight = (leftWidth / imgA.naturalWidth) * imgA.naturalHeight;
-            }
-
-            let leftBottomHeight = leftWidth;
-            leftBottomHeight = (leftWidth / imgB.naturalWidth) * imgB.naturalHeight;
-
-            const expectedLeftHeight = leftTopHeight + leftBottomHeight + 16;
-            const expectedRightHeight = (rightWidth / imgB.naturalWidth) * imgB.naturalHeight;
-
-            const maxContentHeight = Math.max(expectedLeftHeight, expectedRightHeight);
-            const exact3UpHeight = Math.round(maxContentHeight + 48);
-
-            view.style.setProperty('--vpd-3up-height', `${exact3UpHeight}px`);
-
-            const stretchRatio = maxContentHeight > expectedLeftHeight
-                ? (maxContentHeight - 16) / (leftTopHeight + leftBottomHeight)
-                : 1;
-
-            const adjustedTopRow = leftTopHeight * stretchRatio;
-            const adjustedBottomRow = leftBottomHeight * stretchRatio;
-
-            view.style.setProperty('--vpd-3up-row-1', `${Math.round(adjustedTopRow)}px`);
-            view.style.setProperty('--vpd-3up-row-2', `${Math.round(adjustedBottomRow)}px`);
-
-            // Wrapper sizing is now entirely delegated to CSS auto and display: contents 
-            // bounds cascading out from the computed --vpd-3up-height.
-        };
-
-        if (view._vpdResizeObserver) view._vpdResizeObserver.disconnect();
-        view._vpdResizeObserver = new ResizeObserver(updateMetrics);
-        if (wrapper) view._vpdResizeObserver.observe(wrapper);
-        view._vpdResizeObserver.observe(view);
-
-        // Initial setup
-        updateMetrics();
+        // Wrapper sizing and row proportions are now entirely delegated to CSS auto and display: contents 
+        // bounds cascading natively from the computed DOM elements. Wait for images, then render grid.
 
         try {
             if (!chrome.runtime?.id) throw new Error('Refresh GitHub to re-connect.');

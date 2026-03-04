@@ -124,7 +124,7 @@
 .image-diff[data-vpd-state="active"].vpd-active {
   display: grid !important;
   grid-template-columns: 35% 1fr !important;
-  grid-template-rows: var(--vpd-3up-row-1, auto) var(--vpd-3up-row-2, auto) !important;
+  grid-template-rows: auto auto !important;
   row-gap: 16px !important;
   column-gap: 16px !important;
   padding: 24px !important;
@@ -140,10 +140,10 @@
   box-shadow: 0 32px 64px -16px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
   overflow: hidden !important;
 
-  /* Mathematical Exact Height computed by JS to exactly match 3-Up or Onion Skin proportions */
+  /* Autonomously scalable fluid height bounds delegating to Grid */
   width: 100% !important;
-  height: var(--vpd-3up-height, var(--vpd-onion-height, 600px)) !important;
-  min-height: var(--vpd-3up-height, var(--vpd-onion-height, 600px)) !important;
+  height: auto !important;
+  min-height: 400px !important;
   max-height: none !important;
 }
 
@@ -154,7 +154,7 @@
 .file:has(.image-diff[data-vpd-state="active"].vpd-active) {
   display: block !important;
   height: auto !important;
-  min-height: var(--vpd-3up-height, var(--vpd-onion-height, 600px)) !important;
+  min-height: auto !important;
   overflow: visible !important;
 }
 
@@ -233,30 +233,35 @@
   animation: vpd-fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards, vpd-diff-shell-glow 4s ease-in-out infinite alternate !important;
 }
 
-/* Absolutely position ALL images inside shells to guarantee 100% visible fit */
-.three-up.view.vpd-active .shell img,
-.three-up.view.vpd-active .shell canvas,
-.vpd-diff-bg {
-  position: absolute !important;
-  top: 0 !important;
-  left: 0 !important;
+/* Naturally position base native image elements so they dictate their shell sizes */
+.three-up.view.vpd-active .shell[data-vpd-type="deleted"] img,
+.three-up.view.vpd-active .shell[data-vpd-type="added"] img {
+  position: static !important;
   width: 100% !important;
-  height: 100% !important;
+  height: auto !important;
   object-fit: contain !important;
+  display: block !important;
   /* NEVER crop */
   border: none !important;
   box-shadow: none !important;
   background: transparent !important;
 }
 
-/* Base style overrides for absolutely positioned image elements */
-.shell[data-vpd-type="deleted"] img,
-.shell[data-vpd-type="added"] img {
+/* Maintain absolutely stacked overlapping inside the JS composite frame ONLY */
+.three-up.view.vpd-active .vpd-diff-frame canvas,
+.three-up.view.vpd-active .vpd-diff-frame img.vpd-diff-bg {
+  position: absolute !important;
   top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
   height: 100% !important;
+  object-fit: contain !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
 }
 
-/* Overwrite hover effects since layout is absolute */
+/* Overwrite hover effects since layout is contained */
 .image-diff.vpd-active .shell img:hover {
   transform: none !important;
 }
