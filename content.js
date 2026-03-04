@@ -66,7 +66,7 @@
             view.shadowRoot.appendChild(style);
         }
 
-        style.textContent = \`
+        style.textContent = `
             :host(.vpd-active) :has(> .shell) {
                 display: contents !important;
             }
@@ -84,11 +84,19 @@
                 width: 0 !important;
                 overflow: hidden !important;
             }
-        \`;
+        `;
     };
 
     const reconcileViewMode = (view, val, fieldset = null) => {
         if (!view) return;
+
+        // Apply unified height tag for all "complex" views (Swipe, Onion, 3-up)
+        // 2-up is excluded so it can grow naturally to full content height.
+        if (['three-up', 'swipe', 'onion-skin'].includes(val)) {
+            view.classList.add('vpd-unified-view');
+        } else {
+            view.classList.remove('vpd-unified-view');
+        }
 
         if (val === 'three-up') {
             view.classList.remove('swipe', 'onion-skin');
@@ -100,8 +108,6 @@
             view.classList.remove('three-up', 'vpd-active');
             deactivate3Up(view);
             stopPersistentCleanup(view);
-            // Re-sync selection for native buttons
-            if (fieldset) syncTabSelection(fieldset);
         }
     };
 
@@ -114,7 +120,7 @@
         view.style.height = '';
         view.style.maxHeight = '';
         view.style.minHeight = '';
-        
+
         if (view._vpdUrls) {
             view._vpdUrls.forEach(url => URL.revokeObjectURL(url));
             view._vpdUrls = [];
@@ -152,7 +158,18 @@
             if (!view) return;
 
             const fileWrapper = fieldset.closest('.js-file, .file');
-            if (fileWrapper) fileWrapper.classList.add('vpd-initialized');
+            if (fileWrapper) {
+                fileWrapper.classList.add('vpd-initialized');
+                // HEARTBEAT UN-SHACKLE: Force 2-up and Swipe views to show fully from load
+                if (view && !view.classList.contains('vpd-active')) {
+                    if (view.style.height !== 'auto' || view.style.maxHeight !== 'none') {
+                        view.style.height = 'auto';
+                        view.style.maxHeight = 'none';
+                        view.style.minHeight = '400px';
+                        view.style.overflow = 'visible';
+                    }
+                }
+            }
 
             if (!fieldset.dataset.vpdObserved) {
                 fieldset.dataset.vpdObserved = 'true';
@@ -168,15 +185,29 @@
 
             const tab = document.createElement('label');
             tab.className = 'js-view-mode-item vpd-3up-tab';
-            tab.innerHTML = \`<input type="radio" value="three-up" name="view-mode"> 3-up\`;
+            tab.innerHTML = '<input type="radio" value="three-up" name="view-mode"> 3-up';
             fieldset.appendChild(tab);
-            syncTabSelection(fieldset);
+        });
+    };
+
+    const waitForImage = async (img, timeout = 5000) => {
+        if (img.complete && img.naturalWidth !== 0) return true;
+        return new Promise((resolve) => {
+            const timer = setTimeout(() => resolve(false), timeout);
+            const onFull = () => { clearTimeout(timer); resolve(true); };
+            img.addEventListener('load', onFull, { once: true });
+            img.addEventListener('error', onFull, { once: true });
         });
     };
 
     const activate3Up = async (view) => {
-        if (view.dataset.vpdState === 'active' || view.dataset.vpdState === 'loading') return;
-        
+        if (!view || view.dataset.vpdState === 'loading') return;
+
+        // Force-clear inline heights that might be set by GitHub's Swipe/Onion logic
+        view.style.height = 'auto';
+        view.style.maxHeight = 'none';
+        view.style.minHeight = '500px';
+
         const requestId = ++_currentRequestId;
         view.dataset.vpdState = 'loading';
 
@@ -193,9 +224,9 @@
             container = document.createElement('div');
             container.className = 'vpd-3up-container';
 
-            const sparkIcon = \`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:2px;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>\`;
+            const sparkIcon = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:2px;"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>`;
 
-            container.innerHTML = \`
+            container.innerHTML = `
                 <div class="shell" data-vpd-type="deleted">
                     <img class="vpd-source-img" src="" alt="Deleted">
                 </div>
@@ -203,23 +234,31 @@
                     <img class="vpd-source-img" src="" alt="Added">
                 </div>
                 <div class="vpd-diff-shell">
-                    <div class="frame-label vpd-premium-label">\${sparkIcon} <span>Visionary Diff</span></div>
+                    <div class="frame-label vpd-premium-label">${sparkIcon} <span>Visionary Diff</span></div>
                     <div class="vpd-diff-frame">
                         <div class="vpd-loader-container">
                             <div class="vpd-skeleton-rect"></div>
-                            <div class="vpd-loader">Analyzing regression pixels...</div>
+                            <div class="vpd-skeleton-rect" style="width: 60%"></div>
+                            <div class="vpd-loader" style="margin-top:20px; font-size:12px; color:#8b949e; font-family:monospace;">INITIALIZING PIXELS...</div>
                         </div>
                     </div>
-                    <div class="vpd-stats-card"></div>
                 </div>
-            \`;
+                <div class="vpd-stats-card"></div>
+            `;
             view.appendChild(container);
         }
 
         const diffShell = container.querySelector('.vpd-diff-shell');
-        const findImg = (alt) => {
-            const el = [...view.querySelectorAll('img:not(.vpd-source-img)')].find(i => i.alt?.includes(alt));
-            if (el) return el;
+        setStatus(diffShell, 'Waiting for source images...');
+
+        const findImg = (label) => {
+            if (view.shadowRoot) {
+                return [...view.shadowRoot.querySelectorAll('img:not(.vpd-source-img)')].find(img =>
+                    img.alt?.toLowerCase().includes(label.toLowerCase()) ||
+                    img.closest('.shell')?.textContent.toLowerCase().includes(label.toLowerCase())
+                );
+            }
+            const el = [...view.querySelectorAll('.shell:not(.vpd-3up-container .shell)')].find(s => s.textContent.toLowerCase().includes(label.toLowerCase()));
             return el?.querySelector('img:not(.vpd-source-img)');
         };
 
@@ -235,11 +274,6 @@
 
         container.querySelector('.shell[data-vpd-type="deleted"] img').src = imgA.src;
         container.querySelector('.shell[data-vpd-type="added"] img').src = imgB.src;
-
-        const waitForImage = (img) => {
-            if (img.complete) return Promise.resolve();
-            return new Promise(res => img.onload = res);
-        };
 
         await Promise.all([waitForImage(imgA), waitForImage(imgB)]);
         if (requestId !== _currentRequestId) return;
@@ -276,7 +310,7 @@
             const stats = calculateStats(canvas.getContext('2d'), canvas.width, canvas.height);
             const statsCard = container.querySelector('.vpd-stats-card');
             if (statsCard) {
-                statsCard.innerHTML = \`<span>CHANGE</span> <b>\${stats.pct}%</b> <span style="margin-left:8px; opacity:0.5;">|</span> <span>DELTA</span> <b>\${stats.diff.toLocaleString()}</b> <span style="font-size:10px; opacity:0.6;">px</span>\`;
+                statsCard.innerHTML = `<span>CHANGE</span> <b>${stats.pct}%</b> <span style="margin-left:8px; opacity:0.5;">|</span> <span>DELTA</span> <b>${stats.diff.toLocaleString()}</b> <span style="font-size:10px; opacity:0.6;">px</span>`;
             }
             view.dataset.vpdState = 'active';
         } catch (e) {
@@ -285,44 +319,12 @@
                 console.error('[VPD] Failed:', e);
                 const frame = diffShell.querySelector('.vpd-diff-frame');
                 if (frame) {
-                    frame.innerHTML = \`<div style="padding:40px; text-align:center;"><div style="color:#f85149; font-size:13px; margin-bottom:10px; font-weight:600;">\${e.message}</div></div>\`;
+                    frame.innerHTML = `<div style="padding:40px; text-align:center;"><div style="color:#f85149; font-size:13px; margin-bottom:10px; font-weight:600;">${e.message}</div></div>`;
                 }
                 view.dataset.vpdState = 'error';
             }
         }
     };
 
-    const proactiveGlobalExpansion = () => {
-        // Find all potential image containers
-        const containers = document.querySelectorAll('.view, .image-diff, .js-image-diff');
-        containers.forEach(container => {
-            const file = container.closest('.js-file, .file');
-            if (file) file.classList.add('vpd-initialized');
-
-            // Determine if we are in 2-up (natural) or an expanded mode (3-up, Swipe, Onion Skin)
-            const is3Up = container.classList.contains('vpd-active');
-            const isSwipe = container.classList.contains('swipe');
-            const isOnion = container.classList.contains('onion-skin');
-            const is2Up = !is3Up && !isSwipe && !isOnion;
-
-            // FORCE AUTO HEIGHT on everything - this is the "un-shackling"
-            if (container.style.height !== 'auto') container.style.height = 'auto';
-            if (container.style.maxHeight !== 'none') container.style.maxHeight = 'none';
-            if (container.style.overflow !== 'visible') container.style.overflow = 'visible';
-
-            if (is2Up) {
-                // 2-up: "Occupy the size it has" -> Clean auto height, no expansion forcing
-                if (container.style.minHeight) container.style.minHeight = '';
-            } else {
-                // 3-up, Swipe, Onion skin: "Match Onion Skin size" -> Expanded & Tall
-                // We use 500px as a baseline for the high-impact "Expanded" feel
-                if (container.style.minHeight !== '500px') container.style.minHeight = '500px';
-            }
-        });
-    };
-
-    setInterval(() => {
-        setup3Up();
-        proactiveGlobalExpansion();
-    }, 1000);
+    setInterval(setup3Up, 1000);
 })();

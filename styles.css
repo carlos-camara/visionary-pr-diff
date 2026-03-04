@@ -126,13 +126,33 @@
 }
 
 /* Force the .vpd-active element (usually .view or .image-diff) to expand */
+/* Unified views (Swipe, Onion, 3-up) share the same footprint */
+.view.vpd-unified-view,
+.image-diff.vpd-unified-view,
 .view.vpd-active,
-.image-diff.vpd-active,
-[data-vpd-state="active"] {
+.image-diff.vpd-active {
   height: auto !important;
-  min-height: 400px !important;
-  overflow: visible !important;
+  min-height: 500px !important;
+  max-height: 85vh !important;
+  overflow: auto !important;
+  position: relative !important;
+}
+
+/* 3-up specific layout enforcement */
+.view.three-up.vpd-active,
+.image-diff.three-up.vpd-active {
   display: block !important;
+}
+
+/* 2-up view remains completely un-shackled and native in size */
+.vpd-initialized .view:not(.vpd-unified-view):not(.vpd-active),
+.vpd-initialized .image-diff:not(.vpd-unified-view):not(.vpd-active) {
+  height: auto !important;
+  min-height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  display: flex !important;
+  /* Maintain native 2-up flex-row if applicable */
 }
 
 /* Force native shells to behave like blocks in our 3-column grid */
@@ -175,8 +195,8 @@
 
   /* Autonomously scalable fluid height bounds delegating to Grid */
   width: 100% !important;
-  height: auto !important;
-  min-height: 400px !important;
+  height: 100% !important;
+  min-height: 100% !important;
   max-height: none !important;
 }
 
