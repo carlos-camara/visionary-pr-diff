@@ -82,35 +82,41 @@
   display: none !important;
 }
 
-/* BURST-OUT parent overrides: Ensure no clipping on the expanded view */
-/* Scoped only to elements that contain an active 3-up view */
-:has(> .vpd-active),
-.js-file:has(.vpd-active),
-.file-content:has(.vpd-active),
-.data:has(.vpd-active),
-.js-image-diff:has(.vpd-active),
-.js-file-content:has(.vpd-active),
-.file:has(.vpd-active),
-.render-wrapper:has(.vpd-active),
-.Box-body:has(.vpd-active),
-.js-file-content:has(.vpd-3up-container),
-.view:has(.vpd-3up-container) {
+/* BURST-OUT parent overrides: Ensure no clipping on any image diff */
+/* Active as soon as the VPD tab is injected, forcing 2-up and 3-up to show fully */
+.vpd-initialized,
+.vpd-initialized .file-content,
+.vpd-initialized .data,
+.vpd-initialized .js-image-diff,
+.vpd-initialized .js-file-content,
+.vpd-initialized .file,
+.vpd-initialized .render-wrapper,
+.vpd-initialized .Box-body,
+.vpd-initialized .view,
+.vpd-initialized .image-diff {
   overflow: visible !important;
   contain: none !important;
   height: auto !important;
   min-height: auto !important;
   max-height: none !important;
   max-width: 100% !important;
-  display: block !important;
 }
 
-/* NUCLEAR EXPANSION: Scope to active mode only */
+/* Layout overrides: force block behavior ONLY when 3-up mode is active */
 .js-file:has(.vpd-active) .js-file-content,
-.js-file:has(.vpd-active) .data,
-.js-file:has(.vpd-active) .file-content,
 .js-file:has(.vpd-active) .Box-body,
 .js-file:has(.vpd-active) .view,
 .js-file:has(.vpd-active) .image-diff {
+  display: block !important;
+}
+
+/* NUCLEAR EXPANSION: Scope height unblocking to any VPD-initialized file container */
+.vpd-initialized .js-file-content,
+.vpd-initialized .data,
+.vpd-initialized .file-content,
+.vpd-initialized .Box-body,
+.vpd-initialized .view,
+.vpd-initialized .image-diff {
   height: auto !important;
   min-height: auto !important;
   max-height: none !important;

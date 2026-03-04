@@ -149,6 +149,9 @@
 
             if (!view) return;
 
+            const fileWrapper = fieldset.closest('.js-file, .file');
+            if (fileWrapper) fileWrapper.classList.add('vpd-initialized');
+
             if (!fieldset.dataset.vpdObserved) {
                 fieldset.dataset.vpdObserved = 'true';
                 fieldset.addEventListener('change', (e) => {
