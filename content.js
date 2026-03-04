@@ -67,11 +67,15 @@
         }
 
         style.textContent = `
-            :host(:has(.shell)) > div:has(> .shell),
-            :has(> .shell) {
+            :host(.vpd-active) :has(> .shell) {
                 display: contents !important;
             }
-            .handle, .swipe-bar, .divider, .drag-handle, .swipe-handle, .js-drag-handle {
+            :host(.vpd-active) .handle, 
+            :host(.vpd-active) .swipe-bar, 
+            :host(.vpd-active) .divider, 
+            :host(.vpd-active) .drag-handle, 
+            :host(.vpd-active) .swipe-handle, 
+            :host(.vpd-active) .js-drag-handle {
                 display: none !important;
                 visibility: hidden !important;
                 opacity: 0 !important;
@@ -103,6 +107,11 @@
         if (!view) return;
         view.dataset.vpdState = 'inactive';
         view.querySelectorAll('.vpd-3up-container').forEach(c => c.remove());
+
+        // Flush inline styles added during activate3Up
+        view.style.height = '';
+        view.style.maxHeight = '';
+        view.style.minHeight = '';
 
         if (view._vpdUrls) {
             view._vpdUrls.forEach(url => URL.revokeObjectURL(url));

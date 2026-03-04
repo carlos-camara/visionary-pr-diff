@@ -83,19 +83,18 @@
 }
 
 /* BURST-OUT parent overrides: Ensure no clipping on the expanded view */
+/* Scoped only to elements that contain an active 3-up view */
 :has(> .vpd-active),
-.view:has(.vpd-3up-container),
-.image-diff:has(.vpd-3up-container),
-.js-file:has(.three-up.vpd-active),
-.file-content:has(.three-up.vpd-active),
-.data:has(.three-up.vpd-active),
-.js-image-diff:has(.three-up.vpd-active),
-.js-file-content:has(.three-up.vpd-active),
-.file:has(.three-up.vpd-active),
-.render-wrapper:has(.three-up.vpd-active),
-.Box-body:has(.vpd-3up-container),
-.js-file-content[style*="height"],
-.view[style*="height"] {
+.js-file:has(.vpd-active),
+.file-content:has(.vpd-active),
+.data:has(.vpd-active),
+.js-image-diff:has(.vpd-active),
+.js-file-content:has(.vpd-active),
+.file:has(.vpd-active),
+.render-wrapper:has(.vpd-active),
+.Box-body:has(.vpd-active),
+.js-file-content:has(.vpd-3up-container),
+.view:has(.vpd-3up-container) {
   overflow: visible !important;
   contain: none !important;
   height: auto !important;
@@ -105,15 +104,13 @@
   display: block !important;
 }
 
-/* NUCLEAR EXPANSION: Un-shackle every possible parent layout container */
-.js-file-content,
-.js-file,
-.file,
-.data,
-.file-content,
-.Box-body,
-.view,
-.image-diff {
+/* NUCLEAR EXPANSION: Scope to active mode only */
+.js-file:has(.vpd-active) .js-file-content,
+.js-file:has(.vpd-active) .data,
+.js-file:has(.vpd-active) .file-content,
+.js-file:has(.vpd-active) .Box-body,
+.js-file:has(.vpd-active) .view,
+.js-file:has(.vpd-active) .image-diff {
   height: auto !important;
   min-height: auto !important;
   max-height: none !important;
@@ -384,8 +381,9 @@ fieldset:has(.vpd-3up-tab) label input {
 }
 
 /* Re-instate Added/Deleted Text Labels as beautiful glassmorphism pills */
-.shell[data-vpd-type="deleted"] .frame-label,
-.shell[data-vpd-type="added"] .frame-label {
+/* SCOPED to our container to prevent leaking into native 2-up */
+.vpd-3up-container .shell[data-vpd-type="deleted"] .frame-label,
+.vpd-3up-container .shell[data-vpd-type="added"] .frame-label {
   display: flex !important;
   position: absolute !important;
   top: 14px !important;
@@ -408,11 +406,11 @@ fieldset:has(.vpd-3up-tab) label input {
   transition: all 0.3s ease !important;
 }
 
-.shell[data-vpd-type="deleted"] .frame-label {
+.vpd-3up-container .shell[data-vpd-type="deleted"] .frame-label {
   border-left: 3px solid #f85149 !important;
 }
 
-.shell[data-vpd-type="added"] .frame-label {
+.vpd-3up-container .shell[data-vpd-type="added"] .frame-label {
   border-left: 3px solid #3fb950 !important;
 }
 
