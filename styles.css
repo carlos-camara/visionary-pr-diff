@@ -93,13 +93,32 @@
 .js-file-content:has(.three-up.vpd-active),
 .file:has(.three-up.vpd-active),
 .render-wrapper:has(.three-up.vpd-active),
-.Box-body:has(.vpd-3up-container) {
+.Box-body:has(.vpd-3up-container),
+.js-file-content[style*="height"],
+.view[style*="height"] {
   overflow: visible !important;
   contain: none !important;
   height: auto !important;
   min-height: auto !important;
+  max-height: none !important;
   max-width: 100% !important;
   display: block !important;
+}
+
+/* NUCLEAR EXPANSION: Un-shackle every possible parent layout container */
+.js-file-content,
+.js-file,
+.file,
+.data,
+.file-content,
+.Box-body,
+.view,
+.image-diff {
+  height: auto !important;
+  min-height: auto !important;
+  max-height: none !important;
+  overflow: visible !important;
+  contain: none !important;
 }
 
 /* Force the .vpd-active element (usually .view or .image-diff) to expand */
@@ -125,10 +144,11 @@
 .vpd-3up-container {
   display: grid !important;
   grid-template-columns: 35% 1fr !important;
-  grid-template-rows: auto auto !important;
+  grid-template-rows: 1fr 1fr !important;
   row-gap: 16px !important;
   column-gap: 16px !important;
   padding: 24px !important;
+  min-height: 500px !important;
   /* Balanced inner padding for premium framing */
 
   box-sizing: border-box !important;
@@ -191,6 +211,7 @@
   border: 1px solid rgba(255, 255, 255, 0.08) !important;
   border-radius: 12px !important;
   overflow: visible !important;
+  min-height: 200px !important;
   /* Critical so labels can break out */
   box-shadow:
     0 4px 20px rgba(0, 0, 0, 0.4),

@@ -172,6 +172,11 @@
     const activate3Up = async (view) => {
         if (!view || view.dataset.vpdState === 'loading') return;
 
+        // Force-clear inline heights that might be set by GitHub's Swipe/Onion logic
+        view.style.height = 'auto';
+        view.style.maxHeight = 'none';
+        view.style.minHeight = '500px';
+
         const requestId = ++_currentRequestId;
         view.dataset.vpdState = 'loading';
 
