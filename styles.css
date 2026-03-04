@@ -75,6 +75,10 @@
 
 /* LIQUID SHIELD (Scoped Version) */
 /* Dynamically un-wrap any native container holding a shell to allow the grid to absorb them */
+.image-diff.vpd-active .swipe,
+.image-diff.vpd-active .swipe-frame,
+.image-diff.vpd-active .onion-skin-container,
+.image-diff.vpd-active .side-by-side-image-diff,
 .image-diff.vpd-active :has(> .shell) {
   display: contents !important;
 }
@@ -158,10 +162,16 @@
   overflow: visible !important;
 }
 
+/* Hide our custom diff shell when 3-up is inactive (e.g. 2-up is native) */
+.image-diff:not(.vpd-active) .vpd-diff-shell {
+  display: none !important;
+}
+
 /* Base shell: fill its grid cell, never overflow */
 .three-up.view.vpd-active .shell,
 .image-diff[data-vpd-state="active"].vpd-active .shell,
-.vpd-diff-shell {
+.three-up.view.vpd-active .vpd-diff-shell,
+.image-diff[data-vpd-state="active"].vpd-active .vpd-diff-shell {
   width: 100% !important;
   height: 100% !important;
   display: flex !important;
@@ -245,6 +255,8 @@
   border: none !important;
   box-shadow: none !important;
   background: transparent !important;
+  max-width: none !important;
+  max-height: none !important;
 }
 
 /* Maintain absolutely stacked overlapping inside the JS composite frame ONLY */
