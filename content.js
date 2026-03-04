@@ -7,7 +7,7 @@
     let isIframe = false;
     try { isIframe = window.self !== window.top; } catch (e) { isIframe = true; }
 
-    if (!isIframe && window.location.hostname === 'github.com') return;
+    // console.log(`[VPD] v28 Init: ${window.location.hostname} (Iframe: ${isIframe})`);
 
     console.log(`[VPD] v28 Init: ${window.location.hostname}`);
 
@@ -135,27 +135,8 @@
     };
 
     const setup3Up = () => {
-        // Phase 1: Aggressive Universal Un-shackling
-        // We target all view containers directly to ensure 2-up expansion regardless of mode toggles
-        const allViews = document.querySelectorAll('.js-file .view, .js-file .image-diff, .file .view, .file .image-diff');
-        allViews.forEach(view => {
-            const fileWrapper = view.closest('.js-file, .file');
-            if (fileWrapper) {
-                fileWrapper.classList.add('vpd-initialized');
-
-                // Continuous height protection: Override GitHub's native style calculations
-                // for any view that is NOT actively rendering our 3-up logic.
-                if (!view.classList.contains('vpd-active')) {
-                    if (view.style.height !== 'auto' || view.style.maxHeight !== 'none') {
-                        view.style.height = 'auto';
-                        view.style.maxHeight = 'none';
-                    }
-                }
-            }
-        });
-
-        // Phase 2: Tab Injection & Mode Logic
         const fieldsets = document.querySelectorAll('fieldset, .view-modes fieldset');
+
         fieldsets.forEach(fieldset => {
             if (fieldset.querySelector('.vpd-3up-tab')) {
                 syncTabSelection(fieldset);
@@ -163,9 +144,24 @@
             }
 
             let view = fieldset.closest('.js-file, .file')?.querySelector('.view, .image-diff, image-diff')
-                || fieldset.parentElement?.querySelector('.view, .image-diff, image-diff');
+                || fieldset.parentElement?.querySelector('.view, .image-diff, image-diff')
+                || document.querySelector('.view, .image-diff, image-diff');
 
             if (!view) return;
+
+            const fileWrapper = fieldset.closest('.js-file, .file');
+            if (fileWrapper) {
+                fileWrapper.classList.add('vpd-initialized');
+                // HEARTBEAT UN-SHACKLE: Force 2-up and Swipe views to show fully from load
+                if (view && !view.classList.contains('vpd-active')) {
+                    if (view.style.height !== 'auto' || view.style.maxHeight !== 'none') {
+                        view.style.height = 'auto';
+                        view.style.maxHeight = 'none';
+                        view.style.minHeight = '400px';
+                        view.style.overflow = 'visible';
+                    }
+                }
+            }
 
             if (!fieldset.dataset.vpdObserved) {
                 fieldset.dataset.vpdObserved = 'true';
