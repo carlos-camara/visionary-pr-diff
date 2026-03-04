@@ -149,8 +149,15 @@
 
             if (!view) return;
 
-            const fileWrapper = fieldset.closest('.js-file, .file');
-            if (fileWrapper) fileWrapper.classList.add('vpd-initialized');
+            if (fileWrapper) {
+                fileWrapper.classList.add('vpd-initialized');
+                // Proactively strip native height constraints from the view immediately
+                if (view) {
+                    view.style.height = 'auto';
+                    view.style.maxHeight = 'none';
+                    view.style.overflow = 'visible';
+                }
+            }
 
             if (!fieldset.dataset.vpdObserved) {
                 fieldset.dataset.vpdObserved = 'true';

@@ -93,7 +93,9 @@
 .vpd-initialized .render-wrapper,
 .vpd-initialized .Box-body,
 .vpd-initialized .view,
-.vpd-initialized .image-diff {
+.vpd-initialized .image-diff,
+.vpd-initialized .image-diff-content,
+.vpd-initialized .js-image-diff-content {
   overflow: visible !important;
   contain: none !important;
   height: auto !important;
@@ -102,15 +104,9 @@
   max-width: 100% !important;
 }
 
-/* Layout overrides: force block behavior ONLY when 3-up mode is active */
-.js-file:has(.vpd-active) .js-file-content,
-.js-file:has(.vpd-active) .Box-body,
-.js-file:has(.vpd-active) .view,
-.js-file:has(.vpd-active) .image-diff {
-  display: block !important;
-}
-
 /* NUCLEAR EXPANSION: Scope height unblocking to any VPD-initialized file container */
+/* We target every single nested layer to prevent GitHub's dynamic height scripts from winning */
+.vpd-initialized div[style*="height"],
 .vpd-initialized .js-file-content,
 .vpd-initialized .data,
 .vpd-initialized .file-content,
