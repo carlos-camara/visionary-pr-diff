@@ -103,6 +103,7 @@
                 if (wrapper.dataset.vpdOrigHeight === undefined) {
                     wrapper.dataset.vpdOrigHeight = wrapper.style.height || '';
                     wrapper.dataset.vpdOrigMinHeight = wrapper.style.minHeight || '';
+                    wrapper.dataset.vpdOrigOverflow = wrapper.style.overflow || '';
                 }
                 wrapper.style.setProperty('height', 'auto', 'important');
                 wrapper.style.setProperty('min-height', 'auto', 'important');
@@ -117,9 +118,12 @@
             if (wrapper && wrapper.dataset.vpdOrigHeight !== undefined) {
                 wrapper.style.setProperty('height', wrapper.dataset.vpdOrigHeight);
                 wrapper.style.setProperty('min-height', wrapper.dataset.vpdOrigMinHeight);
+                wrapper.style.setProperty('overflow', wrapper.dataset.vpdOrigOverflow);
+                if (wrapper.dataset.vpdOrigOverflow === '') wrapper.style.removeProperty('overflow');
                 wrapper.style.removeProperty('display');
                 delete wrapper.dataset.vpdOrigHeight;
                 delete wrapper.dataset.vpdOrigMinHeight;
+                delete wrapper.dataset.vpdOrigOverflow;
             }
 
             view.classList.remove('three-up', 'vpd-active');
@@ -325,10 +329,8 @@
             view.style.setProperty('--vpd-3up-row-1', `${Math.round(adjustedTopRow)}px`);
             view.style.setProperty('--vpd-3up-row-2', `${Math.round(adjustedBottomRow)}px`);
 
-            if (wrapper) {
-                wrapper.style.setProperty('height', `${exact3UpHeight + 20}px`, 'important');
-                wrapper.style.setProperty('min-height', `${exact3UpHeight + 20}px`, 'important');
-            }
+            // Wrapper sizing is now entirely delegated to CSS auto and display: contents 
+            // bounds cascading out from the computed --vpd-3up-height.
         };
 
         if (view._vpdResizeObserver) view._vpdResizeObserver.disconnect();
