@@ -160,8 +160,9 @@
             const fileWrapper = fieldset.closest('.js-file, .file');
             if (fileWrapper) {
                 fileWrapper.classList.add('vpd-initialized');
-                // HEARTBEAT UN-SHACKLE: Force 2-up and Swipe views to show fully from load
-                if (view && !view.classList.contains('vpd-active')) {
+                // HEARTBEAT UN-SHACKLE: Force 2-up views to show fully from load. 
+                // Unified views (Swipe, Onion, 3-up) are excluded to maintain consistent sizing.
+                if (view && !view.classList.contains('vpd-active') && !view.classList.contains('vpd-unified-view')) {
                     if (view.style.height !== 'auto' || view.style.maxHeight !== 'none') {
                         view.style.height = 'auto';
                         view.style.maxHeight = 'none';
@@ -173,6 +174,11 @@
 
             if (!fieldset.dataset.vpdObserved) {
                 fieldset.dataset.vpdObserved = 'true';
+
+                // Track initial state immediately
+                const currentMode = fieldset.querySelector('input[name="view-mode"]:checked')?.value;
+                if (currentMode) reconcileViewMode(view, currentMode, fieldset);
+
                 fieldset.addEventListener('change', (e) => {
                     if (e.target.name !== 'view-mode') return;
                     const dynamicView = fieldset.closest('.js-file, .file')?.querySelector('.view, .image-diff, image-diff')

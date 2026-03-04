@@ -126,16 +126,17 @@
 }
 
 /* Force the .vpd-active element (usually .view or .image-diff) to expand */
-/* Unified views (Swipe, Onion, 3-up) share the same footprint */
+/* Unified views (Swipe, Onion, 3-up) share the same stable footprint */
 .view.vpd-unified-view,
 .image-diff.vpd-unified-view,
 .view.vpd-active,
 .image-diff.vpd-active {
-  height: auto !important;
-  min-height: 500px !important;
-  max-height: 85vh !important;
+  height: 650px !important;
+  min-height: 650px !important;
+  max-height: 650px !important;
   overflow: auto !important;
   position: relative !important;
+  display: block !important;
 }
 
 /* 3-up specific layout enforcement */
