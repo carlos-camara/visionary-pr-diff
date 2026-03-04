@@ -160,14 +160,23 @@
             const fileWrapper = fieldset.closest('.js-file, .file');
             if (fileWrapper) {
                 fileWrapper.classList.add('vpd-initialized');
-                // HEARTBEAT UN-SHACKLE: Force 2-up and Swipe views to show fully from load
-                if (view && !view.classList.contains('vpd-active')) {
-                    if (view.style.height !== 'auto' || view.style.maxHeight !== 'none') {
-                        view.style.height = 'auto';
-                        view.style.maxHeight = 'none';
-                        view.style.minHeight = '400px';
-                        view.style.overflow = 'visible';
-                    }
+
+                // Detect initial active view mode and apply unified height tag
+                const activeInput = fieldset.querySelector('input[type="radio"]:checked');
+                const initialMode = activeInput?.value;
+                if (['swipe', 'onion-skin', 'three-up'].includes(initialMode)) {
+                    view.classList.add('vpd-unified-view');
+                    // Remove inline styles so CSS var takes over
+                    view.style.height = '';
+                    view.style.maxHeight = '';
+                    view.style.minHeight = '';
+                } else {
+                    // 2-up or unknown: let it grow freely
+                    view.classList.remove('vpd-unified-view');
+                    view.style.height = 'auto';
+                    view.style.maxHeight = 'none';
+                    view.style.minHeight = '';
+                    view.style.overflow = 'visible';
                 }
             }
 

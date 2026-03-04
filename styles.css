@@ -10,6 +10,8 @@
   --vpd-border-glass: rgba(255, 255, 255, 0.1);
   --vpd-glow: 0 8px 32px rgba(0, 0, 0, 0.5);
   --vpd-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  /* Unified view height: all advanced modes (Swipe, Onion, 3-up) share this */
+  --vpd-unified-height: 550px;
 }
 
 /* Animations */
@@ -125,28 +127,36 @@
   contain: none !important;
 }
 
-/* Force the .vpd-active element (usually .view or .image-diff) to expand */
-/* Unified views (Swipe, Onion, 3-up) share the same footprint */
+/* UNIFIED VIEW HEIGHT
+ * Swipe, Onion Skin, and 3-up share an exact fixed height via CSS var.
+ * This overrides GitHub's inline height styles.
+ */
 .view.vpd-unified-view,
 .image-diff.vpd-unified-view,
 .view.vpd-active,
 .image-diff.vpd-active {
-  height: auto !important;
-  min-height: 500px !important;
-  max-height: none !important;
-  overflow: visible !important;
+  height: var(--vpd-unified-height) !important;
+  min-height: var(--vpd-unified-height) !important;
+  max-height: var(--vpd-unified-height) !important;
+  overflow: auto !important;
   position: relative !important;
-  display: block !important;
+  box-sizing: border-box !important;
 }
 
-/* 2-up view remains completely un-shackled and native in size */
+/* 3-up specific: display:block for our custom grid container */
+.view.three-up.vpd-active,
+.image-diff.three-up.vpd-active {
+  display: block !important;
+  overflow: hidden !important;
+}
+
+/* 2-up view: completely free, grows to full content height */
 .vpd-initialized .view:not(.vpd-unified-view):not(.vpd-active),
 .vpd-initialized .image-diff:not(.vpd-unified-view):not(.vpd-active) {
   height: auto !important;
   min-height: auto !important;
   max-height: none !important;
   overflow: visible !important;
-  display: flex !important;
 }
 
 /* Force native shells to behave like blocks in our 3-column grid */
@@ -158,14 +168,17 @@
   margin: 0 !important;
 }
 
-/* Panoramic 3-Column Layout: [Deleted] | [Added] | [Visionary Diff large] */
+/* Grid Layout: [Deleted+Added] | [Visionary Diff large] */
 .vpd-3up-container {
   display: grid !important;
-  grid-template-columns: 1fr 1fr 1.5fr !important;
-  grid-template-rows: 1fr !important;
-  column-gap: 20px !important;
+  grid-template-columns: 35% 1fr !important;
+  grid-template-rows: 1fr 1fr !important;
+  row-gap: 16px !important;
+  column-gap: 16px !important;
   padding: 24px !important;
-  min-height: 600px !important;
+  min-height: 500px !important;
+  /* Balanced inner padding for premium framing */
+
   box-sizing: border-box !important;
   background-color: #0d1117 !important;
   background-image:
@@ -176,19 +189,19 @@
   backdrop-filter: blur(20px) saturate(180%) !important;
   -webkit-backdrop-filter: blur(20px) saturate(180%) !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-top-color: rgba(255, 255, 255, 0.2) !important;
   border-radius: 16px !important;
-  box-shadow: 0 24px 48px -12px rgba(0, 0, 0, 0.8) !important;
-  overflow: visible !important;
-  width: 100% !important;
-  height: auto !important;
-}
+  box-shadow:
+    0 24px 48px -12px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05),
+    0 0 0 1px rgba(255, 255, 255, 0.02) !important;
+  overflow: hidden !important;
 
-/* Layout normalization for unified views */
-.vpd-initialized:has(.vpd-unified-view) .js-file-content,
-.vpd-initialized:has(.vpd-unified-view) .Box-body {
-  height: auto !important;
-  min-height: auto !important;
-  overflow: visible !important;
+  /* Fit fully within the unified view container */
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: none !important;
 }
 
 /* Force GitHub's outer wrapper to allow expansion */
@@ -250,11 +263,12 @@
   z-index: 5 !important;
 }
 
-/* Side-by-side positioning in columns 1, 2, and 3 */
+/* Deleted: top-left cell - Apply Red Premium State */
 .vpd-3up-container .shell[data-vpd-type="deleted"] {
   grid-column: 1 !important;
   grid-row: 1 !important;
   border-color: rgba(248, 81, 73, 0.4) !important;
+  box-shadow: inset 0 0 0 1px rgba(248, 81, 73, 0.1), 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(248, 81, 73, 0.15) !important;
 }
 
 .vpd-3up-container .shell[data-vpd-type="deleted"]:hover {
@@ -262,10 +276,12 @@
   box-shadow: inset 0 1px 0 rgba(248, 81, 73, 0.2), 0 16px 32px rgba(0, 0, 0, 0.5), 0 0 25px rgba(248, 81, 73, 0.25) !important;
 }
 
+/* Added: bottom-left cell - Apply Green Premium State */
 .vpd-3up-container .shell[data-vpd-type="added"] {
-  grid-column: 2 !important;
-  grid-row: 1 !important;
+  grid-column: 1 !important;
+  grid-row: 2 !important;
   border-color: rgba(63, 185, 80, 0.4) !important;
+  box-shadow: inset 0 0 0 1px rgba(63, 185, 80, 0.1), 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(63, 185, 80, 0.15) !important;
 }
 
 .vpd-3up-container .shell[data-vpd-type="added"]:hover {
@@ -273,9 +289,10 @@
   box-shadow: inset 0 1px 0 rgba(63, 185, 80, 0.2), 0 16px 32px rgba(0, 0, 0, 0.5), 0 0 25px rgba(63, 185, 80, 0.25) !important;
 }
 
+/* Visionary Diff: right column, spans both rows */
 .vpd-3up-container .vpd-diff-shell {
-  grid-column: 3 !important;
-  grid-row: 1 !important;
+  grid-column: 2 !important;
+  grid-row: 1 / span 2 !important;
   border-color: rgba(var(--vpd-accent-rgb), 0.4) !important;
   box-shadow:
     inset 0 0 0 1px rgba(var(--vpd-accent-rgb), 0.1),
