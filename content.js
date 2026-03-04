@@ -135,8 +135,27 @@
     };
 
     const setup3Up = () => {
-        const fieldsets = document.querySelectorAll('fieldset, .view-modes fieldset');
+        // Phase 1: Aggressive Universal Un-shackling
+        // We target all view containers directly to ensure 2-up expansion regardless of mode toggles
+        const allViews = document.querySelectorAll('.js-file .view, .js-file .image-diff, .file .view, .file .image-diff');
+        allViews.forEach(view => {
+            const fileWrapper = view.closest('.js-file, .file');
+            if (fileWrapper) {
+                fileWrapper.classList.add('vpd-initialized');
 
+                // Continuous height protection: Override GitHub's native style calculations
+                // for any view that is NOT actively rendering our 3-up logic.
+                if (!view.classList.contains('vpd-active')) {
+                    if (view.style.height !== 'auto' || view.style.maxHeight !== 'none') {
+                        view.style.height = 'auto';
+                        view.style.maxHeight = 'none';
+                    }
+                }
+            }
+        });
+
+        // Phase 2: Tab Injection & Mode Logic
+        const fieldsets = document.querySelectorAll('fieldset, .view-modes fieldset');
         fieldsets.forEach(fieldset => {
             if (fieldset.querySelector('.vpd-3up-tab')) {
                 syncTabSelection(fieldset);
@@ -144,20 +163,9 @@
             }
 
             let view = fieldset.closest('.js-file, .file')?.querySelector('.view, .image-diff, image-diff')
-                || fieldset.parentElement?.querySelector('.view, .image-diff, image-diff')
-                || document.querySelector('.view, .image-diff, image-diff');
+                || fieldset.parentElement?.querySelector('.view, .image-diff, image-diff');
 
             if (!view) return;
-
-            const fileWrapper = fieldset.closest('.js-file, .file');
-            if (fileWrapper) {
-                fileWrapper.classList.add('vpd-initialized');
-                // Proactively un-shackle the view container on initial load
-                if (view && !view.classList.contains('vpd-active')) {
-                    view.style.height = 'auto';
-                    view.style.maxHeight = 'none';
-                }
-            }
 
             if (!fieldset.dataset.vpdObserved) {
                 fieldset.dataset.vpdObserved = 'true';
