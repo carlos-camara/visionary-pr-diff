@@ -149,13 +149,13 @@
 
             if (!view) return;
 
+            const fileWrapper = fieldset.closest('.js-file, .file');
             if (fileWrapper) {
                 fileWrapper.classList.add('vpd-initialized');
-                // Proactively strip native height constraints from the view immediately
-                if (view) {
+                // Proactively un-shackle the view container on initial load
+                if (view && !view.classList.contains('vpd-active')) {
                     view.style.height = 'auto';
                     view.style.maxHeight = 'none';
-                    view.style.overflow = 'visible';
                 }
             }
 
