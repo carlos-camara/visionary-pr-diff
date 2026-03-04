@@ -75,20 +75,20 @@
 
 /* LIQUID SHIELD (Scoped Version) */
 /* Dynamically un-wrap any native container holding a shell to allow the grid to absorb them */
-.image-diff.vpd-active .swipe,
-.image-diff.vpd-active .swipe-frame,
-.image-diff.vpd-active .onion-skin-container,
-.image-diff.vpd-active .side-by-side-image-diff,
-.image-diff.vpd-active :has(> .shell) {
+.vpd-active .swipe,
+.vpd-active .swipe-frame,
+.vpd-active .onion-skin-container,
+.vpd-active .side-by-side-image-diff,
+.vpd-active :has(> .shell) {
   display: contents !important;
 }
 
-.image-diff.vpd-active .swipe-handle,
-.image-diff.vpd-active .swipe-bar,
-.image-diff.vpd-active .handle,
-.image-diff.vpd-active .drag-handle,
-.image-diff.vpd-active .js-drag-handle,
-.image-diff.vpd-active .divider {
+.vpd-active .swipe-handle,
+.vpd-active .swipe-bar,
+.vpd-active .handle,
+.vpd-active .drag-handle,
+.vpd-active .js-drag-handle,
+.vpd-active .divider {
   display: none !important;
   visibility: hidden !important;
   opacity: 0 !important;
@@ -115,7 +115,7 @@
 }
 
 /* Force native shells to behave like blocks in our 3-column grid */
-.image-diff.vpd-active .shell {
+.vpd-active .shell {
   position: static !important;
   transform: none !important;
   display: flex !important;
@@ -124,8 +124,7 @@
 }
 
 /* Grid Layout: [Deleted+Added] | [Visionary Diff large] */
-.three-up.view.vpd-active,
-.image-diff[data-vpd-state="active"].vpd-active {
+.vpd-active {
   display: grid !important;
   grid-template-columns: 35% 1fr !important;
   grid-template-rows: auto auto !important;
@@ -152,10 +151,8 @@
 }
 
 /* Force GitHub's outer wrapper to allow expansion */
-.js-file-content:has(.three-up.view.vpd-active),
-.js-file-content:has(.image-diff[data-vpd-state="active"].vpd-active),
-.file:has(.three-up.view.vpd-active),
-.file:has(.image-diff[data-vpd-state="active"].vpd-active) {
+.js-file-content:has(.vpd-active),
+.file:has(.vpd-active) {
   display: block !important;
   height: auto !important;
   min-height: auto !important;
@@ -163,15 +160,13 @@
 }
 
 /* Hide our custom diff shell when 3-up is inactive (e.g. 2-up is native) */
-.image-diff:not(.vpd-active) .vpd-diff-shell {
+.vpd-diff-shell {
   display: none !important;
 }
 
 /* Base shell: fill its grid cell, never overflow */
-.three-up.view.vpd-active .shell,
-.image-diff[data-vpd-state="active"].vpd-active .shell,
-.three-up.view.vpd-active .vpd-diff-shell,
-.image-diff[data-vpd-state="active"].vpd-active .vpd-diff-shell {
+.vpd-active .shell,
+.vpd-active .vpd-diff-shell {
   width: 100% !important;
   height: 100% !important;
   display: flex !important;
@@ -197,13 +192,12 @@
 /* Apply overflow hidden temporarily on the canvas wrapper instead so labels stay out */
 .vpd-diff-frame,
 .vpd-canvas-main,
-.three-up.view.vpd-active .shell img {
+.vpd-active .shell img {
   border-radius: 10px !important;
 }
 
-.three-up.view.vpd-active .shell:hover,
-.image-diff[data-vpd-state="active"].vpd-active .shell:hover,
-.vpd-diff-shell:hover {
+.vpd-active .shell:hover,
+.vpd-active .vpd-diff-shell:hover {
   transform: translateY(-4px) scale(1.005) !important;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 16px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(var(--vpd-accent-rgb), 0.2) !important;
   border-color: rgba(255, 255, 255, 0.15) !important;
@@ -211,41 +205,41 @@
 }
 
 /* Deleted: top-left cell - Apply Red Premium State */
-.three-up.view.vpd-active .shell[data-vpd-type="deleted"] {
+.vpd-active .shell[data-vpd-type="deleted"] {
   grid-column: 1 !important;
   grid-row: 1 !important;
   border-color: rgba(248, 81, 73, 0.4) !important;
   box-shadow: inset 0 0 0 1px rgba(248, 81, 73, 0.1), 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(248, 81, 73, 0.15) !important;
 }
 
-.three-up.view.vpd-active .shell[data-vpd-type="deleted"]:hover {
+.vpd-active .shell[data-vpd-type="deleted"]:hover {
   border-color: rgba(248, 81, 73, 0.7) !important;
   box-shadow: inset 0 1px 0 rgba(248, 81, 73, 0.2), 0 16px 32px rgba(0, 0, 0, 0.5), 0 0 25px rgba(248, 81, 73, 0.25) !important;
 }
 
 /* Added: bottom-left cell - Apply Green Premium State */
-.three-up.view.vpd-active .shell[data-vpd-type="added"] {
+.vpd-active .shell[data-vpd-type="added"] {
   grid-column: 1 !important;
   grid-row: 2 !important;
   border-color: rgba(63, 185, 80, 0.4) !important;
   box-shadow: inset 0 0 0 1px rgba(63, 185, 80, 0.1), 0 8px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(63, 185, 80, 0.15) !important;
 }
 
-.three-up.view.vpd-active .shell[data-vpd-type="added"]:hover {
+.vpd-active .shell[data-vpd-type="added"]:hover {
   border-color: rgba(63, 185, 80, 0.7) !important;
   box-shadow: inset 0 1px 0 rgba(63, 185, 80, 0.2), 0 16px 32px rgba(0, 0, 0, 0.5), 0 0 25px rgba(63, 185, 80, 0.25) !important;
 }
 
 /* Visionary Diff: right column, spans both rows */
-.vpd-diff-shell {
+.vpd-active .vpd-diff-shell {
   grid-column: 2 !important;
   grid-row: 1 / span 2 !important;
   animation: vpd-fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards, vpd-diff-shell-glow 4s ease-in-out infinite alternate !important;
 }
 
 /* Naturally position base native image elements so they dictate their shell sizes */
-.three-up.view.vpd-active .shell[data-vpd-type="deleted"] img,
-.three-up.view.vpd-active .shell[data-vpd-type="added"] img {
+.vpd-active .shell[data-vpd-type="deleted"] img,
+.vpd-active .shell[data-vpd-type="added"] img {
   position: static !important;
   width: 100% !important;
   height: auto !important;
@@ -260,8 +254,8 @@
 }
 
 /* Maintain absolutely stacked overlapping inside the JS composite frame ONLY */
-.three-up.view.vpd-active .vpd-diff-frame canvas,
-.three-up.view.vpd-active .vpd-diff-frame img.vpd-diff-bg {
+.vpd-active .vpd-diff-frame canvas,
+.vpd-active .vpd-diff-frame img.vpd-diff-bg {
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
@@ -274,7 +268,7 @@
 }
 
 /* Overwrite hover effects since layout is contained */
-.image-diff.vpd-active .shell img:hover {
+.vpd-active .shell img:hover {
   transform: none !important;
 }
 
